@@ -38,7 +38,8 @@ textarea:focus{border-color:rgba(232,200,122,.4)}
 .prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px}
 .prog-bar{height:3px;background:var(--bg3);border-radius:99px;overflow:hidden}
 .prog-fill{height:100%;background:var(--gold);border-radius:99px;transition:width .3s;width:0}
-.prog-sub{font-size:12px;color:var(--muted);margin-top:5px}
+.prog-sub{font-size:13px;color:var(--muted);margin-top:5px}
+.prog-sub.ai{color:var(--purple)}
 .exp-box{display:none;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);padding:1.4rem;margin-bottom:2rem}
 .exp-box.on{display:block}
 .exp-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.7rem}
@@ -54,11 +55,18 @@ textarea:focus{border-color:rgba(232,200,122,.4)}
 .tok{color:var(--green);font-size:11px}
 .tai{color:var(--purple);font-size:11px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+/* CARD */
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;position:relative;transition:border-color .2s,transform .2s}
 .card:hover{border-color:var(--border2);transform:translateY(-2px)}
 .card.ai-card{border-color:rgba(167,139,250,0.3)}
 .card.ai-card:hover{border-color:rgba(167,139,250,0.6)}
 .thumb{width:100%;height:140px;object-fit:cover;display:block;background:var(--bg3)}
+/* Placeholder animado mientras genera la IA */
+.ai-placeholder{width:100%;height:140px;background:var(--bg3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.ai-spinner{width:28px;height:28px;border:2px solid rgba(167,139,250,0.2);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ai-placeholder-txt{font-size:11px;color:var(--purple);animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
 .ai-badge{position:absolute;top:8px;left:8px;background:rgba(167,139,250,0.9);color:#fff;font-size:10px;font-weight:500;padding:2px 8px;border-radius:99px;pointer-events:none}
 .hl{position:absolute;inset:0;background:rgba(10,10,12,.87);display:flex;flex-direction:column;gap:5px;align-items:stretch;justify-content:center;padding:10px;opacity:0;transition:opacity .2s}
 .card:hover .hl{opacity:1}
@@ -70,6 +78,7 @@ textarea:focus{border-color:rgba(232,200,122,.4)}
 .card-info{padding:8px 10px}
 .card-url{font-size:10px;font-family:'Courier New',monospace;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card-credit{font-size:10px;color:var(--muted2);margin-top:2px}
+/* MODAL */
 .mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:200;align-items:center;justify-content:center;padding:1rem}
 .mbg.on{display:flex}
 .mdl{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);width:100%;max-width:600px;max-height:92vh;overflow-y:auto;position:relative;animation:up .2s ease}
@@ -85,8 +94,8 @@ textarea:focus{border-color:rgba(232,200,122,.4)}
 .mdl-btns{display:flex;gap:8px;margin-top:1rem;flex-wrap:wrap}
 .mdl-btns .btn{flex:1;height:40px;font-size:.82rem}
 .xbtn{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.6);border:1px solid var(--border2);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:20px;line-height:1;z-index:10}
-.legend{display:flex;gap:16px;font-size:12px;color:var(--muted);margin-bottom:1.5rem;flex-wrap:wrap}
-.legend-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:5px}
+.legend{display:flex;gap:16px;font-size:12px;color:var(--muted);margin-bottom:1.5rem;flex-wrap:wrap;display:none}
+.ldot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:middle}
 footer{border-top:1px solid var(--border);padding:1.2rem 2rem;text-align:center;font-size:11px;color:var(--muted2);margin-top:2rem}
 @media(max-width:580px){.grid{grid-template-columns:repeat(2,1fr)}.mdl-btns{flex-direction:column}.exp-row{flex-direction:column}}
 </style>
@@ -95,11 +104,11 @@ footer{border-top:1px solid var(--border);padding:1.2rem 2rem;text-align:center;
 <header>
   <div class="badge">&#9889; Unsplash + IA generativa</div>
   <h1>Fotos listas para<br><em>tu web</em></h1>
-  <p class="sub">Busca en Unsplash. Si no encuentra fotos, la IA las genera automáticamente. Descarga en .PNG o .JPG real.</p>
+  <p class="sub">Busca fotos reales. Si no encuentra, la IA las crea automáticamente. Descarga en .PNG o .JPG.</p>
 </header>
 <main>
-  <div class="lbl"><span>Términos de búsqueda &#8212; uno por línea</span><span><span id="cnt">0</span>/20</span></div>
-  <textarea id="ta" placeholder="superman&#10;gato blanco&#10;puesta de sol&#10;dragón de fuego&#10;ciudad cyberpunk&#10;...hasta 20 términos"></textarea>
+  <div class="lbl"><span>Términos &#8212; uno por línea (máx. 20)</span><span><span id="cnt">0</span>/20</span></div>
+  <textarea id="ta" placeholder="superman&#10;dragon de fuego&#10;ciudad cyberpunk&#10;gato blanco&#10;puesta de sol&#10;...hasta 20 términos"></textarea>
   <div class="row">
     <button class="btn gold" id="searchBtn" onclick="startSearch()">&#128269; Buscar fotos</button>
     <button class="btn ghost" onclick="clearAll()">&#128465; Limpiar</button>
@@ -112,7 +121,7 @@ footer{border-top:1px solid var(--border);padding:1.2rem 2rem;text-align:center;
     <div class="prog-sub" id="pSub"></div>
   </div>
   <div class="exp-box" id="expBox">
-    <div class="exp-lbl">URLs encontradas &#8212; listas para usar en tu web</div>
+    <div class="exp-lbl">URLs &#8212; listas para usar en tu web</div>
     <textarea class="exp-ta" id="expTa" readonly></textarea>
     <div class="exp-row">
       <button class="btn ghost" onclick="copyUrls()">&#128203; Copiar todas las URLs</button>
@@ -120,9 +129,9 @@ footer{border-top:1px solid var(--border);padding:1.2rem 2rem;text-align:center;
       <button class="btn amber" id="btnAllJpg" onclick="dlAllFmt('jpg')">&#8595; Descargas en formato .JPG</button>
     </div>
   </div>
-  <div class="legend" id="legend" style="display:none">
-    <span><span class="legend-dot" style="background:var(--gold)"></span>Foto real de Unsplash</span>
-    <span><span class="legend-dot" style="background:var(--purple)"></span>Imagen generada por IA</span>
+  <div class="legend" id="legend">
+    <span><span class="ldot" style="background:var(--gold)"></span>Foto real Unsplash</span>
+    <span><span class="ldot" style="background:var(--purple)"></span>Creada por IA</span>
   </div>
   <div class="results" id="results"></div>
 </main>
@@ -134,14 +143,14 @@ footer{border-top:1px solid var(--border);padding:1.2rem 2rem;text-align:center;
     <div class="mdl-body">
       <div class="mdl-title" id="mTitle"></div>
       <div class="field">
-        <div class="flbl">URL directa &#8212; pégala en tu web</div>
+        <div class="flbl">URL directa</div>
         <div class="fbox">
           <span class="fmono" id="mUrl"></span>
           <button class="cbtn" id="cUrl" onclick="copyF('mUrl','cUrl')">Copiar</button>
         </div>
       </div>
       <div class="field">
-        <div class="flbl">Código HTML listo para pegar</div>
+        <div class="flbl">Código HTML</div>
         <div class="fbox">
           <span class="fmono" id="mHtml"></span>
           <button class="cbtn" id="cHtml" onclick="copyF('mHtml','cHtml')">Copiar</button>
@@ -156,19 +165,19 @@ footer{border-top:1px solid var(--border);padding:1.2rem 2rem;text-align:center;
   </div>
 </div>
 
-<footer>Buscador de Fotos &#8212; Unsplash API + Pollinations AI</footer>
+<footer>Buscador de Fotos &#8212; Unsplash + Pollinations AI</footer>
 
 <script>
-const API_KEY = '2G8xFmc1jV0VWZg4zo6VeoV5yYj5Rf5S8mtuJ9VWai8';
-const ta = document.getElementById('ta');
-ta.addEventListener('input', updateCount);
-function updateCount(){ document.getElementById('cnt').textContent = Math.min(getTerms().length,20); }
-function getTerms(){ return ta.value.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,20); }
+const API_KEY='2G8xFmc1jV0VWZg4zo6VeoV5yYj5Rf5S8mtuJ9VWai8';
+const ta=document.getElementById('ta');
+ta.addEventListener('input',updateCount);
+function updateCount(){document.getElementById('cnt').textContent=Math.min(getTerms().length,20);}
+function getTerms(){return ta.value.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,20);}
 
-let allResults=[], busy=false, curPhoto=null;
+let allResults=[],busy=false,curPhoto=null;
 
 function clearAll(){
-  ta.value=''; updateCount();
+  ta.value='';updateCount();
   document.getElementById('results').innerHTML='';
   document.getElementById('results').classList.remove('on');
   document.getElementById('expBox').classList.remove('on');
@@ -179,92 +188,158 @@ function clearAll(){
 }
 
 async function startSearch(){
-  if(busy) return;
+  if(busy)return;
   const terms=getTerms();
-  if(!terms.length){ alert('Escribe al menos un término'); return; }
-  busy=true; allResults=[];
+  if(!terms.length){alert('Escribe al menos un término');return;}
+  busy=true;allResults=[];
   const btn=document.getElementById('searchBtn');
-  btn.disabled=true; btn.textContent='Buscando...';
+  btn.disabled=true;btn.textContent='Buscando...';
   document.getElementById('expBtn').style.display='none';
   document.getElementById('expBox').classList.remove('on');
   document.getElementById('results').innerHTML='';
   document.getElementById('results').classList.add('on');
   document.getElementById('legend').style.display='none';
   document.getElementById('prog').style.display='block';
-  setProg(0,terms.length,'Iniciando...');
+  setProg(0,terms.length,'Iniciando...',false);
 
   for(let i=0;i<terms.length;i++){
-    setProg(i,terms.length,'Buscando: "'+terms[i]+'"');
-    let photos = await searchUnsplash(terms[i]);
-    let usedAI = false;
+    setProg(i,terms.length,'Buscando en Unsplash: "'+terms[i]+'"',false);
+    let photos=await searchUnsplash(terms[i]);
+    let usedAI=false;
 
-    if(photos.length === 0){
-      // No encontró en Unsplash → generar con IA
-      setProg(i,terms.length,'✨ Generando con IA: "'+terms[i]+'"');
-      photos = generateWithAI(terms[i]);
-      usedAI = true;
+    if(photos.length===0){
+      // No encontrado → crear con IA mostrando placeholders ya
+      setProg(i,terms.length,'✨ Creando con IA: "'+terms[i]+'"...',true);
+      // Renderizar el grupo con placeholders de carga inmediatamente
+      const placeholders=makePlaceholders(terms[i],6);
+      allResults.push({term:terms[i],photos:placeholders,usedAI:true});
+      renderGroup({term:terms[i],photos:placeholders,usedAI:true},i);
+      // Ahora cargar las imágenes IA una por una y reemplazar placeholders
+      photos=await loadAIImages(terms[i],i,placeholders);
+      allResults[i].photos=photos;
+      usedAI=true;
+    } else {
+      allResults.push({term:terms[i],photos,usedAI:false});
+      renderGroup({term:terms[i],photos,usedAI:false},i);
     }
 
-    allResults.push({term:terms[i], photos, usedAI});
-    renderGroup({term:terms[i], photos, usedAI}, i);
-    setProg(i+1, terms.length, (usedAI?'✨ IA: ':'✓ ')+'"'+terms[i]+'" — '+photos.length+' fotos');
+    setProg(i+1,terms.length,(usedAI?'✨ IA creada: ':'✓ Encontrada: ')+'"'+terms[i]+'"',usedAI);
   }
 
   document.getElementById('prog').style.display='none';
-  busy=false; btn.disabled=false; btn.textContent='🔍 Buscar fotos';
+  busy=false;btn.disabled=false;btn.textContent='🔍 Buscar fotos';
   document.getElementById('expBtn').style.display='flex';
   document.getElementById('legend').style.display='flex';
   buildExport();
 }
 
-function setProg(done,total,sub){
+function setProg(done,total,sub,isAI){
   const pct=total?Math.round(done/total*100):0;
   document.getElementById('pFill').style.width=pct+'%';
   document.getElementById('pPct').textContent=pct+'%';
   document.getElementById('pLbl').textContent=done+' de '+total;
-  document.getElementById('pSub').textContent=sub;
+  const subEl=document.getElementById('pSub');
+  subEl.textContent=sub;
+  subEl.className='prog-sub'+(isAI?' ai':'');
 }
 
-// Buscar en Unsplash
 async function searchUnsplash(term){
   try{
-    const url='https://api.unsplash.com/search/photos?query='+encodeURIComponent(term)+'&per_page=6&client_id='+API_KEY;
-    const r=await fetch(url);
-    if(!r.ok) throw new Error('API error');
-    const data=await r.json();
-    return (data.results||[]).map(p=>({
-      url: p.urls.regular,
-      urlFull: p.urls.full,
-      urlSmall: p.urls.small,
-      urlJpg: p.urls.full+'&fm=jpg&q=90',
-      urlPng: p.urls.full+'&fm=png',
-      title: p.alt_description || p.description || term,
-      author: p.user.name,
-      isAI: false
+    const r=await fetch('https://api.unsplash.com/search/photos?query='+encodeURIComponent(term)+'&per_page=6&client_id='+API_KEY);
+    if(!r.ok)throw new Error('error');
+    const d=await r.json();
+    return (d.results||[]).map(p=>({
+      url:p.urls.regular,urlFull:p.urls.full,urlSmall:p.urls.small,
+      urlJpg:p.urls.full+'&fm=jpg&q=90',urlPng:p.urls.full+'&fm=png',
+      title:p.alt_description||p.description||term,
+      author:p.user.name,isAI:false,loaded:true
     }));
-  }catch(e){ return []; }
+  }catch(e){return[];}
 }
 
-// Generar con IA usando Pollinations.ai (gratis, sin API key)
-function generateWithAI(term){
-  const photos=[];
-  const seeds=[1,2,3,4,5,6];
-  const w=800, h=600;
-  seeds.forEach(function(seed){
-    const prompt=encodeURIComponent(term+', high quality, detailed, professional photo');
-    const url='https://image.pollinations.ai/prompt/'+prompt+'?width='+w+'&height='+h+'&seed='+seed+'&nologo=true';
-    photos.push({
-      url: url,
-      urlFull: url,
-      urlSmall: url,
-      urlJpg: url,
-      urlPng: url,
-      title: term+' (IA) #'+seed,
-      author: 'Generado por IA',
-      isAI: true
+// Crea objetos placeholder con estado "cargando"
+function makePlaceholders(term,count){
+  const arr=[];
+  for(let i=0;i<count;i++){
+    arr.push({
+      url:'',urlFull:'',urlSmall:'',urlJpg:'',urlPng:'',
+      title:term+' (IA) '+(i+1),author:'IA generativa',
+      isAI:true,loaded:false,seed:i+1,term:term
     });
+  }
+  return arr;
+}
+
+// Carga imágenes IA y actualiza los placeholders en el DOM en tiempo real
+async function loadAIImages(term,groupIdx,placeholders){
+  const loaded=[];
+  for(let i=0;i<placeholders.length;i++){
+    const seed=i+1;
+    const prompt=encodeURIComponent(term+', high quality, detailed, photorealistic');
+    const url='https://image.pollinations.ai/prompt/'+prompt+'?width=800&height=600&seed='+seed+'&nologo=true&model=flux';
+    // Actualizar placeholder en DOM con "Creando..."
+    updateCardPlaceholder(groupIdx,i,'creating');
+    // Esperar a que la imagen cargue realmente
+    const finalUrl=await waitForAIImage(url);
+    const photo={
+      url:finalUrl,urlFull:finalUrl,urlSmall:finalUrl,
+      urlJpg:finalUrl,urlPng:finalUrl,
+      title:term+' IA #'+seed,author:'Pollinations AI',
+      isAI:true,loaded:true,seed:seed,term:term
+    };
+    loaded.push(photo);
+    // Reemplazar placeholder con imagen real en el DOM
+    updateCardWithImage(groupIdx,i,photo);
+  }
+  return loaded;
+}
+
+function waitForAIImage(url){
+  return new Promise(function(resolve){
+    const img=new Image();
+    img.crossOrigin='anonymous';
+    img.onload=function(){resolve(url);};
+    img.onerror=function(){resolve(url);}; // resolvemos igual con la url
+    img.src=url;
+    // Timeout máximo 30s
+    setTimeout(function(){resolve(url);},30000);
   });
-  return photos;
+}
+
+function updateCardPlaceholder(groupIdx,cardIdx,state){
+  const grid=document.getElementById('g'+groupIdx);
+  if(!grid)return;
+  const card=grid.children[cardIdx];
+  if(!card)return;
+  const ph=card.querySelector('.ai-placeholder-txt');
+  if(ph)ph.textContent='✨ Creando con IA...';
+}
+
+function updateCardWithImage(groupIdx,cardIdx,photo){
+  const grid=document.getElementById('g'+groupIdx);
+  if(!grid)return;
+  const card=grid.children[cardIdx];
+  if(!card)return;
+  // Reemplazar placeholder por imagen real
+  const ph=card.querySelector('.ai-placeholder');
+  if(ph){
+    const img=document.createElement('img');
+    img.className='thumb';
+    img.src=photo.url;
+    img.alt=photo.title;
+    img.loading='lazy';
+    card.replaceChild(img,ph);
+  }
+  // Actualizar data en el card
+  card.dataset.url=photo.url;
+  card.dataset.title=photo.title;
+  card.dataset.urlFull=photo.url;
+  card.dataset.urlJpg=photo.url;
+  card.dataset.urlPng=photo.url;
+  card.dataset.isAI='1';
+  // Actualizar url en footer
+  const urlEl=card.querySelector('.card-url');
+  if(urlEl)urlEl.textContent=photo.url.substring(0,60)+'...';
 }
 
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
@@ -280,170 +355,162 @@ function renderGroup({term,photos,usedAI},idx){
   wrap.className='tgroup';
   wrap.style.animationDelay=(idx*.05)+'s';
   const badge=usedAI
-    ? '<span class="tpill-ai">✨ Generado por IA</span><span class="tai">✨ IA</span>'
-    : '<span class="tpill">'+photos.length+' fotos</span><span class="tok">✓ Unsplash</span>';
-  wrap.innerHTML=
-    '<div class="thdr">'+
-      '<span class="tname">'+esc(term)+'</span>'+
-      badge+
-    '</div>'+
-    '<div class="grid" id="g'+idx+'"></div>';
+    ?'<span class="tpill-ai">✨ Creando con IA</span><span class="tai">✨ IA</span>'
+    :'<span class="tpill">'+photos.length+' fotos</span><span class="tok">✓ Unsplash</span>';
+  wrap.innerHTML='<div class="thdr"><span class="tname">'+esc(term)+'</span>'+badge+'</div><div class="grid" id="g'+idx+'"></div>';
   document.getElementById('results').appendChild(wrap);
 
   const grid=document.getElementById('g'+idx);
   photos.forEach(function(p,pi){
     const card=document.createElement('div');
-    card.className='card'+(p.isAI?' ai-card':'');
+    card.className='card'+(usedAI?' ai-card':'');
+    card.dataset.url=p.url||'';
+    card.dataset.title=p.title||term;
+    card.dataset.urlFull=p.urlFull||p.url||'';
+    card.dataset.urlJpg=p.urlJpg||p.url||'';
+    card.dataset.urlPng=p.urlPng||p.url||'';
+    card.dataset.isAI=usedAI?'1':'0';
 
-    // Para imágenes IA usamos un placeholder mientras carga
-    const imgSrc = p.isAI
-      ? 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="140"%3E%3Crect width="200" height="140" fill="%231e1e26"/%3E%3Ctext x="100" y="65" text-anchor="middle" fill="%23a78bfa" font-size="14" font-family="sans-serif"%3E✨ Generando...%3C/text%3E%3Ctext x="100" y="85" text-anchor="middle" fill="%23666" font-size="11" font-family="sans-serif"%3EImagen IA%3C/text%3E%3C/svg%3E'
-      : esc(p.urlSmall||p.url);
-
-    card.innerHTML=
-      '<img class="thumb" src="'+imgSrc+'" alt="'+esc(p.title||'')+'" loading="lazy" data-real="'+esc(p.url)+'">'+
-      (p.isAI?'<div class="ai-badge">✨ IA</div>':'')+
-      '<div class="hl">'+
-        '<button class="hb hb-gold" onclick="openModal('+idx+','+pi+')">&#128269; Ver / Copiar URL</button>'+
-        '<button class="hb hb-ghost" onclick="cardDl('+idx+','+pi+',this,\'png\')">&#8595; Descargar .PNG</button>'+
-        '<button class="hb hb-amber" onclick="cardDl('+idx+','+pi+',this,\'jpg\')">&#8595; Descargar .JPG</button>'+
-      '</div>'+
-      '<div class="card-info">'+
-        '<div class="card-url">'+esc(p.url)+'</div>'+
-        '<div class="card-credit">'+(p.isAI?'✨':'📷')+' '+esc(p.author)+'</div>'+
-      '</div>';
-
-    // Para imágenes IA, cargar la imagen real después (tarda unos segundos en generarse)
-    if(p.isAI){
-      const img=card.querySelector('img');
-      const realImg=new Image();
-      realImg.onload=function(){ img.src=p.url; };
-      realImg.src=p.url;
+    let imgHtml='';
+    if(!p.loaded){
+      // Placeholder animado mientras la IA genera
+      imgHtml='<div class="ai-placeholder"><div class="ai-spinner"></div><div class="ai-placeholder-txt">✨ Creando con IA...</div></div>';
+    }else{
+      imgHtml='<img class="thumb" src="'+esc(p.urlSmall||p.url)+'" alt="'+esc(p.title||'')+'" loading="lazy">';
     }
 
+    card.innerHTML=
+      imgHtml+
+      (usedAI?'<div class="ai-badge">✨ IA</div>':'')+
+      '<div class="hl">'+
+        '<button class="hb hb-gold" onclick="openModalCard(this)">&#128269; Ver / Copiar URL</button>'+
+        '<button class="hb hb-ghost" onclick="cardDlBtn(this,\'png\')">&#8595; Descargar .PNG</button>'+
+        '<button class="hb hb-amber" onclick="cardDlBtn(this,\'jpg\')">&#8595; Descargar .JPG</button>'+
+      '</div>'+
+      '<div class="card-info">'+
+        '<div class="card-url">'+(p.url?esc(p.url.substring(0,50))+'...':'Generando...')+'</div>'+
+        '<div class="card-credit">'+(usedAI?'✨ Pollinations AI':'📷 '+esc(p.author||''))+'</div>'+
+      '</div>';
     grid.appendChild(card);
   });
 }
 
-function getPhoto(idx,pi){ return allResults[idx].photos[pi]; }
+function getCardData(btn){
+  const card=btn.closest('.card');
+  return {
+    url:card.dataset.url,urlFull:card.dataset.urlFull,
+    urlJpg:card.dataset.urlJpg,urlPng:card.dataset.urlPng,
+    title:card.dataset.title,isAI:card.dataset.isAI==='1'
+  };
+}
 
-function openModal(idx,pi){
-  curPhoto=getPhoto(idx,pi);
-  document.getElementById('mImg').src=curPhoto.url;
-  document.getElementById('mImg').alt=curPhoto.title||'';
-  document.getElementById('mTitle').textContent=(curPhoto.isAI?'✨ IA: ':'')+( curPhoto.title||'Sin título');
-  document.getElementById('mUrl').textContent=curPhoto.urlFull||curPhoto.url;
-  document.getElementById('mHtml').textContent='<img src="'+(curPhoto.urlFull||curPhoto.url)+'" alt="'+(curPhoto.title||'')+'" style="max-width:100%;height:auto;">';
-  document.getElementById('mOpen').href=curPhoto.urlFull||curPhoto.url;
-  ['cUrl','cHtml'].forEach(id=>{
-    const b=document.getElementById(id); b.textContent='Copiar'; b.classList.remove('ok');
-  });
+function openModalCard(btn){
+  const d=getCardData(btn);
+  if(!d.url){alert('La imagen aún se está creando. Espera unos segundos.');return;}
+  curPhoto=d;
+  document.getElementById('mImg').src=d.url;
+  document.getElementById('mTitle').textContent=(d.isAI?'✨ IA: ':'')+d.title;
+  document.getElementById('mUrl').textContent=d.urlFull||d.url;
+  document.getElementById('mHtml').textContent='<img src="'+(d.urlFull||d.url)+'" alt="'+d.title+'" style="max-width:100%;height:auto;">';
+  document.getElementById('mOpen').href=d.urlFull||d.url;
+  ['cUrl','cHtml'].forEach(function(id){const b=document.getElementById(id);b.textContent='Copiar';b.classList.remove('ok');});
   document.getElementById('mbg').classList.add('on');
 }
-function closeModal(){ document.getElementById('mbg').classList.remove('on'); }
+function closeModal(){document.getElementById('mbg').classList.remove('on');}
 
 function copyF(srcId,btnId){
-  navigator.clipboard.writeText(document.getElementById(srcId).textContent).then(()=>{
-    const b=document.getElementById(btnId);
-    b.textContent='✓'; b.classList.add('ok');
-    setTimeout(()=>{ b.textContent='Copiar'; b.classList.remove('ok'); },2000);
+  navigator.clipboard.writeText(document.getElementById(srcId).textContent).then(function(){
+    const b=document.getElementById(btnId);b.textContent='✓';b.classList.add('ok');
+    setTimeout(function(){b.textContent='Copiar';b.classList.remove('ok');},2000);
   });
 }
 
-async function cardDl(idx,pi,btn,fmt){
-  const p=getPhoto(idx,pi);
+async function cardDlBtn(btn,fmt){
+  const d=getCardData(btn);
+  if(!d.url){alert('La imagen aún se está creando. Espera unos segundos.');return;}
   const orig=btn.textContent;
-  btn.disabled=true; btn.textContent='...';
-  await doDownload(p,fmt);
-  btn.textContent=orig; btn.disabled=false;
+  btn.disabled=true;btn.textContent='...';
+  await doDownload(d,fmt);
+  btn.textContent=orig;btn.disabled=false;
 }
 
 async function dlModal(fmt){
-  if(!curPhoto) return;
+  if(!curPhoto||!curPhoto.url)return;
   const btnId=fmt==='png'?'mPng':'mJpg';
   const btn=document.getElementById(btnId);
   const orig=btn.textContent;
-  btn.disabled=true; btn.textContent='Descargando...';
+  btn.disabled=true;btn.textContent='Descargando...';
   await doDownload(curPhoto,fmt);
-  btn.textContent=orig; btn.disabled=false;
+  btn.textContent=orig;btn.disabled=false;
 }
 
 async function dlAllFmt(fmt){
   const btnId=fmt==='png'?'btnAllPng':'btnAllJpg';
+  const otherId=fmt==='png'?'btnAllJpg':'btnAllPng';
   const btn=document.getElementById(btnId);
-  const other=document.getElementById(fmt==='png'?'btnAllJpg':'btnAllPng');
+  const other=document.getElementById(otherId);
   const orig=btn.textContent;
-  btn.disabled=true; other.disabled=true;
+  btn.disabled=true;other.disabled=true;
   let total=0;
-  allResults.forEach(r=>total+=r.photos.length);
+  allResults.forEach(function(r){total+=r.photos.length;});
   let done=0;
   for(const r of allResults){
     for(const p of r.photos){
       done++;
       btn.textContent='Descargando '+done+' de '+total+'...';
-      await doDownload(p,fmt);
-      await new Promise(res=>setTimeout(res,600));
+      if(p.url) await doDownload(p,fmt);
+      await new Promise(function(res){setTimeout(res,600);});
     }
   }
-  btn.textContent=orig; btn.disabled=false; other.disabled=false;
-  alert('✅ '+total+' fotos descargadas en .'+fmt.toUpperCase());
+  btn.textContent=orig;btn.disabled=false;other.disabled=false;
+  alert('✅ '+done+' fotos descargadas en .'+fmt.toUpperCase());
 }
 
 async function doDownload(photo,fmt){
   const ext=fmt==='png'?'png':'jpg';
   const mime=fmt==='png'?'image/png':'image/jpeg';
   const name=safeName(photo.title)+'.'+ext;
-  const srcUrl=fmt==='png'?photo.urlPng:photo.urlJpg;
-
+  const srcUrl=fmt==='png'?(photo.urlPng||photo.url):(photo.urlJpg||photo.url);
   try{
     const r=await fetch(srcUrl);
-    if(!r.ok) throw new Error('fetch error');
+    if(!r.ok)throw new Error('fetch error');
     const blob=await r.blob();
     const bmp=await createImageBitmap(blob);
     const canvas=document.createElement('canvas');
-    canvas.width=bmp.width; canvas.height=bmp.height;
+    canvas.width=bmp.width;canvas.height=bmp.height;
     const ctx=canvas.getContext('2d');
-    if(fmt==='jpg'){ ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,bmp.width,bmp.height); }
+    if(fmt==='jpg'){ctx.fillStyle='#ffffff';ctx.fillRect(0,0,bmp.width,bmp.height);}
     ctx.drawImage(bmp,0,0);
     canvas.toBlob(function(outBlob){
       const u=URL.createObjectURL(outBlob);
       const a=document.createElement('a');
-      a.href=u; a.download=name;
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      setTimeout(()=>URL.revokeObjectURL(u),3000);
+      a.href=u;a.download=name;
+      document.body.appendChild(a);a.click();document.body.removeChild(a);
+      setTimeout(function(){URL.revokeObjectURL(u);},3000);
     },mime,0.95);
   }catch(e){
     const a=document.createElement('a');
-    a.href=srcUrl; a.download=name; a.target='_blank';
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    a.href=srcUrl;a.download=name;a.target='_blank';
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
   }
 }
 
 function buildExport(){
   const lines=[];
-  const html=['<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Mis Fotos</title>',
-    '<style>body{font-family:sans-serif;max-width:1200px;margin:0 auto;padding:2rem}h2{margin:2rem 0 .8rem;border-bottom:2px solid #eee;padding-bottom:.5rem}.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}.g img{width:100%;height:170px;object-fit:cover;border-radius:8px;display:block}</style></head><body>'];
-  allResults.forEach(r=>{
+  allResults.forEach(function(r){
     lines.push('\n=== '+r.term+(r.usedAI?' [IA]':'')+' ===');
-    html.push('<h2>'+esc(r.term)+(r.usedAI?' ✨':' 📷')+'</h2><div class="g">');
-    r.photos.forEach(p=>{
-      lines.push(p.urlFull||p.url);
-      html.push('<img src="'+esc(p.urlFull||p.url)+'" alt="'+esc(p.title)+'" loading="lazy">');
-    });
-    html.push('</div>');
+    r.photos.forEach(function(p){if(p.url)lines.push(p.urlFull||p.url);});
   });
-  html.push('</body></html>');
   document.getElementById('expTa').value=lines.join('\n');
-  window._html=html.join('\n');
 }
 
 function toggleExp(){
   const b=document.getElementById('expBox');
   b.classList.toggle('on');
-  if(b.classList.contains('on')) b.scrollIntoView({behavior:'smooth',block:'start'});
+  if(b.classList.contains('on'))b.scrollIntoView({behavior:'smooth',block:'start'});
 }
 function copyUrls(){
-  navigator.clipboard.writeText(document.getElementById('expTa').value).then(()=>alert('¡URLs copiadas!'));
+  navigator.clipboard.writeText(document.getElementById('expTa').value).then(function(){alert('¡URLs copiadas!');});
 }
 
 updateCount();
