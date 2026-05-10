@@ -8,7 +8,7 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0d0d0f;--bg2:#16161b;--bg3:#1e1e26;--bg4:#25252f;
+  --bg:#0d0d0f;--bg2:#16161b;--bg3:#1e1e26;
   --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.14);
   --accent:#e8c87a;--accent2:#c4a45a;
   --text:#f0ede8;--muted:#7a7880;--muted2:#3e3d4a;
@@ -17,125 +17,96 @@
 }
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;font-weight:300;min-height:100vh;line-height:1.6}
-
-/* HEADER */
 header{padding:2.5rem 2rem 2rem;text-align:center;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
 header::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:700px;height:350px;background:radial-gradient(ellipse,rgba(232,200,122,0.06) 0%,transparent 70%);pointer-events:none}
 .badge{display:inline-flex;align-items:center;gap:6px;background:rgba(232,200,122,0.09);border:1px solid rgba(232,200,122,0.22);border-radius:100px;padding:4px 14px;font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem}
 h1{font-family:'Playfair Display',Georgia,serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:700;line-height:1.1;letter-spacing:-.02em;margin-bottom:.5rem}
 h1 em{font-style:italic;color:var(--accent)}
 .subtitle{font-size:.9rem;color:var(--muted);max-width:460px;margin:0 auto}
-
-/* MAIN */
 main{max-width:900px;margin:0 auto;padding:2rem}
-
-/* TEXTAREA */
 .input-section{margin-bottom:1.5rem}
 .input-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
-.term-count{font-size:11px;color:var(--muted2)}
 .term-count span{color:var(--accent)}
 textarea{width:100%;height:180px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;font-family:'DM Sans',system-ui,sans-serif;font-size:.88rem;font-weight:300;color:var(--text);outline:none;resize:vertical;line-height:1.7;transition:border-color .2s,box-shadow .2s}
 textarea::placeholder{color:var(--muted2)}
 textarea:focus{border-color:rgba(232,200,122,.35);box-shadow:0 0 0 3px rgba(232,200,122,.05)}
-
-/* CONTROLS */
 .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:2rem}
-.btn{height:44px;padding:0 22px;border-radius:var(--r);font-family:'DM Sans',system-ui,sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;text-decoration:none}
-.btn svg{width:15px;height:15px;flex-shrink:0}
-.btn-primary{background:var(--accent);color:#0d0d0f;border:none}
+.btn{height:44px;padding:0 22px;border-radius:var(--r);font-family:'DM Sans',system-ui,sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;text-decoration:none;border:none}
+.btn-primary{background:var(--accent);color:#0d0d0f}
 .btn-primary:hover{background:#f0d48c}
 .btn-primary:active{transform:scale(.98)}
 .btn-primary:disabled{background:var(--muted2);cursor:not-allowed;transform:none}
 .btn-secondary{background:transparent;color:var(--text);border:1px solid var(--border2)}
 .btn-secondary:hover{background:var(--bg3);border-color:var(--text)}
-.btn-danger{background:transparent;color:var(--red);border:1px solid rgba(224,112,112,.3)}
-.btn-danger:hover{background:rgba(224,112,112,.08)}
+.btn-jpeg{background:var(--accent2);color:#0d0d0f}
+.btn-jpeg:hover{background:#d4b46a}
 .spacer{flex:1}
-
-/* PROGRESS */
 .progress-wrap{display:none;margin-bottom:1.5rem}
 .progress-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px}
 .progress-bar{height:3px;background:var(--bg3);border-radius:100px;overflow:hidden}
 .progress-fill{height:100%;background:var(--accent);border-radius:100px;transition:width .4s ease;width:0%}
 .progress-status{font-size:12px;color:var(--muted);margin-top:6px}
-
-/* EXPORT BAR */
-.export-bar{display:none;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:12px 16px;margin-bottom:1.5rem;display:none;align-items:center;gap:12px;flex-wrap:wrap}
-.export-bar.visible{display:flex}
-.export-info{font-size:13px;color:var(--text);flex:1}
-.export-info span{color:var(--accent);font-weight:500}
-
-/* RESULTS */
+.export-panel{display:none;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);padding:1.5rem;margin-bottom:2rem}
+.export-panel.visible{display:block}
+.export-title{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:1rem}
+.export-textarea{width:100%;height:200px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px;font-family:'Courier New',monospace;font-size:11px;color:var(--muted);resize:vertical;outline:none;line-height:1.6}
+.export-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .results-section{display:none}
 .results-section.visible{display:block}
-
 .term-group{margin-bottom:2.5rem;animation:fadeUp .4s ease both}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-
 .term-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border)}
 .term-name{font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:1.1rem;color:var(--text)}
 .term-badge{font-size:11px;color:var(--muted);background:var(--bg3);border:1px solid var(--border);border-radius:100px;padding:3px 10px}
 .term-status-ok{color:var(--green);font-size:11px}
 .term-status-err{color:var(--red);font-size:11px}
-
 .photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
-
 .photo-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;cursor:pointer;transition:border-color .2s,transform .2s;position:relative}
 .photo-card:hover{border-color:var(--border2);transform:translateY(-2px)}
-.photo-card.selected{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
-
 .photo-thumb{width:100%;height:130px;object-fit:cover;display:block;background:var(--bg3)}
-.photo-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(13,13,15,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;opacity:0;transition:opacity .2s}
+.photo-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(13,13,15,.8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;opacity:0;transition:opacity .2s;padding:8px}
 .photo-card:hover .photo-overlay{opacity:1}
-.overlay-btn{background:var(--accent);color:#0d0d0f;border:none;border-radius:6px;padding:5px 14px;font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',system-ui,sans-serif}
-.overlay-btn.sec{background:var(--bg2);color:var(--text);border:1px solid var(--border2)}
+.overlay-btn{background:var(--accent);color:#0d0d0f;border:none;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:500;cursor:pointer;font-family:'DM Sans',system-ui,sans-serif;width:100%;transition:background .15s}
+.overlay-btn:hover{background:#f0d48c}
+.overlay-btn.jpeg{background:var(--accent2)}
+.overlay-btn.jpeg:hover{background:#d4b46a}
+.overlay-btn.sec{background:var(--bg3);color:var(--text);border:1px solid var(--border2)}
+.overlay-btn.sec:hover{background:var(--bg2)}
 .photo-info{padding:8px 10px}
 .photo-url{font-size:10px;font-family:'Courier New',monospace;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-/* DETAIL MODAL */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100;align-items:center;justify-content:center;padding:1rem}
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;align-items:center;justify-content:center;padding:1rem}
 .modal-bg.open{display:flex}
-.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);width:100%;max-width:600px;max-height:90vh;overflow-y:auto;animation:fadeUp .25s ease}
-.modal-img{width:100%;max-height:320px;object-fit:cover;display:block}
-.modal-body{padding:1.5rem}
-.modal-title{font-family:'Playfair Display',Georgia,serif;font-size:1.2rem;margin-bottom:1.2rem;color:var(--text)}
-.field{margin-bottom:1rem}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);width:100%;max-width:580px;max-height:90vh;overflow-y:auto;animation:fadeUp .25s ease;position:relative}
+.modal-img{width:100%;max-height:300px;object-fit:cover;display:block}
+.modal-body{padding:1.4rem}
+.modal-title{font-family:'Playfair Display',Georgia,serif;font-size:1.1rem;margin-bottom:1rem;color:var(--text)}
+.field{margin-bottom:.9rem}
 .field-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px}
 .field-box{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px}
 .field-mono{font-family:'Courier New',monospace;font-size:11px;color:var(--muted);word-break:break-all;flex:1;line-height:1.4}
 .copy-btn{background:var(--bg2);border:1px solid var(--border2);border-radius:6px;padding:4px 12px;font-size:11px;font-weight:500;color:var(--text);cursor:pointer;white-space:nowrap;transition:all .15s;font-family:'DM Sans',system-ui,sans-serif;flex-shrink:0}
 .copy-btn:hover{border-color:var(--accent2)}
 .copy-btn.ok{border-color:var(--green);color:var(--green)}
-.modal-close{position:absolute;top:12px;right:12px;background:var(--bg3);border:1px solid var(--border2);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:18px;line-height:1}
-.modal-wrap{position:relative}
-
-/* EXPORT PANEL */
-.export-panel{display:none;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);padding:1.5rem;margin-bottom:2rem}
-.export-panel.visible{display:block}
-.export-title{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:1rem}
-.export-textarea{width:100%;height:200px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px;font-family:'Courier New',monospace;font-size:11px;color:var(--muted);resize:vertical;outline:none;line-height:1.6}
-.export-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-
-/* EMPTY */
-.empty{text-align:center;padding:3rem 1rem;color:var(--muted)}
-.empty svg{width:40px;height:40px;margin:0 auto 1rem;opacity:.3}
-
+.modal-dl-row{display:flex;gap:8px;margin-top:1rem;flex-wrap:wrap}
+.modal-dl-row .btn{flex:1;justify-content:center;height:40px;font-size:.82rem}
+.modal-close{position:absolute;top:10px;right:10px;background:var(--bg3);border:1px solid var(--border2);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:18px;line-height:1;z-index:10}
 footer{border-top:1px solid var(--border);padding:1.2rem 2rem;text-align:center;font-size:11px;color:var(--muted2);margin-top:2rem}
 footer span{color:var(--accent2)}
-
 @media(max-width:600px){
   .controls{flex-direction:column;align-items:stretch}
   .btn{justify-content:center}
   .photo-grid{grid-template-columns:repeat(2,1fr)}
+  .modal-dl-row{flex-direction:column}
 }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="badge">⚡ Búsqueda múltiple con IA</div>
+  <div class="badge">⚡ Búsqueda múltiple — descarga PNG &amp; JPEG</div>
   <h1>Fotos listas para<br><em>tu web</em></h1>
-  <p class="subtitle">Escribe hasta 20 términos (uno por línea) y obtén las fotos con URLs directas al instante.</p>
+  <p class="subtitle">Escribe hasta 20 términos (uno por línea), encuentra las fotos y descárgalas en PNG o JPEG al instante.</p>
 </header>
 
 <main>
@@ -148,19 +119,10 @@ footer span{color:var(--accent2)}
   </div>
 
   <div class="controls">
-    <button class="btn btn-primary" id="searchBtn" onclick="startSearch()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      Buscar fotos
-    </button>
-    <button class="btn btn-secondary" onclick="clearAll()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6l-1 14H6L5 6M10 11v6M14 11v6M8 6V4h8v2"/></svg>
-      Limpiar
-    </button>
+    <button class="btn btn-primary" id="searchBtn" onclick="startSearch()">&#128269; Buscar fotos</button>
+    <button class="btn btn-secondary" onclick="clearAll()">&#128465; Limpiar</button>
     <div class="spacer"></div>
-    <button class="btn btn-secondary" id="exportBtn" onclick="toggleExport()" style="display:none">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Exportar todas las URLs
-    </button>
+    <button class="btn btn-secondary" id="exportBtn" onclick="toggleExport()" style="display:none">&#8595; Exportar URLs</button>
   </div>
 
   <div class="progress-wrap" id="progressWrap">
@@ -176,18 +138,9 @@ footer span{color:var(--accent2)}
     <div class="export-title">Todas las URLs encontradas</div>
     <textarea class="export-textarea" id="exportText" readonly></textarea>
     <div class="export-actions">
-      <button class="btn btn-primary" onclick="copyExport()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        Copiar todo
-      </button>
-      <button class="btn btn-secondary" onclick="downloadExport()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Descargar .txt
-      </button>
-      <button class="btn btn-secondary" onclick="downloadHtml()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-        Descargar HTML
-      </button>
+      <button class="btn btn-primary" onclick="copyExport()">Copiar todo</button>
+      <button class="btn btn-secondary" onclick="downloadExport()">Descargar .txt</button>
+      <button class="btn btn-secondary" onclick="downloadHtml()">Descargar HTML</button>
     </div>
   </div>
 
@@ -195,58 +148,49 @@ footer span{color:var(--accent2)}
 </main>
 
 <!-- MODAL -->
-<div class="modal-bg" id="modalBg" onclick="closeModal(event)">
-  <div class="modal-wrap">
-    <div class="modal" id="modal">
-      <img class="modal-img" id="modalImg" src="" alt=""/>
-      <div class="modal-body">
-        <div class="modal-title" id="modalTitle"></div>
-        <div class="field">
-          <div class="field-label">URL directa de la imagen</div>
-          <div class="field-box">
-            <span class="field-mono" id="modalUrl"></span>
-            <button class="copy-btn" id="btnUrl" onclick="copyField('modalUrl','btnUrl')">Copiar</button>
-          </div>
-        </div>
-        <div class="field">
-          <div class="field-label">Tag HTML listo para pegar</div>
-          <div class="field-box">
-            <span class="field-mono" id="modalHtml"></span>
-            <button class="copy-btn" id="btnHtml" onclick="copyField('modalHtml','btnHtml')">Copiar</button>
-          </div>
-        </div>
-        <div style="display:flex;gap:8px;margin-top:1rem;flex-wrap:wrap">
-          <button class="btn btn-primary" id="modalDownloadBtn" onclick="downloadAsPng()" style="flex:1;justify-content:center">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            ⬇ Descargar PNG
-          </button>
-          <a class="btn btn-secondary" id="modalOpen" href="#" target="_blank" style="flex:1;justify-content:center">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            Ver original
-          </a>
+<div class="modal-bg" id="modalBg" onclick="closeModalBg(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="document.getElementById('modalBg').classList.remove('open')">&#215;</button>
+    <img class="modal-img" id="modalImg" src="" alt=""/>
+    <div class="modal-body">
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="field">
+        <div class="field-label">URL directa de la imagen</div>
+        <div class="field-box">
+          <span class="field-mono" id="modalUrl"></span>
+          <button class="copy-btn" id="btnUrl" onclick="copyField('modalUrl','btnUrl')">Copiar</button>
         </div>
       </div>
+      <div class="field">
+        <div class="field-label">Tag HTML listo para pegar</div>
+        <div class="field-box">
+          <span class="field-mono" id="modalHtml"></span>
+          <button class="copy-btn" id="btnHtml" onclick="copyField('modalHtml','btnHtml')">Copiar</button>
+        </div>
+      </div>
+      <div class="modal-dl-row">
+        <button class="btn btn-primary" id="modalBtnPng" onclick="downloadImg('png')">&#8595; Descargar PNG</button>
+        <button class="btn btn-jpeg" id="modalBtnJpg" onclick="downloadImg('jpeg')">&#8595; Descargar JPEG</button>
+        <a class="btn btn-secondary" id="modalOpen" href="#" target="_blank">Ver original</a>
+      </div>
     </div>
-    <button class="modal-close" onclick="document.getElementById('modalBg').classList.remove('open')">×</button>
   </div>
 </div>
 
-<footer>Buscador de Fotos IA — URLs reales listas para tu web — Hecho con <span>♥</span> y Claude</footer>
+<footer>Buscador de Fotos IA &mdash; URLs reales listas para tu web &mdash; Hecho con <span>&#9829;</span> y Claude</footer>
 
 <script>
-// Contador de términos
 const termsInput = document.getElementById('termsInput');
 termsInput.addEventListener('input', updateCount);
+
 function updateCount() {
-  const terms = getTerms();
-  document.getElementById('termCount').textContent = Math.min(terms.length, 20);
+  document.getElementById('termCount').textContent = Math.min(getTerms().length, 20);
 }
 function getTerms() {
-  return termsInput.value.split('\n').map(t => t.trim()).filter(t => t.length > 0).slice(0, 20);
+  return termsInput.value.split('\n').map(t => t.trim()).filter(Boolean).slice(0, 20);
 }
 
-// Estado global
-let allResults = []; // [{term, photos:[{url,title}]}]
+let allResults = [];
 let isSearching = false;
 
 function clearAll() {
@@ -264,33 +208,30 @@ async function startSearch() {
   if (isSearching) return;
   const terms = getTerms();
   if (!terms.length) { alert('Escribe al menos un término de búsqueda'); return; }
-
   isSearching = true;
   allResults = [];
-  document.getElementById('searchBtn').disabled = true;
-  document.getElementById('searchBtn').textContent = 'Buscando...';
+  const btn = document.getElementById('searchBtn');
+  btn.disabled = true;
+  btn.textContent = 'Buscando...';
   document.getElementById('exportBtn').style.display = 'none';
   document.getElementById('exportPanel').classList.remove('visible');
   document.getElementById('resultsSection').innerHTML = '';
   document.getElementById('resultsSection').classList.add('visible');
-
-  const pw = document.getElementById('progressWrap');
-  pw.style.display = 'block';
-  setProgress(0, terms.length, 'Iniciando búsqueda...');
+  document.getElementById('progressWrap').style.display = 'block';
+  setProgress(0, terms.length, 'Iniciando...');
 
   for (let i = 0; i < terms.length; i++) {
-    const term = terms[i];
-    setProgress(i, terms.length, `Buscando: "${term}"`);
-    const photos = await searchTerm(term);
-    allResults.push({ term, photos });
-    renderTermGroup({ term, photos }, i);
-    setProgress(i + 1, terms.length, `✓ "${term}" — ${photos.length} fotos encontradas`);
+    setProgress(i, terms.length, 'Buscando: "' + terms[i] + '"');
+    const photos = await searchTerm(terms[i]);
+    allResults.push({ term: terms[i], photos });
+    renderTermGroup({ term: terms[i], photos }, i);
+    setProgress(i + 1, terms.length, '✓ "' + terms[i] + '" — ' + photos.length + ' fotos');
   }
 
-  pw.style.display = 'none';
+  document.getElementById('progressWrap').style.display = 'none';
   isSearching = false;
-  document.getElementById('searchBtn').disabled = false;
-  document.getElementById('searchBtn').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Buscar fotos`;
+  btn.disabled = false;
+  btn.textContent = '🔍 Buscar fotos';
   document.getElementById('exportBtn').style.display = 'flex';
   buildExport();
 }
@@ -299,133 +240,65 @@ function setProgress(done, total, status) {
   const pct = total > 0 ? Math.round((done / total) * 100) : 0;
   document.getElementById('progressFill').style.width = pct + '%';
   document.getElementById('progressPct').textContent = pct + '%';
-  document.getElementById('progressLabel').textContent = `${done} de ${total} términos`;
+  document.getElementById('progressLabel').textContent = done + ' de ' + total + ' términos';
   document.getElementById('progressStatus').textContent = status;
 }
 
 async function searchTerm(term) {
-  // Usamos Unsplash Source API — devuelve imágenes reales directamente
-  // Generamos múltiples URLs de Unsplash para el término
   const photos = [];
-  const keywords = encodeURIComponent(term);
-  
-  // Unsplash Source genera imágenes reales por keyword con seed diferente
-  const seeds = ['alpha','beta','gamma','delta','epsilon','zeta'];
+  const kw = encodeURIComponent(term);
   for (let i = 0; i < 6; i++) {
-    const w = 800, h = 600;
-    const url = `https://source.unsplash.com/random/${w}x${h}?${keywords}&sig=${Date.now()}_${i}`;
-    // Resolvemos la URL real (unsplash redirige)
+    const url = 'https://source.unsplash.com/random/800x600?' + kw + '&sig=' + Date.now() + '_' + i;
     try {
-      const resolved = await resolveUnsplashUrl(url, term, i);
-      if (resolved) photos.push(resolved);
-    } catch(e) {}
-  }
-
-  // Si unsplash falla, intentamos con Picsum para tener algo
-  if (photos.length === 0) {
-    for (let i = 1; i <= 4; i++) {
-      photos.push({
-        url: `https://picsum.photos/seed/${encodeURIComponent(term)}_${i}/800/600`,
-        title: `${term} — foto ${i}`
-      });
+      const r = await fetch(url, { method: 'HEAD', redirect: 'follow' });
+      const finalUrl = r.url;
+      if (finalUrl && finalUrl.includes('unsplash.com')) {
+        photos.push({ url: finalUrl, title: term + ' — foto ' + (i + 1) });
+      } else {
+        photos.push({ url: url, title: term + ' — foto ' + (i + 1) });
+      }
+    } catch(e) {
+      photos.push({ url: url, title: term + ' — foto ' + (i + 1) });
     }
   }
-
   return photos;
 }
 
-async function resolveUnsplashUrl(url, term, idx) {
-  try {
-    // Hacemos fetch con redirect manual para obtener la URL real de la imagen
-    const resp = await fetch(url, { method: 'HEAD', redirect: 'follow' });
-    const finalUrl = resp.url;
-    // Verificamos que sea una imagen real de unsplash (images.unsplash.com)
-    if (finalUrl && finalUrl.includes('images.unsplash.com')) {
-      return { url: finalUrl, title: `${term} — foto ${idx + 1}` };
-    }
-    // Si no, devolvemos la URL original que igual funciona como src
-    return { url, title: `${term} — foto ${idx + 1}` };
-  } catch(e) {
-    return { url, title: `${term} — foto ${idx + 1}` };
-  }
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 function renderTermGroup({ term, photos }, idx) {
   const section = document.getElementById('resultsSection');
   const group = document.createElement('div');
   group.className = 'term-group';
-  group.style.animationDelay = `${idx * 0.05}s`;
-
-  const hasPhotos = photos.length > 0;
-  group.innerHTML = `
-    <div class="term-header">
-      <span class="term-name">${escHtml(term)}</span>
-      <span class="term-badge">${photos.length} fotos</span>
-      <span class="${hasPhotos ? 'term-status-ok' : 'term-status-err'}">${hasPhotos ? '✓ OK' : '✗ Sin resultados'}</span>
-    </div>
-    <div class="photo-grid" id="grid_${idx}"></div>
-  `;
+  group.style.animationDelay = (idx * 0.05) + 's';
+  const ok = photos.length > 0;
+  group.innerHTML =
+    '<div class="term-header">' +
+      '<span class="term-name">' + esc(term) + '</span>' +
+      '<span class="term-badge">' + photos.length + ' fotos</span>' +
+      '<span class="' + (ok ? 'term-status-ok' : 'term-status-err') + '">' + (ok ? '✓ OK' : '✗ Sin resultados') + '</span>' +
+    '</div>' +
+    '<div class="photo-grid" id="grid_' + idx + '"></div>';
   section.appendChild(group);
 
   const grid = group.querySelector('.photo-grid');
-  photos.forEach((photo, pi) => {
+  photos.forEach(function(photo, pi) {
     const card = document.createElement('div');
     card.className = 'photo-card';
-    card.innerHTML = `
-      <img class="photo-thumb" src="${escHtml(photo.url)}" alt="${escHtml(photo.title)}" loading="lazy" onerror="this.parentElement.style.display='none'"/>
-      <div class="photo-overlay">
-        <button class="overlay-btn" onclick="openModal(${JSON.stringify(photo.url).replace(/"/g,'&quot;')}, ${JSON.stringify(photo.title).replace(/"/g,'&quot;')})">Ver detalles</button>
-        <button class="overlay-btn sec" onclick="downloadCardPng(${JSON.stringify(photo.url).replace(/"/g,'&quot;')}, ${JSON.stringify(photo.title).replace(/"/g,'&quot;')}, this)">⬇ PNG</button>
-      </div>
-      <div class="photo-info">
-        <div class="photo-url">${escHtml(photo.url)}</div>
-      </div>
-    `;
+    const urlQ = JSON.stringify(photo.url);
+    const titleQ = JSON.stringify(photo.title);
+    card.innerHTML =
+      '<img class="photo-thumb" src="' + esc(photo.url) + '" alt="' + esc(photo.title) + '" loading="lazy" onerror="this.parentElement.style.display=\'none\'">' +
+      '<div class="photo-overlay">' +
+        '<button class="overlay-btn" onclick=\'openModal(' + urlQ + ',' + titleQ + ')\'>Ver detalles</button>' +
+        '<button class="overlay-btn jpeg" onclick=\'cardDownload(' + urlQ + ',' + titleQ + ',this,"jpeg")\'>⬇ JPEG</button>' +
+        '<button class="overlay-btn sec" onclick=\'cardDownload(' + urlQ + ',' + titleQ + ',this,"png")\'>⬇ PNG</button>' +
+      '</div>' +
+      '<div class="photo-info"><div class="photo-url">' + esc(photo.url) + '</div></div>';
     grid.appendChild(card);
   });
-}
-
-function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function quickCopy(url, btn) {
-  navigator.clipboard.writeText(url).then(() => {
-    const orig = btn.textContent;
-    btn.textContent = '✓ Copiado';
-    setTimeout(() => btn.textContent = orig, 1500);
-  });
-}
-
-function downloadCardPng(url, title, btn) {
-  const orig = btn.textContent;
-  btn.textContent = '...';
-  btn.disabled = true;
-  const img = new Image();
-  img.crossOrigin = 'anonymous';
-  img.onload = () => {
-    const canvas = document.createElement('canvas');
-    canvas.width = img.naturalWidth || 800;
-    canvas.height = img.naturalHeight || 600;
-    canvas.getContext('2d').drawImage(img, 0, 0);
-    canvas.toBlob(blob => {
-      const a = document.createElement('a');
-      const safeName = (title||'foto').replace(/[^a-z0-9áéíóúñ\s]/gi,'').trim().replace(/\s+/g,'-').toLowerCase();
-      a.download = `${safeName || 'foto'}.png`;
-      a.href = URL.createObjectURL(blob);
-      a.click();
-      URL.revokeObjectURL(a.href);
-      btn.textContent = '✓';
-      btn.disabled = false;
-      setTimeout(() => btn.textContent = orig, 2000);
-    }, 'image/png');
-  };
-  img.onerror = () => {
-    window.open(url, '_blank');
-    btn.textContent = orig;
-    btn.disabled = false;
-  };
-  img.src = url;
 }
 
 function openModal(url, title) {
@@ -433,131 +306,154 @@ function openModal(url, title) {
   document.getElementById('modalImg').alt = title;
   document.getElementById('modalTitle').textContent = title;
   document.getElementById('modalUrl').textContent = url;
-  document.getElementById('modalHtml').textContent = `<img src="${url}" alt="${title}" style="max-width:100%;height:auto;">`;
+  document.getElementById('modalHtml').textContent = '<img src="' + url + '" alt="' + title + '" style="max-width:100%;height:auto;">';
   document.getElementById('modalOpen').href = url;
   document.getElementById('btnUrl').textContent = 'Copiar';
   document.getElementById('btnUrl').classList.remove('ok');
   document.getElementById('btnHtml').textContent = 'Copiar';
   document.getElementById('btnHtml').classList.remove('ok');
-  // Guardar url actual para descarga PNG
-  window._currentImgUrl = url;
-  window._currentImgTitle = title;
+  window._modalUrl = url;
+  window._modalTitle = title;
   document.getElementById('modalBg').classList.add('open');
 }
 
-async function downloadAsPng() {
-  const url = window._currentImgUrl;
-  const title = window._currentImgTitle || 'foto';
-  const btn = document.getElementById('modalDownloadBtn');
-  btn.textContent = 'Descargando...';
-  btn.disabled = true;
-
-  try {
-    // Cargar imagen en canvas y exportar como PNG
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = img.naturalWidth || img.width;
-      canvas.height = img.naturalHeight || img.height;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0);
-      canvas.toBlob(blob => {
-        const a = document.createElement('a');
-        const safeName = title.replace(/[^a-z0-9áéíóúñ\s]/gi,'').trim().replace(/\s+/g,'-').toLowerCase();
-        a.download = `${safeName || 'foto'}.png`;
-        a.href = URL.createObjectURL(blob);
-        a.click();
-        URL.revokeObjectURL(a.href);
-        btn.textContent = '✓ Descargado';
-        setTimeout(() => { btn.textContent = '⬇ Descargar PNG'; btn.disabled = false; }, 2000);
-      }, 'image/png');
-    };
-    img.onerror = () => {
-      // Si CORS bloquea, abrir directamente
-      window.open(url, '_blank');
-      btn.textContent = '⬇ Descargar PNG';
-      btn.disabled = false;
-    };
-    img.src = url;
-  } catch(e) {
-    window.open(url, '_blank');
-    btn.textContent = '⬇ Descargar PNG';
-    btn.disabled = false;
-  }
-}
-
-function closeModal(e) {
+function closeModalBg(e) {
   if (e.target === document.getElementById('modalBg')) {
     document.getElementById('modalBg').classList.remove('open');
   }
 }
 
-function copyField(id, btnId) {
-  const text = document.getElementById(id).textContent;
+function copyField(srcId, btnId) {
+  const text = document.getElementById(srcId).textContent;
   const btn = document.getElementById(btnId);
-  navigator.clipboard.writeText(text).then(() => {
-    btn.textContent = '✓';
-    btn.classList.add('ok');
-    setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('ok'); }, 2000);
+  navigator.clipboard.writeText(text).then(function() {
+    btn.textContent = '✓'; btn.classList.add('ok');
+    setTimeout(function() { btn.textContent = 'Copiar'; btn.classList.remove('ok'); }, 2000);
   });
 }
 
-function buildExport() {
-  let urlLines = [];
-  let htmlLines = ['<!DOCTYPE html>','<html lang="es">','<head><meta charset="UTF-8"><title>Fotos</title>',
-    '<style>body{font-family:sans-serif;max-width:1200px;margin:0 auto;padding:2rem}',
-    '.section{margin-bottom:3rem}h2{margin-bottom:1rem;border-bottom:2px solid #eee;padding-bottom:.5rem}',
-    '.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}',
-    '.grid img{width:100%;height:160px;object-fit:cover;border-radius:8px;display:block}</style>',
-    '</head><body>'];
+async function downloadImg(format) {
+  const url = window._modalUrl;
+  const title = window._modalTitle || 'foto';
+  const btnId = format === 'png' ? 'modalBtnPng' : 'modalBtnJpg';
+  const btn = document.getElementById(btnId);
+  const orig = btn.textContent;
+  btn.textContent = 'Descargando...';
+  btn.disabled = true;
+  await doDownload(url, title, format);
+  btn.textContent = orig;
+  btn.disabled = false;
+}
 
-  for (const { term, photos } of allResults) {
-    urlLines.push(`\n=== ${term} ===`);
-    htmlLines.push(`<div class="section"><h2>${escHtml(term)}</h2><div class="grid">`);
-    for (const p of photos) {
-      urlLines.push(p.url);
-      htmlLines.push(`  <img src="${escHtml(p.url)}" alt="${escHtml(p.title)}" loading="lazy">`);
+async function cardDownload(url, title, btn, format) {
+  const orig = btn.textContent;
+  btn.textContent = '...';
+  btn.disabled = true;
+  await doDownload(url, title, format);
+  btn.textContent = orig;
+  btn.disabled = false;
+}
+
+async function doDownload(url, title, format) {
+  const ext = format === 'jpeg' ? 'jpg' : 'png';
+  const mime = format === 'jpeg' ? 'image/jpeg' : 'image/png';
+  const safeName = (title || 'foto').replace(/[^a-z0-9\s]/gi, '').trim().replace(/\s+/g, '-').toLowerCase() || 'foto';
+
+  try {
+    // Intentar con proxy CORS para obtener los bytes reales
+    const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(url);
+    const resp = await fetch(proxyUrl);
+    if (!resp.ok) throw new Error('proxy error');
+    const blob = await resp.blob();
+    const bmp = await createImageBitmap(blob);
+    const canvas = document.createElement('canvas');
+    canvas.width = bmp.width;
+    canvas.height = bmp.height;
+    const ctx = canvas.getContext('2d');
+    if (format === 'jpeg') {
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
-    htmlLines.push('</div></div>');
+    ctx.drawImage(bmp, 0, 0);
+    canvas.toBlob(function(outBlob) {
+      triggerDownload(outBlob, safeName + '.' + ext);
+    }, mime, 0.93);
+  } catch(e) {
+    // Fallback: intentar carga directa con crossOrigin
+    try {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      await new Promise(function(resolve, reject) {
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = url + (url.includes('?') ? '&' : '?') + 't=' + Date.now();
+      });
+      const canvas = document.createElement('canvas');
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext('2d');
+      if (format === 'jpeg') { ctx.fillStyle = '#fff'; ctx.fillRect(0,0,canvas.width,canvas.height); }
+      ctx.drawImage(img, 0, 0);
+      canvas.toBlob(function(outBlob) {
+        triggerDownload(outBlob, safeName + '.' + ext);
+      }, mime, 0.93);
+    } catch(e2) {
+      alert('No se pudo descargar automáticamente.\n\nHaz clic derecho sobre la imagen → "Guardar imagen como..." y guárdala con extensión .' + ext);
+      window.open(url, '_blank');
+    }
   }
-  htmlLines.push('</body></html>');
+}
 
-  document.getElementById('exportText').value = urlLines.join('\n');
-  window._exportHtml = htmlLines.join('\n');
+function triggerDownload(blob, filename) {
+  const a = document.createElement('a');
+  a.download = filename;
+  a.href = URL.createObjectURL(blob);
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(function() { URL.revokeObjectURL(a.href); }, 1000);
+}
+
+function buildExport() {
+  var lines = [];
+  var html = ['<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Fotos</title>',
+    '<style>body{font-family:sans-serif;max-width:1200px;margin:0 auto;padding:2rem}',
+    'h2{margin:2rem 0 .8rem;border-bottom:2px solid #eee;padding-bottom:.4rem}',
+    '.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}',
+    '.grid img{width:100%;height:160px;object-fit:cover;border-radius:8px;display:block}</style></head><body>'];
+  allResults.forEach(function(r) {
+    lines.push('\n=== ' + r.term + ' ===');
+    html.push('<h2>' + esc(r.term) + '</h2><div class="grid">');
+    r.photos.forEach(function(p) {
+      lines.push(p.url);
+      html.push('<img src="' + esc(p.url) + '" alt="' + esc(p.title) + '" loading="lazy">');
+    });
+    html.push('</div>');
+  });
+  html.push('</body></html>');
+  document.getElementById('exportText').value = lines.join('\n');
+  window._exportHtml = html.join('\n');
 }
 
 function toggleExport() {
-  const panel = document.getElementById('exportPanel');
+  var panel = document.getElementById('exportPanel');
   panel.classList.toggle('visible');
-  if (panel.classList.contains('visible')) {
-    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
+  if (panel.classList.contains('visible')) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function copyExport() {
-  const text = document.getElementById('exportText').value;
-  navigator.clipboard.writeText(text).then(() => alert('¡URLs copiadas al portapapeles!'));
+  navigator.clipboard.writeText(document.getElementById('exportText').value)
+    .then(function() { alert('¡URLs copiadas!'); });
 }
 
 function downloadExport() {
-  const text = document.getElementById('exportText').value;
-  const blob = new Blob([text], { type: 'text/plain' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'fotos-urls.txt';
-  a.click();
+  triggerDownload(new Blob([document.getElementById('exportText').value], { type: 'text/plain' }), 'fotos-urls.txt');
 }
 
 function downloadHtml() {
-  const blob = new Blob([window._exportHtml || ''], { type: 'text/html' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'fotos-galeria.html';
-  a.click();
+  triggerDownload(new Blob([window._exportHtml || ''], { type: 'text/html' }), 'fotos-galeria.html');
 }
 
-// Init
 updateCount();
 </script>
 </body>
