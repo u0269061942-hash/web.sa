@@ -65,7 +65,6 @@ textarea:focus{border-color:rgba(232,200,122,.4)}
 .card-info{padding:8px 10px}
 .card-url{font-size:10px;font-family:'Courier New',monospace;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card-credit{font-size:10px;color:var(--muted2);margin-top:2px}
-/* MODAL */
 .mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:200;align-items:center;justify-content:center;padding:1rem}
 .mbg.on{display:flex}
 .mdl{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);width:100%;max-width:600px;max-height:92vh;overflow-y:auto;position:relative;animation:up .2s ease}
@@ -89,11 +88,11 @@ footer{border-top:1px solid var(--border);padding:1.2rem 2rem;text-align:center;
 <header>
   <div class="badge">⚡ Unsplash API — PNG y JPG reales</div>
   <h1>Fotos listas para<br><em>tu web</em></h1>
-  <p class="sub">Escribe hasta 20 términos, uno por línea. Descarga cada foto como .jpg o .png real, listo para subir a tu web.</p>
+  <p class="sub">Escribe hasta 20 términos, uno por línea. Descarga cada foto como .jpg o .png real listo para subir a tu web.</p>
 </header>
 <main>
   <div class="lbl"><span>Términos de búsqueda — uno por línea</span><span><span id="cnt">0</span>/20</span></div>
-  <textarea id="ta" placeholder="gato blanco&#10;puesta de sol en el mar&#10;café en terraza de París&#10;bosque de bambú&#10;arquitectura moderna&#10;playa tropical&#10;montaña nevada&#10;...hasta 20 términos"></textarea>
+  <textarea id="ta" placeholder="superman&#10;gato blanco&#10;puesta de sol en el mar&#10;café en terraza de París&#10;bosque de bambú&#10;...hasta 20 términos"></textarea>
   <div class="row">
     <button class="btn gold" id="searchBtn" onclick="startSearch()">🔍 Buscar fotos</button>
     <button class="btn ghost" onclick="clearAll()">🗑 Limpiar</button>
@@ -106,18 +105,17 @@ footer{border-top:1px solid var(--border);padding:1.2rem 2rem;text-align:center;
     <div class="prog-sub" id="pSub"></div>
   </div>
   <div class="exp-box" id="expBox">
-    <div class="exp-lbl">URLs encontradas — listas para copiar y usar en tu web</div>
+    <div class="exp-lbl">URLs encontradas — listas para usar en tu web</div>
     <textarea class="exp-ta" id="expTa" readonly></textarea>
     <div class="exp-row">
       <button class="btn gold" onclick="copyUrls()">📋 Copiar todas las URLs</button>
-      <button class="btn ghost" onclick="dlFile(new Blob([document.getElementById('expTa').value],{type:'text/plain'}),'fotos-urls.txt')">↓ Descargar .txt</button>
-      <button class="btn ghost" onclick="dlFile(new Blob([window._html||''],{type:'text/html'}),'galeria.html')">↓ Descargar HTML galería</button>
+      <button class="btn ghost" onclick="dlFile(new Blob([document.getElementById('expTa').value],{type:'text/plain'}),'fotos-urls.txt')">↓ .txt</button>
+      <button class="btn ghost" onclick="dlFile(new Blob([window._html||''],{type:'text/html'}),'galeria.html')">↓ HTML galería</button>
     </div>
   </div>
   <div class="results" id="results"></div>
 </main>
 
-<!-- MODAL -->
 <div class="mbg" id="mbg" onclick="if(event.target===this)closeModal()">
   <div class="mdl">
     <div class="xbtn" onclick="closeModal()">×</div>
@@ -147,7 +145,7 @@ footer{border-top:1px solid var(--border);padding:1.2rem 2rem;text-align:center;
   </div>
 </div>
 
-<footer>Buscador de Fotos — Powered by Unsplash API — Fotos en .png y .jpg reales</footer>
+<footer>Buscador de Fotos — Powered by Unsplash API</footer>
 
 <script>
 const API_KEY = '2G8xFmc1jV0VWZg4zo6VeoV5yYj5Rf5S8mtuJ9VWai8';
@@ -170,7 +168,7 @@ function clearAll(){
 
 async function startSearch(){
   if(busy) return;
-  const terms = getTerms();
+  const terms=getTerms();
   if(!terms.length){ alert('Escribe al menos un término'); return; }
   busy=true; allResults=[];
   const btn=document.getElementById('searchBtn');
@@ -184,7 +182,7 @@ async function startSearch(){
 
   for(let i=0;i<terms.length;i++){
     setProg(i,terms.length,'Buscando: "'+terms[i]+'"');
-    const photos = await searchUnsplash(terms[i]);
+    const photos=await searchUnsplash(terms[i]);
     allResults.push({term:terms[i],photos});
     renderGroup({term:terms[i],photos},i);
     setProg(i+1,terms.length,'✓ "'+terms[i]+'" — '+photos.length+' fotos');
@@ -204,7 +202,6 @@ function setProg(done,total,sub){
   document.getElementById('pSub').textContent=sub;
 }
 
-// Unsplash API — devuelve URLs directas de imágenes reales
 async function searchUnsplash(term){
   try{
     const url='https://api.unsplash.com/search/photos?query='+encodeURIComponent(term)+'&per_page=6&client_id='+API_KEY;
@@ -212,12 +209,16 @@ async function searchUnsplash(term){
     if(!r.ok) throw new Error('API error '+r.status);
     const data=await r.json();
     return (data.results||[]).map(p=>({
-      url: p.urls.regular,        // URL directa a la imagen
-      urlFull: p.urls.full,       // URL en máxima calidad
+      // Añadimos fm=jpg o fm=png a la URL para forzar el formato
+      url: p.urls.regular,
+      urlFull: p.urls.full,
       urlSmall: p.urls.small,
+      // URL con formato forzado — Unsplash CDN acepta estos parámetros
+      urlJpg: p.urls.full+'&fm=jpg&q=90',
+      urlPng: p.urls.full+'&fm=png',
       title: p.alt_description || p.description || term,
       author: p.user.name,
-      downloadUrl: p.links.download  // URL oficial de descarga
+      id: p.id
     }));
   }catch(e){
     console.error('Error buscando "'+term+'":', e);
@@ -253,7 +254,7 @@ function renderGroup({term,photos},idx){
     card.dataset.idx=idx;
     card.dataset.pi=pi;
     card.innerHTML=
-      '<img class="thumb" src="'+esc(p.urlSmall||p.url)+'" alt="'+esc(p.title)+'" loading="lazy">'+
+      '<img class="thumb" src="'+esc(p.urlSmall||p.url)+'" alt="'+esc(p.title||'')+'" loading="lazy">'+
       '<div class="hl">'+
         '<button class="hb hb-gold" onclick="openModal('+idx+','+pi+')">🔍 Ver / Copiar URL</button>'+
         '<button class="hb hb-amber" onclick="cardDl('+idx+','+pi+',this,\'jpg\')">↓ Descargar .JPG</button>'+
@@ -275,7 +276,7 @@ function openModal(idx,pi){
   document.getElementById('mImg').alt=curPhoto.title||'';
   document.getElementById('mTitle').textContent=curPhoto.title||'Sin título';
   document.getElementById('mUrl').textContent=curPhoto.urlFull||curPhoto.url;
-  document.getElementById('mHtml').textContent='<img src="'+( curPhoto.urlFull||curPhoto.url)+'" alt="'+(curPhoto.title||'')+'" style="max-width:100%;height:auto;">';
+  document.getElementById('mHtml').textContent='<img src="'+(curPhoto.urlFull||curPhoto.url)+'" alt="'+(curPhoto.title||'')+'" style="max-width:100%;height:auto;">';
   document.getElementById('mOpen').href=curPhoto.urlFull||curPhoto.url;
   ['cUrl','cHtml'].forEach(id=>{
     const b=document.getElementById(id); b.textContent='Copiar'; b.classList.remove('ok');
@@ -292,12 +293,11 @@ function copyF(srcId,btnId){
   });
 }
 
-// DESCARGA REAL como blob .jpg o .png
 async function cardDl(idx,pi,btn,fmt){
   const p=getPhoto(idx,pi);
   const orig=btn.textContent;
   btn.disabled=true; btn.textContent='...';
-  await doDownload(p.urlFull||p.url, p.title, fmt);
+  await doDownload(p, fmt);
   btn.textContent=orig; btn.disabled=false;
 }
 
@@ -307,22 +307,24 @@ async function dlModal(fmt){
   const btn=document.getElementById(btnId);
   const orig=btn.textContent;
   btn.disabled=true; btn.textContent='Descargando...';
-  await doDownload(curPhoto.urlFull||curPhoto.url, curPhoto.title, fmt);
+  await doDownload(curPhoto, fmt);
   btn.textContent=orig; btn.disabled=false;
 }
 
-async function doDownload(imgUrl, title, fmt){
+// Descarga real usando canvas para convertir al formato correcto
+async function doDownload(photo, fmt){
   const ext = fmt==='png' ? 'png' : 'jpg';
   const mime = fmt==='png' ? 'image/png' : 'image/jpeg';
-  const name = safeName(title)+'.'+ext;
+  const name = safeName(photo.title)+'.'+ext;
+  // Usamos la URL con formato forzado del CDN de Unsplash
+  const srcUrl = fmt==='png' ? photo.urlPng : photo.urlJpg;
 
   try{
-    // Unsplash permite fetch directo porque tiene CORS habilitado en su CDN
-    const r = await fetch(imgUrl);
-    if(!r.ok) throw new Error('fetch error '+r.status);
+    const r = await fetch(srcUrl);
+    if(!r.ok) throw new Error('fetch error');
     const blob = await r.blob();
 
-    // Convertir al formato correcto via canvas
+    // Convertir con canvas al formato exacto
     const bmp = await createImageBitmap(blob);
     const canvas = document.createElement('canvas');
     canvas.width = bmp.width;
@@ -332,24 +334,30 @@ async function doDownload(imgUrl, title, fmt){
     ctx.drawImage(bmp,0,0);
 
     canvas.toBlob(function(outBlob){
-      saveBlob(outBlob, name);
+      const u=URL.createObjectURL(outBlob);
+      const a=document.createElement('a');
+      a.href=u; a.download=name;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(()=>URL.revokeObjectURL(u),3000);
     }, mime, 0.95);
 
   }catch(e){
-    alert('Error al descargar. Prueba a hacer clic derecho sobre la imagen → Guardar imagen como → elige .'+ext);
-    console.error(e);
+    // Si falla el canvas, forzamos descarga directa con el nombre correcto
+    const a=document.createElement('a');
+    a.href=srcUrl;
+    a.download=name;
+    a.target='_blank';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
   }
 }
 
-function saveBlob(blob,name){
+function dlFile(blob,name){
   const u=URL.createObjectURL(blob);
   const a=document.createElement('a');
   a.href=u; a.download=name;
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   setTimeout(()=>URL.revokeObjectURL(u),3000);
 }
-
-function dlFile(blob,name){ saveBlob(blob,name); }
 
 function buildExport(){
   const lines=[];
@@ -375,7 +383,7 @@ function toggleExp(){
   if(b.classList.contains('on')) b.scrollIntoView({behavior:'smooth',block:'start'});
 }
 function copyUrls(){
-  navigator.clipboard.writeText(document.getElementById('expTa').value).then(()=>alert('¡URLs copiadas al portapapeles!'));
+  navigator.clipboard.writeText(document.getElementById('expTa').value).then(()=>alert('¡URLs copiadas!'));
 }
 
 updateCount();
