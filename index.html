@@ -3,455 +3,379 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Buscador de Fotos IA</title>
+<title>Buscador de Fotos</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#0d0d0f;--bg2:#16161b;--bg3:#1e1e26;
-  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.14);
-  --accent:#e8c87a;--accent2:#c4a45a;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.16);
+  --gold:#e8c87a;--amber:#c4a45a;
   --text:#f0ede8;--muted:#7a7880;--muted2:#3e3d4a;
   --green:#6fcf8a;--red:#e07070;
   --r:10px;--rl:16px;
 }
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;font-weight:300;min-height:100vh;line-height:1.6}
-header{padding:2.5rem 2rem 2rem;text-align:center;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
-header::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:700px;height:350px;background:radial-gradient(ellipse,rgba(232,200,122,0.06) 0%,transparent 70%);pointer-events:none}
-.badge{display:inline-flex;align-items:center;gap:6px;background:rgba(232,200,122,0.09);border:1px solid rgba(232,200,122,0.22);border-radius:100px;padding:4px 14px;font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem}
-h1{font-family:'Playfair Display',Georgia,serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:700;line-height:1.1;letter-spacing:-.02em;margin-bottom:.5rem}
-h1 em{font-style:italic;color:var(--accent)}
-.subtitle{font-size:.9rem;color:var(--muted);max-width:460px;margin:0 auto}
-main{max-width:900px;margin:0 auto;padding:2rem}
-.input-section{margin-bottom:1.5rem}
-.input-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
-.term-count span{color:var(--accent)}
-textarea{width:100%;height:180px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;font-family:'DM Sans',system-ui,sans-serif;font-size:.88rem;font-weight:300;color:var(--text);outline:none;resize:vertical;line-height:1.7;transition:border-color .2s,box-shadow .2s}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;font-weight:300;min-height:100vh}
+header{padding:2.5rem 2rem 2rem;text-align:center;border-bottom:1px solid var(--border)}
+.badge{display:inline-flex;background:rgba(232,200,122,0.09);border:1px solid rgba(232,200,122,0.22);border-radius:100px;padding:4px 14px;font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
+h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3rem);font-weight:700;line-height:1.1;letter-spacing:-.02em;margin-bottom:.5rem}
+h1 em{font-style:italic;color:var(--gold)}
+.sub{font-size:.9rem;color:var(--muted);max-width:500px;margin:0 auto}
+main{max-width:960px;margin:0 auto;padding:2rem}
+.lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px;display:flex;justify-content:space-between}
+#cnt{color:var(--gold)}
+textarea{width:100%;height:200px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;font-family:'DM Sans',system-ui,sans-serif;font-size:.9rem;color:var(--text);outline:none;resize:vertical;line-height:1.9;margin-bottom:1rem}
 textarea::placeholder{color:var(--muted2)}
-textarea:focus{border-color:rgba(232,200,122,.35);box-shadow:0 0 0 3px rgba(232,200,122,.05)}
-.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:2rem}
-.btn{height:44px;padding:0 22px;border-radius:var(--r);font-family:'DM Sans',system-ui,sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;text-decoration:none;border:none}
-.btn-primary{background:var(--accent);color:#0d0d0f}
-.btn-primary:hover{background:#f0d48c}
-.btn-primary:active{transform:scale(.98)}
-.btn-primary:disabled{background:var(--muted2);cursor:not-allowed;transform:none}
-.btn-secondary{background:transparent;color:var(--text);border:1px solid var(--border2)}
-.btn-secondary:hover{background:var(--bg3);border-color:var(--text)}
-.btn-jpeg{background:var(--accent2);color:#0d0d0f}
-.btn-jpeg:hover{background:#d4b46a}
-.spacer{flex:1}
-.progress-wrap{display:none;margin-bottom:1.5rem}
-.progress-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px}
-.progress-bar{height:3px;background:var(--bg3);border-radius:100px;overflow:hidden}
-.progress-fill{height:100%;background:var(--accent);border-radius:100px;transition:width .4s ease;width:0%}
-.progress-status{font-size:12px;color:var(--muted);margin-top:6px}
-.export-panel{display:none;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);padding:1.5rem;margin-bottom:2rem}
-.export-panel.visible{display:block}
-.export-title{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:1rem}
-.export-textarea{width:100%;height:200px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px;font-family:'Courier New',monospace;font-size:11px;color:var(--muted);resize:vertical;outline:none;line-height:1.6}
-.export-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-.results-section{display:none}
-.results-section.visible{display:block}
-.term-group{margin-bottom:2.5rem;animation:fadeUp .4s ease both}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.term-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border)}
-.term-name{font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:1.1rem;color:var(--text)}
-.term-badge{font-size:11px;color:var(--muted);background:var(--bg3);border:1px solid var(--border);border-radius:100px;padding:3px 10px}
-.term-status-ok{color:var(--green);font-size:11px}
-.term-status-err{color:var(--red);font-size:11px}
-.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
-.photo-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;cursor:pointer;transition:border-color .2s,transform .2s;position:relative}
-.photo-card:hover{border-color:var(--border2);transform:translateY(-2px)}
-.photo-thumb{width:100%;height:130px;object-fit:cover;display:block;background:var(--bg3)}
-.photo-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(13,13,15,.8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;opacity:0;transition:opacity .2s;padding:8px}
-.photo-card:hover .photo-overlay{opacity:1}
-.overlay-btn{background:var(--accent);color:#0d0d0f;border:none;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:500;cursor:pointer;font-family:'DM Sans',system-ui,sans-serif;width:100%;transition:background .15s}
-.overlay-btn:hover{background:#f0d48c}
-.overlay-btn.jpeg{background:var(--accent2)}
-.overlay-btn.jpeg:hover{background:#d4b46a}
-.overlay-btn.sec{background:var(--bg3);color:var(--text);border:1px solid var(--border2)}
-.overlay-btn.sec:hover{background:var(--bg2)}
-.photo-info{padding:8px 10px}
-.photo-url{font-size:10px;font-family:'Courier New',monospace;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+textarea:focus{border-color:rgba(232,200,122,.4)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:2rem;align-items:center}
+.btn{height:44px;padding:0 22px;border-radius:var(--r);font-family:'DM Sans',system-ui,sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;text-decoration:none;border:none}
+.gold{background:var(--gold);color:#0d0d0f}.gold:hover{background:#f0d48c}.gold:disabled{background:var(--muted2);cursor:not-allowed}
+.amber{background:var(--amber);color:#0d0d0f}.amber:hover{background:#d4b46a}.amber:disabled{background:var(--muted2);cursor:not-allowed}
+.ghost{background:transparent;color:var(--text);border:1px solid var(--border2)}.ghost:hover{background:var(--bg3)}
+.sp{flex:1}
+.prog{display:none;margin-bottom:1.5rem}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px}
+.prog-bar{height:3px;background:var(--bg3);border-radius:99px;overflow:hidden}
+.prog-fill{height:100%;background:var(--gold);border-radius:99px;transition:width .3s;width:0}
+.prog-sub{font-size:12px;color:var(--muted);margin-top:5px}
+.exp-box{display:none;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);padding:1.4rem;margin-bottom:2rem}
+.exp-box.on{display:block}
+.exp-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.7rem}
+.exp-ta{width:100%;height:160px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px;font-family:'Courier New',monospace;font-size:11px;color:var(--muted);resize:vertical;outline:none;line-height:1.6}
+.exp-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.results{display:none}.results.on{display:block}
+.tgroup{margin-bottom:2.5rem;animation:up .35s ease both}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.thdr{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.tname{font-family:'Playfair Display',serif;font-style:italic;font-size:1.1rem}
+.tpill{font-size:11px;color:var(--muted);background:var(--bg3);border:1px solid var(--border);border-radius:99px;padding:2px 10px}
+.tok{color:var(--green);font-size:11px}.terr{color:var(--red);font-size:11px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;position:relative;transition:border-color .2s,transform .2s}
+.card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.thumb{width:100%;height:140px;object-fit:cover;display:block;background:var(--bg3)}
+.hl{position:absolute;inset:0;background:rgba(10,10,12,.87);display:flex;flex-direction:column;gap:5px;align-items:stretch;justify-content:center;padding:10px;opacity:0;transition:opacity .2s}
+.card:hover .hl{opacity:1}
+.hb{width:100%;padding:7px 0;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;font-family:'DM Sans',system-ui,sans-serif;border:none;transition:opacity .15s}
+.hb:disabled{opacity:.5;cursor:wait}
+.hb-gold{background:var(--gold);color:#0d0d0f}
+.hb-amber{background:var(--amber);color:#0d0d0f}
+.hb-ghost{background:transparent;color:var(--text);border:1px solid var(--border2)}
+.card-info{padding:8px 10px}
+.card-url{font-size:10px;font-family:'Courier New',monospace;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-credit{font-size:10px;color:var(--muted2);margin-top:2px}
 /* MODAL */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;align-items:center;justify-content:center;padding:1rem}
-.modal-bg.open{display:flex}
-.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);width:100%;max-width:580px;max-height:90vh;overflow-y:auto;animation:fadeUp .25s ease;position:relative}
-.modal-img{width:100%;max-height:300px;object-fit:cover;display:block}
-.modal-body{padding:1.4rem}
-.modal-title{font-family:'Playfair Display',Georgia,serif;font-size:1.1rem;margin-bottom:1rem;color:var(--text)}
+.mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:200;align-items:center;justify-content:center;padding:1rem}
+.mbg.on{display:flex}
+.mdl{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);width:100%;max-width:600px;max-height:92vh;overflow-y:auto;position:relative;animation:up .2s ease}
+.mdl-img{width:100%;max-height:300px;object-fit:cover;display:block}
+.mdl-body{padding:1.3rem}
+.mdl-title{font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:1rem}
 .field{margin-bottom:.9rem}
-.field-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px}
-.field-box{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px}
-.field-mono{font-family:'Courier New',monospace;font-size:11px;color:var(--muted);word-break:break-all;flex:1;line-height:1.4}
-.copy-btn{background:var(--bg2);border:1px solid var(--border2);border-radius:6px;padding:4px 12px;font-size:11px;font-weight:500;color:var(--text);cursor:pointer;white-space:nowrap;transition:all .15s;font-family:'DM Sans',system-ui,sans-serif;flex-shrink:0}
-.copy-btn:hover{border-color:var(--accent2)}
-.copy-btn.ok{border-color:var(--green);color:var(--green)}
-.modal-dl-row{display:flex;gap:8px;margin-top:1rem;flex-wrap:wrap}
-.modal-dl-row .btn{flex:1;justify-content:center;height:40px;font-size:.82rem}
-.modal-close{position:absolute;top:10px;right:10px;background:var(--bg3);border:1px solid var(--border2);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:18px;line-height:1;z-index:10}
+.flbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+.fbox{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px}
+.fmono{font-family:'Courier New',monospace;font-size:11px;color:var(--muted);word-break:break-all;flex:1;line-height:1.4}
+.cbtn{background:var(--bg2);border:1px solid var(--border2);border-radius:6px;padding:4px 12px;font-size:11px;font-weight:500;color:var(--text);cursor:pointer;white-space:nowrap;font-family:'DM Sans',system-ui,sans-serif;transition:all .15s;flex-shrink:0}
+.cbtn:hover{border-color:var(--amber)}.cbtn.ok{border-color:var(--green);color:var(--green)}
+.mdl-btns{display:flex;gap:8px;margin-top:1rem;flex-wrap:wrap}
+.mdl-btns .btn{flex:1;height:40px;font-size:.82rem}
+.xbtn{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.6);border:1px solid var(--border2);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:20px;line-height:1;z-index:10}
 footer{border-top:1px solid var(--border);padding:1.2rem 2rem;text-align:center;font-size:11px;color:var(--muted2);margin-top:2rem}
-footer span{color:var(--accent2)}
-@media(max-width:600px){
-  .controls{flex-direction:column;align-items:stretch}
-  .btn{justify-content:center}
-  .photo-grid{grid-template-columns:repeat(2,1fr)}
-  .modal-dl-row{flex-direction:column}
-}
+@media(max-width:580px){.grid{grid-template-columns:repeat(2,1fr)}.mdl-btns{flex-direction:column}}
 </style>
 </head>
 <body>
-
 <header>
-  <div class="badge">⚡ Búsqueda múltiple — descarga PNG &amp; JPEG</div>
+  <div class="badge">⚡ Unsplash API — PNG y JPG reales</div>
   <h1>Fotos listas para<br><em>tu web</em></h1>
-  <p class="subtitle">Escribe hasta 20 términos (uno por línea), encuentra las fotos y descárgalas en PNG o JPEG al instante.</p>
+  <p class="sub">Escribe hasta 20 términos, uno por línea. Descarga cada foto como .jpg o .png real, listo para subir a tu web.</p>
 </header>
-
 <main>
-  <div class="input-section">
-    <div class="input-label">
-      <span>Términos de búsqueda — uno por línea</span>
-      <span class="term-count"><span id="termCount">0</span> / 20</span>
-    </div>
-    <textarea id="termsInput" placeholder="gato blanco esponjoso&#10;puesta de sol en el mar&#10;café con leche en terraza&#10;bosque de bambú Japón&#10;arquitectura moderna minimalista&#10;...hasta 20 términos"></textarea>
+  <div class="lbl"><span>Términos de búsqueda — uno por línea</span><span><span id="cnt">0</span>/20</span></div>
+  <textarea id="ta" placeholder="gato blanco&#10;puesta de sol en el mar&#10;café en terraza de París&#10;bosque de bambú&#10;arquitectura moderna&#10;playa tropical&#10;montaña nevada&#10;...hasta 20 términos"></textarea>
+  <div class="row">
+    <button class="btn gold" id="searchBtn" onclick="startSearch()">🔍 Buscar fotos</button>
+    <button class="btn ghost" onclick="clearAll()">🗑 Limpiar</button>
+    <div class="sp"></div>
+    <button class="btn ghost" id="expBtn" style="display:none" onclick="toggleExp()">↓ Exportar URLs</button>
   </div>
-
-  <div class="controls">
-    <button class="btn btn-primary" id="searchBtn" onclick="startSearch()">&#128269; Buscar fotos</button>
-    <button class="btn btn-secondary" onclick="clearAll()">&#128465; Limpiar</button>
-    <div class="spacer"></div>
-    <button class="btn btn-secondary" id="exportBtn" onclick="toggleExport()" style="display:none">&#8595; Exportar URLs</button>
+  <div class="prog" id="prog">
+    <div class="prog-top"><span id="pLbl">0 de 0</span><span id="pPct">0%</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="pFill"></div></div>
+    <div class="prog-sub" id="pSub"></div>
   </div>
-
-  <div class="progress-wrap" id="progressWrap">
-    <div class="progress-top">
-      <span id="progressLabel">Buscando...</span>
-      <span id="progressPct">0%</span>
-    </div>
-    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-    <div class="progress-status" id="progressStatus"></div>
-  </div>
-
-  <div class="export-panel" id="exportPanel">
-    <div class="export-title">Todas las URLs encontradas</div>
-    <textarea class="export-textarea" id="exportText" readonly></textarea>
-    <div class="export-actions">
-      <button class="btn btn-primary" onclick="copyExport()">Copiar todo</button>
-      <button class="btn btn-secondary" onclick="downloadExport()">Descargar .txt</button>
-      <button class="btn btn-secondary" onclick="downloadHtml()">Descargar HTML</button>
+  <div class="exp-box" id="expBox">
+    <div class="exp-lbl">URLs encontradas — listas para copiar y usar en tu web</div>
+    <textarea class="exp-ta" id="expTa" readonly></textarea>
+    <div class="exp-row">
+      <button class="btn gold" onclick="copyUrls()">📋 Copiar todas las URLs</button>
+      <button class="btn ghost" onclick="dlFile(new Blob([document.getElementById('expTa').value],{type:'text/plain'}),'fotos-urls.txt')">↓ Descargar .txt</button>
+      <button class="btn ghost" onclick="dlFile(new Blob([window._html||''],{type:'text/html'}),'galeria.html')">↓ Descargar HTML galería</button>
     </div>
   </div>
-
-  <div class="results-section" id="resultsSection"></div>
+  <div class="results" id="results"></div>
 </main>
 
 <!-- MODAL -->
-<div class="modal-bg" id="modalBg" onclick="closeModalBg(event)">
-  <div class="modal" id="modal">
-    <button class="modal-close" onclick="document.getElementById('modalBg').classList.remove('open')">&#215;</button>
-    <img class="modal-img" id="modalImg" src="" alt=""/>
-    <div class="modal-body">
-      <div class="modal-title" id="modalTitle"></div>
+<div class="mbg" id="mbg" onclick="if(event.target===this)closeModal()">
+  <div class="mdl">
+    <div class="xbtn" onclick="closeModal()">×</div>
+    <img class="mdl-img" id="mImg" src="" alt=""/>
+    <div class="mdl-body">
+      <div class="mdl-title" id="mTitle"></div>
       <div class="field">
-        <div class="field-label">URL directa de la imagen</div>
-        <div class="field-box">
-          <span class="field-mono" id="modalUrl"></span>
-          <button class="copy-btn" id="btnUrl" onclick="copyField('modalUrl','btnUrl')">Copiar</button>
+        <div class="flbl">URL directa — pégala en tu web</div>
+        <div class="fbox">
+          <span class="fmono" id="mUrl"></span>
+          <button class="cbtn" id="cUrl" onclick="copyF('mUrl','cUrl')">Copiar</button>
         </div>
       </div>
       <div class="field">
-        <div class="field-label">Tag HTML listo para pegar</div>
-        <div class="field-box">
-          <span class="field-mono" id="modalHtml"></span>
-          <button class="copy-btn" id="btnHtml" onclick="copyField('modalHtml','btnHtml')">Copiar</button>
+        <div class="flbl">Código HTML listo para pegar</div>
+        <div class="fbox">
+          <span class="fmono" id="mHtml"></span>
+          <button class="cbtn" id="cHtml" onclick="copyF('mHtml','cHtml')">Copiar</button>
         </div>
       </div>
-      <div class="modal-dl-row">
-        <button class="btn btn-primary" id="modalBtnPng" onclick="downloadImg('png')">&#8595; Descargar PNG</button>
-        <button class="btn btn-jpeg" id="modalBtnJpg" onclick="downloadImg('jpeg')">&#8595; Descargar JPEG</button>
-        <a class="btn btn-secondary" id="modalOpen" href="#" target="_blank">Ver original</a>
+      <div class="mdl-btns">
+        <button class="btn gold" id="mPng" onclick="dlModal('png')">↓ Descargar .PNG</button>
+        <button class="btn amber" id="mJpg" onclick="dlModal('jpg')">↓ Descargar .JPG</button>
+        <a class="btn ghost" id="mOpen" href="#" target="_blank">Ver original</a>
       </div>
     </div>
   </div>
 </div>
 
-<footer>Buscador de Fotos IA &mdash; URLs reales listas para tu web &mdash; Hecho con <span>&#9829;</span> y Claude</footer>
+<footer>Buscador de Fotos — Powered by Unsplash API — Fotos en .png y .jpg reales</footer>
 
 <script>
-const termsInput = document.getElementById('termsInput');
-termsInput.addEventListener('input', updateCount);
+const API_KEY = '2G8xFmc1jV0VWZg4zo6VeoV5yYj5Rf5S8mtuJ9VWai8';
+const ta = document.getElementById('ta');
+ta.addEventListener('input', updateCount);
+function updateCount(){ document.getElementById('cnt').textContent = Math.min(getTerms().length,20); }
+function getTerms(){ return ta.value.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,20); }
 
-function updateCount() {
-  document.getElementById('termCount').textContent = Math.min(getTerms().length, 20);
-}
-function getTerms() {
-  return termsInput.value.split('\n').map(t => t.trim()).filter(Boolean).slice(0, 20);
-}
+let allResults=[], busy=false, curPhoto=null;
 
-let allResults = [];
-let isSearching = false;
-
-function clearAll() {
-  termsInput.value = '';
-  updateCount();
-  document.getElementById('resultsSection').innerHTML = '';
-  document.getElementById('resultsSection').classList.remove('visible');
-  document.getElementById('exportPanel').classList.remove('visible');
-  document.getElementById('exportBtn').style.display = 'none';
-  document.getElementById('progressWrap').style.display = 'none';
-  allResults = [];
+function clearAll(){
+  ta.value=''; updateCount();
+  document.getElementById('results').innerHTML='';
+  document.getElementById('results').classList.remove('on');
+  document.getElementById('expBox').classList.remove('on');
+  document.getElementById('expBtn').style.display='none';
+  document.getElementById('prog').style.display='none';
+  allResults=[];
 }
 
-async function startSearch() {
-  if (isSearching) return;
+async function startSearch(){
+  if(busy) return;
   const terms = getTerms();
-  if (!terms.length) { alert('Escribe al menos un término de búsqueda'); return; }
-  isSearching = true;
-  allResults = [];
-  const btn = document.getElementById('searchBtn');
-  btn.disabled = true;
-  btn.textContent = 'Buscando...';
-  document.getElementById('exportBtn').style.display = 'none';
-  document.getElementById('exportPanel').classList.remove('visible');
-  document.getElementById('resultsSection').innerHTML = '';
-  document.getElementById('resultsSection').classList.add('visible');
-  document.getElementById('progressWrap').style.display = 'block';
-  setProgress(0, terms.length, 'Iniciando...');
+  if(!terms.length){ alert('Escribe al menos un término'); return; }
+  busy=true; allResults=[];
+  const btn=document.getElementById('searchBtn');
+  btn.disabled=true; btn.textContent='Buscando...';
+  document.getElementById('expBtn').style.display='none';
+  document.getElementById('expBox').classList.remove('on');
+  document.getElementById('results').innerHTML='';
+  document.getElementById('results').classList.add('on');
+  document.getElementById('prog').style.display='block';
+  setProg(0,terms.length,'Iniciando...');
 
-  for (let i = 0; i < terms.length; i++) {
-    setProgress(i, terms.length, 'Buscando: "' + terms[i] + '"');
-    const photos = await searchTerm(terms[i]);
-    allResults.push({ term: terms[i], photos });
-    renderTermGroup({ term: terms[i], photos }, i);
-    setProgress(i + 1, terms.length, '✓ "' + terms[i] + '" — ' + photos.length + ' fotos');
+  for(let i=0;i<terms.length;i++){
+    setProg(i,terms.length,'Buscando: "'+terms[i]+'"');
+    const photos = await searchUnsplash(terms[i]);
+    allResults.push({term:terms[i],photos});
+    renderGroup({term:terms[i],photos},i);
+    setProg(i+1,terms.length,'✓ "'+terms[i]+'" — '+photos.length+' fotos');
   }
 
-  document.getElementById('progressWrap').style.display = 'none';
-  isSearching = false;
-  btn.disabled = false;
-  btn.textContent = '🔍 Buscar fotos';
-  document.getElementById('exportBtn').style.display = 'flex';
+  document.getElementById('prog').style.display='none';
+  busy=false; btn.disabled=false; btn.textContent='🔍 Buscar fotos';
+  document.getElementById('expBtn').style.display='flex';
   buildExport();
 }
 
-function setProgress(done, total, status) {
-  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressPct').textContent = pct + '%';
-  document.getElementById('progressLabel').textContent = done + ' de ' + total + ' términos';
-  document.getElementById('progressStatus').textContent = status;
+function setProg(done,total,sub){
+  const pct=total?Math.round(done/total*100):0;
+  document.getElementById('pFill').style.width=pct+'%';
+  document.getElementById('pPct').textContent=pct+'%';
+  document.getElementById('pLbl').textContent=done+' de '+total;
+  document.getElementById('pSub').textContent=sub;
 }
 
-async function searchTerm(term) {
-  const photos = [];
-  const kw = encodeURIComponent(term);
-  for (let i = 0; i < 6; i++) {
-    const url = 'https://source.unsplash.com/random/800x600?' + kw + '&sig=' + Date.now() + '_' + i;
-    try {
-      const r = await fetch(url, { method: 'HEAD', redirect: 'follow' });
-      const finalUrl = r.url;
-      if (finalUrl && finalUrl.includes('unsplash.com')) {
-        photos.push({ url: finalUrl, title: term + ' — foto ' + (i + 1) });
-      } else {
-        photos.push({ url: url, title: term + ' — foto ' + (i + 1) });
-      }
-    } catch(e) {
-      photos.push({ url: url, title: term + ' — foto ' + (i + 1) });
-    }
+// Unsplash API — devuelve URLs directas de imágenes reales
+async function searchUnsplash(term){
+  try{
+    const url='https://api.unsplash.com/search/photos?query='+encodeURIComponent(term)+'&per_page=6&client_id='+API_KEY;
+    const r=await fetch(url);
+    if(!r.ok) throw new Error('API error '+r.status);
+    const data=await r.json();
+    return (data.results||[]).map(p=>({
+      url: p.urls.regular,        // URL directa a la imagen
+      urlFull: p.urls.full,       // URL en máxima calidad
+      urlSmall: p.urls.small,
+      title: p.alt_description || p.description || term,
+      author: p.user.name,
+      downloadUrl: p.links.download  // URL oficial de descarga
+    }));
+  }catch(e){
+    console.error('Error buscando "'+term+'":', e);
+    return [];
   }
-  return photos;
 }
 
-function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function safeName(t){
+  return (t||'foto').toLowerCase()
+    .replace(/[áàä]/g,'a').replace(/[éèë]/g,'e').replace(/[íìï]/g,'i')
+    .replace(/[óòö]/g,'o').replace(/[úùü]/g,'u').replace(/ñ/g,'n')
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').substring(0,50)||'foto';
 }
 
-function renderTermGroup({ term, photos }, idx) {
-  const section = document.getElementById('resultsSection');
-  const group = document.createElement('div');
-  group.className = 'term-group';
-  group.style.animationDelay = (idx * 0.05) + 's';
-  const ok = photos.length > 0;
-  group.innerHTML =
-    '<div class="term-header">' +
-      '<span class="term-name">' + esc(term) + '</span>' +
-      '<span class="term-badge">' + photos.length + ' fotos</span>' +
-      '<span class="' + (ok ? 'term-status-ok' : 'term-status-err') + '">' + (ok ? '✓ OK' : '✗ Sin resultados') + '</span>' +
-    '</div>' +
-    '<div class="photo-grid" id="grid_' + idx + '"></div>';
-  section.appendChild(group);
+function renderGroup({term,photos},idx){
+  const wrap=document.createElement('div');
+  wrap.className='tgroup';
+  wrap.style.animationDelay=(idx*.05)+'s';
+  wrap.innerHTML=
+    '<div class="thdr">'+
+      '<span class="tname">'+esc(term)+'</span>'+
+      '<span class="tpill">'+photos.length+' fotos</span>'+
+      '<span class="'+(photos.length?'tok':'terr')+'">'+(photos.length?'✓ OK':'✗ Sin resultados')+'</span>'+
+    '</div>'+
+    '<div class="grid" id="g'+idx+'"></div>';
+  document.getElementById('results').appendChild(wrap);
 
-  const grid = group.querySelector('.photo-grid');
-  photos.forEach(function(photo, pi) {
-    const card = document.createElement('div');
-    card.className = 'photo-card';
-    const urlQ = JSON.stringify(photo.url);
-    const titleQ = JSON.stringify(photo.title);
-    card.innerHTML =
-      '<img class="photo-thumb" src="' + esc(photo.url) + '" alt="' + esc(photo.title) + '" loading="lazy" onerror="this.parentElement.style.display=\'none\'">' +
-      '<div class="photo-overlay">' +
-        '<button class="overlay-btn" onclick=\'openModal(' + urlQ + ',' + titleQ + ')\'>Ver detalles</button>' +
-        '<button class="overlay-btn jpeg" onclick=\'cardDownload(' + urlQ + ',' + titleQ + ',this,"jpeg")\'>⬇ JPEG</button>' +
-        '<button class="overlay-btn sec" onclick=\'cardDownload(' + urlQ + ',' + titleQ + ',this,"png")\'>⬇ PNG</button>' +
-      '</div>' +
-      '<div class="photo-info"><div class="photo-url">' + esc(photo.url) + '</div></div>';
+  const grid=document.getElementById('g'+idx);
+  photos.forEach(function(p,pi){
+    const card=document.createElement('div');
+    card.className='card';
+    card.dataset.idx=idx;
+    card.dataset.pi=pi;
+    card.innerHTML=
+      '<img class="thumb" src="'+esc(p.urlSmall||p.url)+'" alt="'+esc(p.title)+'" loading="lazy">'+
+      '<div class="hl">'+
+        '<button class="hb hb-gold" onclick="openModal('+idx+','+pi+')">🔍 Ver / Copiar URL</button>'+
+        '<button class="hb hb-amber" onclick="cardDl('+idx+','+pi+',this,\'jpg\')">↓ Descargar .JPG</button>'+
+        '<button class="hb hb-ghost" onclick="cardDl('+idx+','+pi+',this,\'png\')">↓ Descargar .PNG</button>'+
+      '</div>'+
+      '<div class="card-info">'+
+        '<div class="card-url">'+esc(p.url)+'</div>'+
+        '<div class="card-credit">📷 '+esc(p.author)+'</div>'+
+      '</div>';
     grid.appendChild(card);
   });
 }
 
-function openModal(url, title) {
-  document.getElementById('modalImg').src = url;
-  document.getElementById('modalImg').alt = title;
-  document.getElementById('modalTitle').textContent = title;
-  document.getElementById('modalUrl').textContent = url;
-  document.getElementById('modalHtml').textContent = '<img src="' + url + '" alt="' + title + '" style="max-width:100%;height:auto;">';
-  document.getElementById('modalOpen').href = url;
-  document.getElementById('btnUrl').textContent = 'Copiar';
-  document.getElementById('btnUrl').classList.remove('ok');
-  document.getElementById('btnHtml').textContent = 'Copiar';
-  document.getElementById('btnHtml').classList.remove('ok');
-  window._modalUrl = url;
-  window._modalTitle = title;
-  document.getElementById('modalBg').classList.add('open');
-}
+function getPhoto(idx,pi){ return allResults[idx].photos[pi]; }
 
-function closeModalBg(e) {
-  if (e.target === document.getElementById('modalBg')) {
-    document.getElementById('modalBg').classList.remove('open');
-  }
+function openModal(idx,pi){
+  curPhoto=getPhoto(idx,pi);
+  document.getElementById('mImg').src=curPhoto.url;
+  document.getElementById('mImg').alt=curPhoto.title||'';
+  document.getElementById('mTitle').textContent=curPhoto.title||'Sin título';
+  document.getElementById('mUrl').textContent=curPhoto.urlFull||curPhoto.url;
+  document.getElementById('mHtml').textContent='<img src="'+( curPhoto.urlFull||curPhoto.url)+'" alt="'+(curPhoto.title||'')+'" style="max-width:100%;height:auto;">';
+  document.getElementById('mOpen').href=curPhoto.urlFull||curPhoto.url;
+  ['cUrl','cHtml'].forEach(id=>{
+    const b=document.getElementById(id); b.textContent='Copiar'; b.classList.remove('ok');
+  });
+  document.getElementById('mbg').classList.add('on');
 }
+function closeModal(){ document.getElementById('mbg').classList.remove('on'); }
 
-function copyField(srcId, btnId) {
-  const text = document.getElementById(srcId).textContent;
-  const btn = document.getElementById(btnId);
-  navigator.clipboard.writeText(text).then(function() {
-    btn.textContent = '✓'; btn.classList.add('ok');
-    setTimeout(function() { btn.textContent = 'Copiar'; btn.classList.remove('ok'); }, 2000);
+function copyF(srcId,btnId){
+  navigator.clipboard.writeText(document.getElementById(srcId).textContent).then(()=>{
+    const b=document.getElementById(btnId);
+    b.textContent='✓'; b.classList.add('ok');
+    setTimeout(()=>{ b.textContent='Copiar'; b.classList.remove('ok'); },2000);
   });
 }
 
-async function downloadImg(format) {
-  const url = window._modalUrl;
-  const title = window._modalTitle || 'foto';
-  const btnId = format === 'png' ? 'modalBtnPng' : 'modalBtnJpg';
-  const btn = document.getElementById(btnId);
-  const orig = btn.textContent;
-  btn.textContent = 'Descargando...';
-  btn.disabled = true;
-  await doDownload(url, title, format);
-  btn.textContent = orig;
-  btn.disabled = false;
+// DESCARGA REAL como blob .jpg o .png
+async function cardDl(idx,pi,btn,fmt){
+  const p=getPhoto(idx,pi);
+  const orig=btn.textContent;
+  btn.disabled=true; btn.textContent='...';
+  await doDownload(p.urlFull||p.url, p.title, fmt);
+  btn.textContent=orig; btn.disabled=false;
 }
 
-async function cardDownload(url, title, btn, format) {
-  const orig = btn.textContent;
-  btn.textContent = '...';
-  btn.disabled = true;
-  await doDownload(url, title, format);
-  btn.textContent = orig;
-  btn.disabled = false;
+async function dlModal(fmt){
+  if(!curPhoto) return;
+  const btnId=fmt==='png'?'mPng':'mJpg';
+  const btn=document.getElementById(btnId);
+  const orig=btn.textContent;
+  btn.disabled=true; btn.textContent='Descargando...';
+  await doDownload(curPhoto.urlFull||curPhoto.url, curPhoto.title, fmt);
+  btn.textContent=orig; btn.disabled=false;
 }
 
-async function doDownload(url, title, format) {
-  const ext = format === 'jpeg' ? 'jpg' : 'png';
-  const mime = format === 'jpeg' ? 'image/jpeg' : 'image/png';
-  const safeName = (title || 'foto').replace(/[^a-z0-9\s]/gi, '').trim().replace(/\s+/g, '-').toLowerCase() || 'foto';
+async function doDownload(imgUrl, title, fmt){
+  const ext = fmt==='png' ? 'png' : 'jpg';
+  const mime = fmt==='png' ? 'image/png' : 'image/jpeg';
+  const name = safeName(title)+'.'+ext;
 
-  try {
-    // Intentar con proxy CORS para obtener los bytes reales
-    const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(url);
-    const resp = await fetch(proxyUrl);
-    if (!resp.ok) throw new Error('proxy error');
-    const blob = await resp.blob();
+  try{
+    // Unsplash permite fetch directo porque tiene CORS habilitado en su CDN
+    const r = await fetch(imgUrl);
+    if(!r.ok) throw new Error('fetch error '+r.status);
+    const blob = await r.blob();
+
+    // Convertir al formato correcto via canvas
     const bmp = await createImageBitmap(blob);
     const canvas = document.createElement('canvas');
     canvas.width = bmp.width;
     canvas.height = bmp.height;
     const ctx = canvas.getContext('2d');
-    if (format === 'jpeg') {
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
-    ctx.drawImage(bmp, 0, 0);
-    canvas.toBlob(function(outBlob) {
-      triggerDownload(outBlob, safeName + '.' + ext);
-    }, mime, 0.93);
-  } catch(e) {
-    // Fallback: intentar carga directa con crossOrigin
-    try {
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      await new Promise(function(resolve, reject) {
-        img.onload = resolve;
-        img.onerror = reject;
-        img.src = url + (url.includes('?') ? '&' : '?') + 't=' + Date.now();
-      });
-      const canvas = document.createElement('canvas');
-      canvas.width = img.naturalWidth;
-      canvas.height = img.naturalHeight;
-      const ctx = canvas.getContext('2d');
-      if (format === 'jpeg') { ctx.fillStyle = '#fff'; ctx.fillRect(0,0,canvas.width,canvas.height); }
-      ctx.drawImage(img, 0, 0);
-      canvas.toBlob(function(outBlob) {
-        triggerDownload(outBlob, safeName + '.' + ext);
-      }, mime, 0.93);
-    } catch(e2) {
-      alert('No se pudo descargar automáticamente.\n\nHaz clic derecho sobre la imagen → "Guardar imagen como..." y guárdala con extensión .' + ext);
-      window.open(url, '_blank');
-    }
+    if(fmt==='jpg'){ ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,bmp.width,bmp.height); }
+    ctx.drawImage(bmp,0,0);
+
+    canvas.toBlob(function(outBlob){
+      saveBlob(outBlob, name);
+    }, mime, 0.95);
+
+  }catch(e){
+    alert('Error al descargar. Prueba a hacer clic derecho sobre la imagen → Guardar imagen como → elige .'+ext);
+    console.error(e);
   }
 }
 
-function triggerDownload(blob, filename) {
-  const a = document.createElement('a');
-  a.download = filename;
-  a.href = URL.createObjectURL(blob);
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(function() { URL.revokeObjectURL(a.href); }, 1000);
+function saveBlob(blob,name){
+  const u=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=u; a.download=name;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(u),3000);
 }
 
-function buildExport() {
-  var lines = [];
-  var html = ['<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Fotos</title>',
-    '<style>body{font-family:sans-serif;max-width:1200px;margin:0 auto;padding:2rem}',
-    'h2{margin:2rem 0 .8rem;border-bottom:2px solid #eee;padding-bottom:.4rem}',
-    '.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}',
-    '.grid img{width:100%;height:160px;object-fit:cover;border-radius:8px;display:block}</style></head><body>'];
-  allResults.forEach(function(r) {
-    lines.push('\n=== ' + r.term + ' ===');
-    html.push('<h2>' + esc(r.term) + '</h2><div class="grid">');
-    r.photos.forEach(function(p) {
-      lines.push(p.url);
-      html.push('<img src="' + esc(p.url) + '" alt="' + esc(p.title) + '" loading="lazy">');
+function dlFile(blob,name){ saveBlob(blob,name); }
+
+function buildExport(){
+  const lines=[];
+  const html=['<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Mis Fotos</title>',
+    '<style>body{font-family:sans-serif;max-width:1200px;margin:0 auto;padding:2rem}h2{margin:2rem 0 .8rem;border-bottom:2px solid #eee;padding-bottom:.5rem}.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}.g img{width:100%;height:170px;object-fit:cover;border-radius:8px;display:block}</style></head><body>'];
+  allResults.forEach(r=>{
+    lines.push('\n=== '+r.term+' ===');
+    html.push('<h2>'+esc(r.term)+'</h2><div class="g">');
+    r.photos.forEach(p=>{
+      lines.push(p.urlFull||p.url);
+      html.push('<img src="'+esc(p.urlFull||p.url)+'" alt="'+esc(p.title)+'" loading="lazy">');
     });
     html.push('</div>');
   });
   html.push('</body></html>');
-  document.getElementById('exportText').value = lines.join('\n');
-  window._exportHtml = html.join('\n');
+  document.getElementById('expTa').value=lines.join('\n');
+  window._html=html.join('\n');
 }
 
-function toggleExport() {
-  var panel = document.getElementById('exportPanel');
-  panel.classList.toggle('visible');
-  if (panel.classList.contains('visible')) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+function toggleExp(){
+  const b=document.getElementById('expBox');
+  b.classList.toggle('on');
+  if(b.classList.contains('on')) b.scrollIntoView({behavior:'smooth',block:'start'});
 }
-
-function copyExport() {
-  navigator.clipboard.writeText(document.getElementById('exportText').value)
-    .then(function() { alert('¡URLs copiadas!'); });
-}
-
-function downloadExport() {
-  triggerDownload(new Blob([document.getElementById('exportText').value], { type: 'text/plain' }), 'fotos-urls.txt');
-}
-
-function downloadHtml() {
-  triggerDownload(new Blob([window._exportHtml || ''], { type: 'text/html' }), 'fotos-galeria.html');
+function copyUrls(){
+  navigator.clipboard.writeText(document.getElementById('expTa').value).then(()=>alert('¡URLs copiadas al portapapeles!'));
 }
 
 updateCount();
