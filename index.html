@@ -109,8 +109,8 @@ footer{border-top:1px solid var(--border);padding:1.2rem 2rem;text-align:center;
     <textarea class="exp-ta" id="expTa" readonly></textarea>
     <div class="exp-row">
       <button class="btn gold" onclick="copyUrls()">📋 Copiar todas las URLs</button>
-      <button class="btn ghost" onclick="dlFile(new Blob([document.getElementById('expTa').value],{type:'text/plain'}),'fotos-urls.txt')">↓ .txt</button>
-      <button class="btn ghost" onclick="dlFile(new Blob([window._html||''],{type:'text/html'}),'galeria.html')">↓ HTML galería</button>
+      <button class="btn gold" onclick="dlAllFmt('png')" id="btnAllPng">↓ Descargar todas en .PNG</button>
+      <button class="btn amber" onclick="dlAllFmt('jpg')" id="btnAllJpg">↓ Descargar todas en .JPG</button>
     </div>
   </div>
   <div class="results" id="results"></div>
@@ -382,6 +382,25 @@ function toggleExp(){
   b.classList.toggle('on');
   if(b.classList.contains('on')) b.scrollIntoView({behavior:'smooth',block:'start'});
 }
+async function dlAllFmt(fmt){
+  const btnId=fmt==="png"?"btnAllPng":"btnAllJpg";
+  const btn=document.getElementById(btnId);
+  const orig=btn.textContent;
+  btn.disabled=true;
+  let total=0;
+  allResults.forEach(r=>total+=r.photos.length);
+  let done=0;
+  for(const r of allResults){
+    for(const p of r.photos){
+      btn.textContent="Descargando "+(++done)+" de "+total+"...";
+      await doDownload(p,fmt);
+      await new Promise(res=>setTimeout(res,400));
+    }
+  }
+  btn.textContent=orig;
+  btn.disabled=false;
+}
+
 function copyUrls(){
   navigator.clipboard.writeText(document.getElementById('expTa').value).then(()=>alert('¡URLs copiadas!'));
 }
