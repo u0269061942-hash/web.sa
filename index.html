@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Buscador de Fotos IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0d0f;
+    --bg2: #15151a;
+    --bg3: #1e1e26;
+    --border: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.18);
+    --accent: #e8c87a;
+    --accent2: #c4a45a;
+    --text: #f0ede8;
+    --muted: #7a7880;
+    --muted2: #4a4860;
+    --success: #6fcf8a;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-weight: 300;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* Header */
+  header {
+    padding: 3rem 2rem 2rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(232,200,122,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(232,200,122,0.1);
+    border: 1px solid rgba(232,200,122,0.25);
+    border-radius: 100px;
+    padding: 4px 14px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.2rem;
+  }
+
+  .logo-badge svg { width: 12px; height: 12px; fill: var(--accent); }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.6rem;
+    color: var(--text);
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  /* Search section */
+  .search-section {
+    padding: 2.5rem 2rem;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .search-bar {
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .search-input-wrap {
+    flex: 1;
+    position: relative;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    pointer-events: none;
+  }
+
+  .search-icon svg { width: 18px; height: 18px; display: block; }
+
+  input[type="text"] {
+    width: 100%;
+    height: 52px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0 16px 0 46px;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+  }
+
+  input[type="text"]::placeholder { color: var(--muted); }
+
+  input[type="text"]:focus {
+    border-color: rgba(232,200,122,0.4);
+    box-shadow: 0 0 0 3px rgba(232,200,122,0.06);
+  }
+
+  .search-btn {
+    height: 52px;
+    padding: 0 28px;
+    background: var(--accent);
+    color: #0d0d0f;
+    border: none;
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .search-btn:hover { background: #f0d48c; }
+  .search-btn:active { transform: scale(0.98); }
+  .search-btn:disabled { background: var(--muted2); cursor: not-allowed; transform: none; }
+
+  .search-btn svg { display: inline-block; vertical-align: middle; width: 16px; height: 16px; margin-right: 6px; margin-top: -2px; }
+
+  /* Suggestions */
+  .suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 1.2rem;
+  }
+
+  .suggestion-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-right: 4px;
+    align-self: center;
+  }
+
+  .suggestion-pill {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 5px 14px;
+    font-size: 12px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+  }
+
+  .suggestion-pill:hover {
+    border-color: var(--border-hover);
+    color: var(--text);
+    background: var(--bg3);
+  }
+
+  /* Status */
+  .status-bar {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 2rem 1.5rem;
+    display: none;
+  }
+
+  .status-inner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid var(--border-hover);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Gallery */
+  .gallery-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem 3rem;
+  }
+
+  .gallery-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 1.2rem;
+  }
+
+  .gallery-title {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  .gallery-count {
+    font-size: 12px;
+    color: var(--muted2);
+    letter-spacing: 0.05em;
+  }
+
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+
+  .photo-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+    animation: fadeIn 0.4s ease both;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .photo-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-3px);
+  }
+
+  .photo-card.selected {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent);
+  }
+
+  .photo-thumb {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
+    background: var(--bg3);
+    transition: opacity 0.3s;
+  }
+
+  .photo-info {
+    padding: 12px 14px;
+  }
+
+  .photo-title {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .photo-source {
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .photo-source svg { width: 10px; height: 10px; }
+
+  /* Detail panel */
+  .detail-panel {
+    display: none;
+    max-width: 760px;
+    margin: 0 auto 3rem;
+    padding: 0 2rem;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .detail-inner {
+    background: var(--bg2);
+    border: 1px solid var(--border-hover);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .detail-img-wrap {
+    position: relative;
+    background: var(--bg3);
+  }
+
+  .detail-img {
+    width: 100%;
+    max-height: 380px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .detail-img-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 60px;
+    background: linear-gradient(transparent, rgba(13,13,15,0.7));
+  }
+
+  .detail-body {
+    padding: 1.5rem;
+  }
+
+  .detail-label {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  .detail-title {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+  }
+
+  .detail-field {
+    margin-bottom: 1rem;
+  }
+
+  .field-label {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+
+  .field-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+  }
+
+  .field-content svg { width: 15px; height: 15px; flex-shrink: 0; color: var(--muted); }
+
+  .field-text {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    word-break: break-all;
+    flex: 1;
+    line-height: 1.4;
+  }
+
+  .copy-btn {
+    background: var(--bg2);
+    border: 1px solid var(--border-hover);
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    flex-shrink: 0;
+  }
+
+  .copy-btn:hover { background: var(--bg3); border-color: var(--accent2); }
+  .copy-btn.copied { border-color: var(--success); color: var(--success); }
+
+  .detail-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 1.2rem;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    flex: 1;
+    min-width: 140px;
+    padding: 11px 20px;
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    text-decoration: none;
+  }
+
+  .action-btn svg { width: 15px; height: 15px; }
+
+  .action-primary {
+    background: var(--accent);
+    color: #0d0d0f;
+    border: none;
+  }
+
+  .action-primary:hover { background: #f0d48c; }
+
+  .action-secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border-hover);
+  }
+
+  .action-secondary:hover { background: var(--bg3); border-color: var(--text); }
+
+  /* Empty / error states */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    display: none;
+  }
+
+  .empty-icon {
+    width: 56px; height: 56px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+  }
+
+  .empty-icon svg { width: 22px; height: 22px; color: var(--muted); }
+  .empty-title { font-size: 1rem; color: var(--text); margin-bottom: 6px; }
+  .empty-sub { font-size: 13px; color: var(--muted); }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted2);
+  }
+
+  footer span { color: var(--accent2); }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    h1 { font-size: 2rem; }
+    .search-bar { flex-direction: column; }
+    .search-btn { width: 100%; justify-content: center; }
+    .photo-grid { grid-template-columns: repeat(2, 1fr); }
+    .detail-actions { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-badge">
+    <svg viewBox="0 0 16 16"><path d="M8 1l1.5 4.5H14l-3.7 2.7 1.4 4.3L8 9.8l-3.7 2.7 1.4-4.3L2 5.5h4.5z"/></svg>
+    Potenciado por IA
+  </div>
+  <h1>Busca <em>cualquier</em><br>foto del mundo</h1>
+  <p class="subtitle">Escribe lo que imaginas y la IA encontrará la imagen perfecta con la URL lista para tu web.</p>
+</header>
+
+<section class="search-section">
+  <div class="search-bar">
+    <div class="search-input-wrap">
+      <span class="search-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+      </span>
+      <input type="text" id="searchInput" placeholder="Ej: café con leche en una terraza de París..." />
+    </div>
+    <button class="search-btn" id="searchBtn" onclick="searchPhotos()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+      Buscar
+    </button>
+  </div>
+
+  <div class="suggestions">
+    <span class="suggestion-label">Prueba con</span>
+    <span class="suggestion-pill" onclick="quickSearch('puesta de sol en la montaña')">Puesta de sol</span>
+    <span class="suggestion-pill" onclick="quickSearch('ciudad de noche lluvia')">Ciudad nocturna</span>
+    <span class="suggestion-pill" onclick="quickSearch('playa tropical cristalina')">Playa tropical</span>
+    <span class="suggestion-pill" onclick="quickSearch('bosque de bambú Japón')">Bosque bambú</span>
+    <span class="suggestion-pill" onclick="quickSearch('comida italiana pasta')">Comida italiana</span>
+    <span class="suggestion-pill" onclick="quickSearch('arquitectura moderna minimalista')">Arquitectura</span>
+  </div>
+</section>
+
+<div class="status-bar" id="statusBar">
+  <div class="status-inner">
+    <div class="spinner" id="spinner"></div>
+    <span id="statusText">Buscando fotos con IA...</span>
+  </div>
+</div>
+
+<div class="detail-panel" id="detailPanel">
+  <div class="detail-inner">
+    <div class="detail-img-wrap">
+      <img class="detail-img" id="detailImg" src="" alt="" />
+      <div class="detail-img-overlay"></div>
+    </div>
+    <div class="detail-body">
+      <div class="detail-label">Foto seleccionada</div>
+      <div class="detail-title" id="detailTitle"></div>
+
+      <div class="detail-field">
+        <div class="field-label">URL directa de la imagen</div>
+        <div class="field-content">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          <span class="field-text" id="detailUrl"></span>
+          <button class="copy-btn" id="btnCopyUrl" onclick="copyText('detailUrl','btnCopyUrl')">Copiar URL</button>
+        </div>
+      </div>
+
+      <div class="detail-field">
+        <div class="field-label">Código HTML listo para pegar</div>
+        <div class="field-content">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span class="field-text" id="detailHtml"></span>
+          <button class="copy-btn" id="btnCopyHtml" onclick="copyText('detailHtml','btnCopyHtml')">Copiar HTML</button>
+        </div>
+      </div>
+
+      <div class="detail-actions">
+        <a class="action-btn action-primary" id="detailDownload" href="#" target="_blank" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Descargar foto
+        </a>
+        <a class="action-btn action-secondary" id="detailOpen" href="#" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Ver original
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="gallery-section">
+  <div id="galleryHeader" class="gallery-header" style="display:none;">
+    <span class="gallery-title" id="galleryTitle"></span>
+    <span class="gallery-count" id="galleryCount"></span>
+  </div>
+  <div class="photo-grid" id="photoGrid"></div>
+  <div class="empty-state" id="emptyState">
+    <div class="empty-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </div>
+    <p class="empty-title" id="emptyTitle">No se encontraron fotos</p>
+    <p class="empty-sub" id="emptySub">Intenta con otro término de búsqueda.</p>
+  </div>
+</section>
+
+<footer>
+  Buscador de Fotos IA &mdash; Imágenes encontradas en tiempo real &mdash; Hecho con <span>♥</span> y Claude
+</footer>
+
+<script>
+const ANTHROPIC_API = 'https://api.anthropic.com/v1/messages';
+let selectedCard = null;
+
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchPhotos(); });
+
+function quickSearch(term) {
+  searchInput.value = term;
+  searchPhotos();
+}
+
+function setStatus(show, text) {
+  const bar = document.getElementById('statusBar');
+  bar.style.display = show ? 'block' : 'none';
+  if (text) document.getElementById('statusText').textContent = text;
+}
+
+function setSearching(on) {
+  document.getElementById('searchBtn').disabled = on;
+  document.getElementById('searchBtn').textContent = on ? 'Buscando...' : '';
+  if (!on) {
+    document.getElementById('searchBtn').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:middle;margin-right:6px;margin-top:-2px"><path d="M5 12h14M12 5l7 7-7 7"/></svg>Buscar`;
+  }
+}
+
+async function searchPhotos() {
+  const query = searchInput.value.trim();
+  if (!query) return;
+
+  setSearching(true);
+  setStatus(true, 'La IA está buscando fotos para ti...');
+  document.getElementById('photoGrid').innerHTML = '';
+  document.getElementById('detailPanel').style.display = 'none';
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('galleryHeader').style.display = 'none';
+  selectedCard = null;
+
+  try {
+    const response = await fetch(ANTHROPIC_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        system: `Eres un asistente que busca imágenes reales en internet usando la herramienta de búsqueda web.
+Cuando el usuario pida fotos de algo, usa web_search para encontrar imágenes reales con URLs directas.
+Estrategia de búsqueda: busca "[tema] site:unsplash.com" O "[tema] site:images.pexels.com" O "[tema] photo jpg".
+Devuelve ÚNICAMENTE un JSON válido sin markdown, backticks, ni texto extra. Formato exacto:
+{"photos":[{"url":"URL_DIRECTA_IMAGEN","title":"Descripción breve","source":"Nombre fuente"}]}
+Incluye 6-8 fotos. Las URLs deben ser imágenes directas (terminar en .jpg .jpeg .png .webp o incluir parámetros de imagen).
+Prioriza Unsplash (images.unsplash.com), Pexels (images.pexels.com), Pixabay, o wikimedia.`,
+        messages: [{ role: 'user', content: `Busca fotos de: ${query}` }]
+      })
+    });
+
+    const data = await response.json();
+
+    let jsonText = '';
+    for (const block of (data.content || [])) {
+      if (block.type === 'text' && block.text) {
+        jsonText = block.text;
+        break;
+      }
+    }
+
+    let photos = [];
+    try {
+      const clean = jsonText.replace(/```json\s?|```/g, '').trim();
+      const startIdx = clean.indexOf('{');
+      const endIdx = clean.lastIndexOf('}');
+      if (startIdx !== -1 && endIdx !== -1) {
+        const jsonOnly = clean.slice(startIdx, endIdx + 1);
+        const parsed = JSON.parse(jsonOnly);
+        photos = parsed.photos || [];
+      }
+    } catch (e) {
+      console.error('Parse error:', e, jsonText);
+    }
+
+    setStatus(false);
+    setSearching(false);
+
+    if (!photos.length) {
+      document.getElementById('emptyState').style.display = 'block';
+      document.getElementById('emptyTitle').textContent = 'No se encontraron imágenes directas';
+      document.getElementById('emptySub').textContent = 'Intenta con términos más específicos o en inglés.';
+      return;
+    }
+
+    document.getElementById('galleryHeader').style.display = 'flex';
+    document.getElementById('galleryTitle').textContent = `Resultados para "${query}"`;
+    document.getElementById('galleryCount').textContent = `${photos.length} fotos`;
+
+    renderPhotos(photos);
+
+  } catch (err) {
+    setStatus(false);
+    setSearching(false);
+    document.getElementById('emptyState').style.display = 'block';
+    document.getElementById('emptyTitle').textContent = 'Error de conexión';
+    document.getElementById('emptySub').textContent = 'Revisa tu conexión a internet e inténtalo de nuevo.';
+    console.error(err);
+  }
+}
+
+function renderPhotos(photos) {
+  const grid = document.getElementById('photoGrid');
+  grid.innerHTML = '';
+
+  photos.forEach((photo, i) => {
+    const card = document.createElement('div');
+    card.className = 'photo-card';
+    card.style.animationDelay = `${i * 0.06}s`;
+
+    const img = document.createElement('img');
+    img.className = 'photo-thumb';
+    img.src = photo.url;
+    img.alt = photo.title || 'Foto';
+    img.loading = 'lazy';
+    img.onerror = () => { card.style.display = 'none'; };
+
+    const info = document.createElement('div');
+    info.className = 'photo-info';
+    info.innerHTML = `
+      <div class="photo-title">${photo.title || 'Sin título'}</div>
+      <div class="photo-source">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        ${photo.source || 'Web'}
+      </div>
+    `;
+
+    card.appendChild(img);
+    card.appendChild(info);
+    card.onclick = () => selectPhoto(photo, card);
+    grid.appendChild(card);
+  });
+}
+
+function selectPhoto(photo, card) {
+  if (selectedCard) selectedCard.classList.remove('selected');
+  card.classList.add('selected');
+  selectedCard = card;
+
+  const htmlCode = `<img src="${photo.url}" alt="${photo.title || 'Imagen'}" style="max-width: 100%; height: auto;" />`;
+
+  document.getElementById('detailImg').src = photo.url;
+  document.getElementById('detailImg').alt = photo.title || '';
+  document.getElementById('detailTitle').textContent = photo.title || 'Sin título';
+  document.getElementById('detailUrl').textContent = photo.url;
+  document.getElementById('detailHtml').textContent = htmlCode;
+  document.getElementById('detailDownload').href = photo.url;
+  document.getElementById('detailOpen').href = photo.url;
+
+  const panel = document.getElementById('detailPanel');
+  panel.style.display = 'block';
+
+  setTimeout(() => {
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
+
+  document.getElementById('btnCopyUrl').textContent = 'Copiar URL';
+  document.getElementById('btnCopyUrl').classList.remove('copied');
+  document.getElementById('btnCopyHtml').textContent = 'Copiar HTML';
+  document.getElementById('btnCopyHtml').classList.remove('copied');
+}
+
+function copyText(sourceId, btnId) {
+  const text = document.getElementById(sourceId).textContent;
+  const btn = document.getElementById(btnId);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copiado';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = sourceId === 'detailUrl' ? 'Copiar URL' : 'Copiar HTML';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
+</body>
+</html>
