@@ -38,76 +38,60 @@ textarea:focus{border-color:rgba(232,200,122,.4)}
 .prog-bar{height:5px;background:var(--bg3);border-radius:99px;overflow:hidden}
 .prog-fill{height:100%;background:var(--gold);border-radius:99px;transition:width .5s;width:0}
 .prog-fill.ai{background:var(--purple)}
-.prog-sub{font-size:13px;color:var(--muted);margin-top:10px}
-.prog-sub.ai{color:var(--purple);font-weight:500}
-.prog-detail{font-size:11px;color:var(--muted2);margin-top:4px;min-height:16px}
+.prog-msg{font-size:13px;margin-top:10px;min-height:20px}
+.prog-msg.ai{color:var(--purple);font-weight:500}
+.prog-msg.ok{color:var(--green)}
+.prog-src{font-size:11px;color:var(--muted2);margin-top:4px;min-height:16px}
 .exp-box{display:none;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);padding:1.4rem;margin-bottom:2rem}
 .exp-box.on{display:block}
 .exp-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.7rem}
 .exp-ta{width:100%;height:160px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px;font-family:'Courier New',monospace;font-size:11px;color:var(--muted);resize:vertical;outline:none;line-height:1.6}
 .exp-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .results{display:none}.results.on{display:block}
-.tgroup{margin-bottom:2.5rem;animation:up .35s ease both}
+/* CARD grande — una sola imagen por término */
+.item{display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:1.5rem;animation:up .35s ease both}
 @keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.thdr{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);flex-wrap:wrap}
-.tname{font-family:'Playfair Display',serif;font-style:italic;font-size:1.1rem}
-.tpill{font-size:11px;color:var(--muted);background:var(--bg3);border:1px solid var(--border);border-radius:99px;padding:2px 10px}
-.tpill-ai{font-size:11px;color:var(--purple);background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.3);border-radius:99px;padding:2px 10px}
-.tok{color:var(--green);font-size:11px}.tai{color:var(--purple);font-size:11px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;position:relative;transition:border-color .2s,transform .2s}
-.card:hover{border-color:var(--border2);transform:translateY(-2px)}
-.card.aicard{border-color:rgba(167,139,250,0.25)}
-.card.aicard:hover{border-color:rgba(167,139,250,0.6)}
-.thumb{width:100%;height:140px;object-fit:cover;display:block;background:var(--bg3)}
-.ph{width:100%;height:140px;background:linear-gradient(135deg,#1a1824,#1e1a2e);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
-.ph-spin{width:36px;height:36px;border:3px solid rgba(167,139,250,0.15);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite}
+.item.ai-item{border-color:rgba(167,139,250,0.3)}
+@media(max-width:640px){.item{grid-template-columns:1fr}}
+.item-img{position:relative;aspect-ratio:4/3;background:var(--bg3);overflow:hidden}
+.item-img img{width:100%;height:100%;object-fit:cover;display:block}
+/* Placeholder animado mientras genera */
+.item-ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:1rem;background:linear-gradient(135deg,#1a1824,#1e1a2e);min-height:200px}
+.ph-spin{width:40px;height:40px;border:3px solid rgba(167,139,250,0.1);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
-.ph-label{font-size:10px;color:var(--purple);text-align:center;padding:0 8px;line-height:1.4}
-.ph-source{font-size:9px;color:var(--muted2);text-align:center;animation:blink 1.5s ease-in-out infinite}
+.ph-name{font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;color:var(--text);text-align:center}
+.ph-status{font-size:11px;color:var(--purple);text-align:center;animation:blink 1.4s ease-in-out infinite}
+.ph-source{font-size:10px;color:var(--muted2);text-align:center}
 @keyframes blink{0%,100%{opacity:.3}50%{opacity:1}}
-.ai-badge{position:absolute;top:8px;left:8px;background:rgba(110,80,220,0.92);color:#fff;font-size:10px;font-weight:500;padding:2px 9px;border-radius:99px;pointer-events:none}
-.src-badge{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.65);color:#ccc;font-size:9px;padding:2px 7px;border-radius:99px;pointer-events:none}
-.hl{position:absolute;inset:0;background:rgba(8,8,10,.88);display:flex;flex-direction:column;gap:6px;align-items:stretch;justify-content:center;padding:10px;opacity:0;transition:opacity .2s}
-.card:hover .hl{opacity:1}
-.hb{width:100%;padding:7px 0;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;font-family:'DM Sans',system-ui,sans-serif;border:none;transition:opacity .15s}
-.hb:disabled{opacity:.4;cursor:wait}
-.hb-gold{background:var(--gold);color:#0d0d0f}
-.hb-amber{background:var(--amber);color:#0d0d0f}
-.hb-ghost{background:transparent;color:var(--text);border:1px solid var(--border2)}
-.card-info{padding:8px 10px}
-.card-url{font-size:10px;font-family:'Courier New',monospace;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.card-credit{font-size:10px;color:var(--muted2);margin-top:2px}
-.mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:200;align-items:center;justify-content:center;padding:1rem}
-.mbg.on{display:flex}
-.mdl{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);width:100%;max-width:600px;max-height:92vh;overflow-y:auto;position:relative;animation:up .2s ease}
-.mdl-img{width:100%;max-height:300px;object-fit:cover;display:block}
-.mdl-body{padding:1.3rem}
-.mdl-title{font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:1rem}
-.field{margin-bottom:.9rem}
-.flbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
-.fbox{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px}
-.fmono{font-family:'Courier New',monospace;font-size:11px;color:var(--muted);word-break:break-all;flex:1;line-height:1.4}
-.cbtn{background:var(--bg2);border:1px solid var(--border2);border-radius:6px;padding:4px 12px;font-size:11px;font-weight:500;color:var(--text);cursor:pointer;white-space:nowrap;font-family:'DM Sans',system-ui,sans-serif;transition:all .15s;flex-shrink:0}
-.cbtn:hover{border-color:var(--amber)}.cbtn.ok{border-color:var(--green);color:var(--green)}
-.mdl-btns{display:flex;gap:8px;margin-top:1rem;flex-wrap:wrap}
-.mdl-btns .btn{flex:1;height:40px;font-size:.82rem}
-.xbtn{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.6);border:1px solid var(--border2);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:20px;line-height:1;z-index:10}
+.src-tag{position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,.7);color:#ccc;font-size:10px;padding:3px 8px;border-radius:99px;backdrop-filter:blur(4px)}
+.ai-tag{position:absolute;bottom:8px;right:8px;background:rgba(110,80,220,0.9);color:#fff;font-size:10px;font-weight:500;padding:3px 8px;border-radius:99px}
+.item-info{padding:1.2rem;display:flex;flex-direction:column;gap:10px;justify-content:center}
+.item-term{font-family:'Playfair Display',serif;font-style:italic;font-size:1.2rem;color:var(--text)}
+.item-credit{font-size:11px;color:var(--muted2)}
+.field-sm{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:8px 10px}
+.field-lbl{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px}
+.field-val{font-family:'Courier New',monospace;font-size:10px;color:var(--muted);word-break:break-all;line-height:1.4}
+.item-btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.item-btns .btn{height:36px;font-size:.78rem;padding:0 14px;flex:1}
+.cbtn-sm{background:var(--bg);border:1px solid var(--border2);border-radius:5px;padding:3px 10px;font-size:10px;font-weight:500;color:var(--text);cursor:pointer;font-family:'DM Sans',system-ui,sans-serif;transition:all .15s;flex-shrink:0}
+.cbtn-sm:hover{border-color:var(--amber)}.cbtn-sm.ok{border-color:var(--green);color:var(--green)}
+.url-row{display:flex;align-items:center;gap:6px}
+.url-val{font-family:'Courier New',monospace;font-size:10px;color:var(--muted);word-break:break-all;flex:1;line-height:1.4}
 footer{border-top:1px solid var(--border);padding:1.2rem 2rem;text-align:center;font-size:11px;color:var(--muted2);margin-top:2rem}
-@media(max-width:580px){.grid{grid-template-columns:repeat(2,1fr)}.mdl-btns{flex-direction:column}.exp-row{flex-direction:column}}
+.exp-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 </style>
 </head>
 <body>
 <header>
-  <div class="badge">&#9889; Unsplash + 3 IAs generativas</div>
+  <div class="badge">&#9889; Unsplash + IA — 1 imagen exacta por término</div>
   <h1>Fotos listas para<br><em>tu web</em></h1>
-  <p class="sub">Busca fotos reales. Si no encuentra, 3 IAs crean la imagen exacta del nombre que escribiste, una a una.</p>
+  <p class="sub">Una imagen exacta por cada nombre. Si no la encuentra, la IA la crea. Descarga en .PNG o .JPG.</p>
 </header>
 <main>
   <div class="lbl"><span>Términos &#8212; uno por línea (máx. 20)</span><span><span id="cnt">0</span>/20</span></div>
   <textarea id="ta" placeholder="superman&#10;dragon de fuego&#10;ciudad cyberpunk&#10;gato blanco&#10;puesta de sol&#10;...hasta 20 términos"></textarea>
   <div class="row">
-    <button class="btn gold" id="searchBtn" onclick="startSearch()">&#128269; Buscar fotos</button>
+    <button class="btn gold" id="searchBtn" onclick="startSearch()">&#128269; Buscar</button>
     <button class="btn ghost" onclick="clearAll()">&#128465; Limpiar</button>
     <div class="sp"></div>
     <button class="btn ghost" id="expBtn" style="display:none" onclick="toggleExp()">&#8595; Ver URLs</button>
@@ -115,45 +99,21 @@ footer{border-top:1px solid var(--border);padding:1.2rem 2rem;text-align:center;
   <div class="prog" id="prog">
     <div class="prog-top"><span id="pLbl">0 de 0</span><span id="pPct">0%</span></div>
     <div class="prog-bar"><div class="prog-fill" id="pFill"></div></div>
-    <div class="prog-sub" id="pSub">Iniciando...</div>
-    <div class="prog-detail" id="pDetail"></div>
+    <div class="prog-msg" id="pMsg">Iniciando...</div>
+    <div class="prog-src" id="pSrc"></div>
   </div>
   <div class="exp-box" id="expBox">
-    <div class="exp-lbl">URLs &#8212; listas para usar en tu web</div>
+    <div class="exp-lbl">URLs encontradas</div>
     <textarea class="exp-ta" id="expTa" readonly></textarea>
     <div class="exp-row">
       <button class="btn ghost" onclick="copyUrls()">&#128203; Copiar URLs</button>
-      <button class="btn gold" id="btnAllPng" onclick="dlAllFmt('png')">&#8595; Descargas en formato .PNG</button>
-      <button class="btn amber" id="btnAllJpg" onclick="dlAllFmt('jpg')">&#8595; Descargas en formato .JPG</button>
+      <button class="btn gold" id="btnAllPng" onclick="dlAll('png')">&#8595; Descargas .PNG</button>
+      <button class="btn amber" id="btnAllJpg" onclick="dlAll('jpg')">&#8595; Descargas .JPG</button>
     </div>
   </div>
   <div class="results" id="results"></div>
 </main>
-
-<div class="mbg" id="mbg" onclick="if(event.target===this)closeModal()">
-  <div class="mdl">
-    <div class="xbtn" onclick="closeModal()">&#215;</div>
-    <img class="mdl-img" id="mImg" src="" alt=""/>
-    <div class="mdl-body">
-      <div class="mdl-title" id="mTitle"></div>
-      <div class="field">
-        <div class="flbl">URL directa</div>
-        <div class="fbox"><span class="fmono" id="mUrl"></span><button class="cbtn" id="cUrl" onclick="copyF('mUrl','cUrl')">Copiar</button></div>
-      </div>
-      <div class="field">
-        <div class="flbl">Código HTML</div>
-        <div class="fbox"><span class="fmono" id="mHtml"></span><button class="cbtn" id="cHtml" onclick="copyF('mHtml','cHtml')">Copiar</button></div>
-      </div>
-      <div class="mdl-btns">
-        <button class="btn gold" id="mPng" onclick="dlModal('png')">&#8595; Descargar .PNG</button>
-        <button class="btn amber" id="mJpg" onclick="dlModal('jpg')">&#8595; Descargar .JPG</button>
-        <a class="btn ghost" id="mOpen" href="#" target="_blank">Ver original</a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<footer>Buscador &#8212; Unsplash + Pollinations + Lexica + Picsum</footer>
+<footer>Buscador &#8212; Unsplash + Pollinations AI + Lexica AI</footer>
 
 <script>
 const UKEY='2G8xFmc1jV0VWZg4zo6VeoV5yYj5Rf5S8mtuJ9VWai8';
@@ -161,7 +121,7 @@ const ta=document.getElementById('ta');
 ta.addEventListener('input',updateCount);
 function updateCount(){document.getElementById('cnt').textContent=Math.min(getTerms().length,20);}
 function getTerms(){return ta.value.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,20);}
-let allResults=[],busy=false,curPhoto=null;
+let allResults=[],busy=false;
 
 function clearAll(){
   ta.value='';updateCount();
@@ -189,119 +149,131 @@ async function startSearch(){
   for(let i=0;i<terms.length;i++){
     const term=terms[i];
     setProg(i,terms.length,'&#128269; Buscando "'+term+'" en Unsplash...',false,'');
-    let photos=await searchUnsplash(term);
 
-    if(photos.length===0){
-      // No encontrado — crear con IA una a una
-      addGroupWithPlaceholders(term,4,i);
-      const aiPhotos=[];
-      for(let j=0;j<4;j++){
-        const num=j+1;
-        setProg(i,terms.length,'✨ Creando imagen '+num+' de 4 para "'+term+'"',true,'Probando Pollinations AI → Lexica AI → Picsum...');
-        setCardState(i,j,'creating','Creando imagen '+num+' de 4...','Probando IAs...');
-        const photo=await generateAI(term,j,function(source){
-          setCardState(i,j,'creating','Creando imagen '+num+' de 4...','Usando '+source+'...');
-          setProg(i,terms.length,'✨ Imagen '+num+' de 4 para "'+term+'"',true,'Usando '+source+'...');
-        });
-        aiPhotos.push(photo);
-        showCard(i,j,photo);
-        setProg(i,terms.length,'✨ Imagen '+num+'/4 lista para "'+term+'"',true,'Creada con '+photo.source);
-      }
-      allResults.push({term,photos:aiPhotos,usedAI:true});
-      document.getElementById('pill_'+i).textContent='✅ 4 imágenes IA listas';
-    }else{
-      allResults.push({term,photos,usedAI:false});
-      addGroupReal(term,photos,i);
+    // Crear el item con placeholder inmediatamente
+    const itemEl=addItem(term,i,null);
+
+    // Buscar en Unsplash primero
+    let photo=await searchUnsplash(term);
+
+    if(!photo){
+      // No encontrado — crear con IA sin timeout — espera lo que haga falta
+      setProg(i,terms.length,'✨ Creando imagen de "'+term+'" con IA...',true,'Conectando con Pollinations AI...');
+      updateItemStatus(itemEl,'✨ Creando con IA...','Conectando con Pollinations AI...');
+
+      photo=await generateAI(term,i,function(msg,src){
+        setProg(i,terms.length,'✨ Creando "'+term+'"...',true,msg);
+        updateItemStatus(itemEl,'✨ '+msg,src||'');
+      });
     }
-    setProg(i+1,terms.length,(allResults[i].usedAI?'✨':'✓')+' "'+term+'" completado',allResults[i].usedAI,'');
+
+    // Mostrar imagen en el item
+    showItemImage(itemEl,photo);
+    allResults.push({term,photo});
+    setProg(i+1,terms.length,(photo.isAI?'✨ IA lista':'✓ Encontrada')+': "'+term+'"',photo.isAI,photo.source);
   }
 
   document.getElementById('prog').style.display='none';
-  busy=false;btn.disabled=false;btn.textContent='🔍 Buscar fotos';
+  busy=false;btn.disabled=false;btn.textContent='🔍 Buscar';
   document.getElementById('expBtn').style.display='flex';
   buildExport();
 }
 
-function setProg(done,total,sub,isAI,detail){
+function setProg(done,total,msg,isAI,src){
   const pct=total?Math.round(done/total*100):0;
   const fill=document.getElementById('pFill');
   fill.style.width=pct+'%';fill.className='prog-fill'+(isAI?' ai':'');
   document.getElementById('pPct').textContent=pct+'%';
   document.getElementById('pLbl').textContent=done+' de '+total+' términos';
-  const s=document.getElementById('pSub');s.innerHTML=sub;s.className='prog-sub'+(isAI?' ai':'');
-  document.getElementById('pDetail').textContent=detail||'';
+  const m=document.getElementById('pMsg');m.innerHTML=msg;
+  m.className='prog-msg'+(isAI?' ai':'');
+  document.getElementById('pSrc').textContent=src||'';
 }
 
+// Busca en Unsplash — devuelve la mejor imagen o null
 async function searchUnsplash(term){
   try{
-    const r=await fetch('https://api.unsplash.com/search/photos?query='+encodeURIComponent(term)+'&per_page=6&client_id='+UKEY);
+    const r=await fetch('https://api.unsplash.com/search/photos?query='+encodeURIComponent(term)+'&per_page=1&client_id='+UKEY);
     if(!r.ok)throw new Error();
     const d=await r.json();
-    return (d.results||[]).map(function(p){return{
-      url:p.urls.regular,urlFull:p.urls.full,urlSmall:p.urls.small,
-      urlJpg:p.urls.full+'&fm=jpg&q=90',urlPng:p.urls.full+'&fm=png',
-      title:p.alt_description||term,author:p.user.name,isAI:false,source:'Unsplash'
-    };});
-  }catch(e){return[];}
+    if(!d.results||!d.results.length)return null;
+    const p=d.results[0];
+    return{url:p.urls.regular,urlFull:p.urls.full,urlJpg:p.urls.full+'&fm=jpg&q=95',urlPng:p.urls.full+'&fm=png',
+      title:p.alt_description||term,author:p.user.name,isAI:false,source:'Unsplash'};
+  }catch(e){return null;}
 }
 
-// Genera imagen con 3 IAs en cascada, llamando onSource cuando sabe qué IA usa
-async function generateAI(term,idx,onSource){
-  const seed=hashStr(term)*31+idx*7777;
+// Genera imagen con IA — sin timeout, espera todo lo necesario
+async function generateAI(term,idx,onStatus){
+  const seed=hashStr(term)+idx*1000;
+  const prompt=encodeURIComponent(term+', high quality photorealistic');
 
-  // 1. Pollinations AI — genera exactamente lo que le pides
-  onSource('Pollinations AI');
-  const polUrl='https://image.pollinations.ai/prompt/'+encodeURIComponent(term)+'?width=800&height=600&seed='+seed+'&nologo=true&enhance=true&model=flux';
-  const polOk=await waitForImage(polUrl,25000);
-  if(polOk){
-    return mkPhoto(polUrl,term,idx,'Pollinations AI');
-  }
+  // 1. Pollinations AI — intenta sin límite de tiempo
+  onStatus('Generando "'+term+'" con Pollinations AI...','Esto puede tardar 20-40 segundos...');
+  const polUrl='https://image.pollinations.ai/prompt/'+prompt+'?width=800&height=600&seed='+seed+'&nologo=true&enhance=true&model=flux';
+  const polOk=await waitImageForever(polUrl,60000,function(secs){
+    onStatus('Generando "'+term+'" con Pollinations AI... ('+secs+'s)','Esperando respuesta...');
+  });
+  if(polOk)return mkPhoto(polUrl,term,'Pollinations AI',false);
 
-  // 2. Lexica AI — banco de imágenes IA por keyword
-  onSource('Lexica AI');
+  // 2. Lexica AI — búsqueda por keyword
+  onStatus('Buscando "'+term+'" en Lexica AI...','');
   try{
-    const ctrl=new AbortController();
-    const t=setTimeout(function(){ctrl.abort();},10000);
-    const r=await fetch('https://lexica.art/api/v1/search?q='+encodeURIComponent(term),{signal:ctrl.signal});
-    clearTimeout(t);
+    const r=await fetchWithTimeout('https://lexica.art/api/v1/search?q='+encodeURIComponent(term),15000);
     if(r.ok){
       const d=await r.json();
-      const imgs=(d.images||[]).filter(function(i){return i.src&&i.src.startsWith('http');});
-      if(imgs.length>0){
-        const pick=imgs[idx%imgs.length];
-        return mkPhoto(pick.src,term,idx,'Lexica AI');
+      const imgs=(d.images||[]).filter(function(x){return x.src&&x.src.startsWith('https');});
+      if(imgs.length){
+        const url=imgs[0].src;
+        const ok=await waitImageForever(url,15000,null);
+        if(ok)return mkPhoto(url,term,'Lexica AI',false);
       }
     }
   }catch(e){}
 
-  // 3. Picsum — foto real aleatoria pero siempre la misma para el mismo término
-  onSource('Picsum (respaldo)');
-  const picsumUrl='https://picsum.photos/seed/'+hashStr(term+idx)+'/800/600';
-  return mkPhoto(picsumUrl,term,idx,'Picsum');
+  // 3. Picsum — respaldo, foto aleatoria real
+  onStatus('Usando Picsum como respaldo...','');
+  const picsumUrl='https://picsum.photos/seed/'+hashStr(term)/800/600;
+  return mkPhoto('https://picsum.photos/seed/'+hashStr(term)+'/800/600',term,'Picsum (respaldo)',true);
 }
 
-// Espera real a que cargue la imagen (hasta ms milisegundos)
-function waitForImage(url,ms){
+// Espera a que cargue una imagen sin timeout fijo, actualizando el contador
+function waitImageForever(url,maxMs,onTick){
   return new Promise(function(resolve){
     const img=new Image();
-    const timer=setTimeout(function(){img.src='';resolve(false);},ms);
-    img.onload=function(){clearTimeout(timer);resolve(true);};
-    img.onerror=function(){clearTimeout(timer);resolve(false);};
+    let secs=0;
+    let interval=null;
+    const maxTimer=setTimeout(function(){
+      if(interval)clearInterval(interval);
+      img.src='';resolve(false);
+    },maxMs);
+    if(onTick){
+      interval=setInterval(function(){secs++;onTick(secs);},1000);
+    }
+    img.onload=function(){
+      clearTimeout(maxTimer);if(interval)clearInterval(interval);resolve(true);
+    };
+    img.onerror=function(){
+      clearTimeout(maxTimer);if(interval)clearInterval(interval);resolve(false);
+    };
     img.src=url;
   });
 }
 
-function mkPhoto(url,term,idx,source){
-  return{url:url,urlFull:url,urlSmall:url,urlJpg:url,urlPng:url,
-    title:term+' '+(idx+1),author:source,isAI:true,source:source};
+async function fetchWithTimeout(url,ms){
+  const ctrl=new AbortController();
+  const t=setTimeout(function(){ctrl.abort();},ms);
+  try{const r=await fetch(url,{signal:ctrl.signal});clearTimeout(t);return r;}
+  catch(e){clearTimeout(t);throw e;}
+}
+
+function mkPhoto(url,term,source,isFallback){
+  return{url,urlFull:url,urlJpg:url,urlPng:url,title:term,author:source,isAI:true,source,isFallback};
 }
 
 function hashStr(s){
-  let h=5381;
-  for(let i=0;i<s.length;i++)h=((h<<5)+h)+s.charCodeAt(i)|0;
-  return Math.abs(h)%99991;
+  let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h)+s.charCodeAt(i)|0;return Math.abs(h)%99991;
 }
-
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function safeName(t){
   return(t||'foto').toLowerCase()
@@ -310,140 +282,112 @@ function safeName(t){
     .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').substring(0,50)||'foto';
 }
 
-function hoverBtns(){
-  return '<div class="hl">'+
-    '<button class="hb hb-gold" onclick="openModalCard(this)">&#128269; Ver / Copiar URL</button>'+
-    '<button class="hb hb-ghost" onclick="cardDl(this,\'png\')">&#8595; Descargar .PNG</button>'+
-    '<button class="hb hb-amber" onclick="cardDl(this,\'jpg\')">&#8595; Descargar .JPG</button>'+
-  '</div>';
-}
-
-function addGroupReal(term,photos,idx){
+// Crea el item con placeholder
+function addItem(term,idx,photo){
   const wrap=document.createElement('div');
-  wrap.className='tgroup';wrap.style.animationDelay=(idx*.05)+'s';
-  wrap.innerHTML='<div class="thdr"><span class="tname">'+esc(term)+'</span>'+
-    '<span class="tpill">'+photos.length+' fotos</span><span class="tok">✓ Unsplash</span></div>'+
-    '<div class="grid" id="g'+idx+'"></div>';
-  document.getElementById('results').appendChild(wrap);
-  const grid=document.getElementById('g'+idx);
-  photos.forEach(function(p){
-    const c=document.createElement('div');
-    c.className='card';
-    c.dataset.url=p.url;c.dataset.urlFull=p.urlFull;
-    c.dataset.urlJpg=p.urlJpg;c.dataset.urlPng=p.urlPng;
-    c.dataset.title=p.title;c.dataset.isAI='0';
-    c.innerHTML='<img class="thumb" src="'+esc(p.urlSmall||p.url)+'" alt="'+esc(p.title)+'" loading="lazy">'+
-      '<div class="src-badge">Unsplash</div>'+hoverBtns()+
-      '<div class="card-info"><div class="card-url">'+esc(p.url.substring(0,55))+'</div>'+
-      '<div class="card-credit">📷 '+esc(p.author)+'</div></div>';
-    grid.appendChild(c);
-  });
-}
-
-function addGroupWithPlaceholders(term,count,idx){
-  const wrap=document.createElement('div');
-  wrap.className='tgroup';wrap.style.animationDelay=(idx*.05)+'s';
-  wrap.innerHTML='<div class="thdr"><span class="tname">'+esc(term)+'</span>'+
-    '<span class="tpill-ai" id="pill_'+idx+'">✨ Creando con IA...</span>'+
-    '<span class="tai">✨ IA</span></div>'+
-    '<div class="grid" id="g'+idx+'"></div>';
-  document.getElementById('results').appendChild(wrap);
-  const grid=document.getElementById('g'+idx);
-  for(let i=0;i<count;i++){
-    const c=document.createElement('div');
-    c.className='card aicard';c.id='c_'+idx+'_'+i;
-    c.innerHTML='<div class="ph">'+
-      '<div class="ph-spin"></div>'+
-      '<div class="ph-label" id="cl_'+idx+'_'+i+'">Preparando...</div>'+
-      '<div class="ph-source" id="cs_'+idx+'_'+i+'">Iniciando IAs...</div>'+
+  wrap.className='item'+(photo&&photo.isAI?' ai-item':'');
+  wrap.style.animationDelay=(idx*.08)+'s';
+  wrap.id='item_'+idx;
+  wrap.innerHTML=
+    '<div class="item-img" id="img_'+idx+'">'+
+      '<div class="item-ph" id="ph_'+idx+'">'+
+        '<div class="ph-spin"></div>'+
+        '<div class="ph-name">'+esc(term)+'</div>'+
+        '<div class="ph-status" id="phst_'+idx+'">Buscando...</div>'+
+        '<div class="ph-source" id="phsr_'+idx+'"></div>'+
+      '</div>'+
     '</div>'+
-    '<div class="ai-badge">✨ IA</div>'+
-    hoverBtns().replace('onclick="openModalCard(this)"','onclick="openModalCard(this)" disabled').replace('onclick="cardDl','onclick="cardDl')+
-    '<div class="card-info"><div class="card-url" id="cu_'+idx+'_'+i+'">Generando...</div>'+
-    '<div class="card-credit">✨ IA generativa</div></div>';
-    grid.appendChild(c);
-  }
+    '<div class="item-info" id="info_'+idx+'">'+
+      '<div class="item-term">'+esc(term)+'</div>'+
+      '<div class="item-credit" id="credit_'+idx+'">Buscando...</div>'+
+      '<div class="field-sm"><div class="field-lbl">URL</div>'+
+        '<div class="url-row"><span class="url-val" id="urlval_'+idx+'">—</span>'+
+          '<button class="cbtn-sm" id="cbtn_'+idx+'" onclick="copyUrl('+idx+')">Copiar</button></div>'+
+      '</div>'+
+      '<div class="field-sm"><div class="field-lbl">HTML</div>'+
+        '<div class="field-val" id="htmlval_'+idx+'">—</div>'+
+      '</div>'+
+      '<div class="item-btns">'+
+        '<button class="btn gold" id="dlpng_'+idx+'" onclick="dlItem('+idx+',\'png\')" disabled>&#8595; .PNG</button>'+
+        '<button class="btn amber" id="dljpg_'+idx+'" onclick="dlItem('+idx+',\'jpg\')" disabled>&#8595; .JPG</button>'+
+      '</div>'+
+    '</div>';
+  document.getElementById('results').appendChild(wrap);
+  return wrap;
 }
 
-function setCardState(gi,ci,state,label,source){
-  const lEl=document.getElementById('cl_'+gi+'_'+ci);
-  const sEl=document.getElementById('cs_'+gi+'_'+ci);
-  if(lEl)lEl.textContent=label;
-  if(sEl)sEl.textContent=source;
+function updateItemStatus(itemEl,status,source){
+  const idx=itemEl.id.replace('item_','');
+  const stEl=document.getElementById('phst_'+idx);
+  const srEl=document.getElementById('phsr_'+idx);
+  if(stEl)stEl.textContent=status;
+  if(srEl)srEl.textContent=source;
 }
 
-function showCard(gi,ci,photo){
-  const c=document.getElementById('c_'+gi+'_'+ci);
-  if(!c)return;
-  c.dataset.url=photo.url;c.dataset.urlFull=photo.url;
-  c.dataset.urlJpg=photo.url;c.dataset.urlPng=photo.url;
-  c.dataset.title=photo.title;c.dataset.isAI='1';
-  c.innerHTML='<img class="thumb" src="'+esc(photo.url)+'" alt="'+esc(photo.title)+'" loading="lazy">'+
-    '<div class="ai-badge">✨ IA</div>'+
-    '<div class="src-badge">'+esc(photo.source)+'</div>'+
-    hoverBtns()+
-    '<div class="card-info"><div class="card-url">'+esc(photo.url.substring(0,55))+'</div>'+
-    '<div class="card-credit">✨ '+esc(photo.source)+'</div></div>';
+function showItemImage(itemEl,photo){
+  const idx=itemEl.id.replace('item_','');
+  if(photo.isAI)itemEl.classList.add('ai-item');
+
+  // Reemplazar placeholder con imagen real
+  const imgDiv=document.getElementById('img_'+idx);
+  imgDiv.innerHTML=
+    '<img src="'+esc(photo.url)+'" alt="'+esc(photo.title)+'" style="width:100%;height:100%;object-fit:cover;display:block">'+
+    '<div class="src-tag">'+esc(photo.source)+'</div>'+
+    (photo.isAI?'<div class="ai-tag">✨ IA</div>':'');
+
+  // Actualizar info
+  document.getElementById('credit_'+idx).textContent=(photo.isAI?'✨ ':' 📷')+photo.author;
+  const urlEl=document.getElementById('urlval_'+idx);
+  if(urlEl)urlEl.textContent=photo.urlFull||photo.url;
+  const htmlEl=document.getElementById('htmlval_'+idx);
+  if(htmlEl)htmlEl.textContent='<img src="'+(photo.urlFull||photo.url)+'" alt="'+photo.title+'" style="max-width:100%">';
+
+  // Activar botones
+  const png=document.getElementById('dlpng_'+idx);
+  const jpg=document.getElementById('dljpg_'+idx);
+  if(png)png.disabled=false;
+  if(jpg)jpg.disabled=false;
+
+  // Guardar photo en dataset
+  itemEl.dataset.url=photo.url;
+  itemEl.dataset.urlFull=photo.urlFull||photo.url;
+  itemEl.dataset.urlJpg=photo.urlJpg||photo.url;
+  itemEl.dataset.urlPng=photo.urlPng||photo.url;
+  itemEl.dataset.title=photo.title;
 }
 
-function getData(btn){
-  const c=btn.closest('.card');
-  return{url:c.dataset.url||'',urlFull:c.dataset.urlFull||c.dataset.url||'',
-    urlJpg:c.dataset.urlJpg||c.dataset.url||'',urlPng:c.dataset.urlPng||c.dataset.url||'',
-    title:c.dataset.title||'foto',isAI:c.dataset.isAI==='1'};
-}
-
-function openModalCard(btn){
-  const d=getData(btn);
-  if(!d.url){alert('Imagen aún generándose, espera.');return;}
-  curPhoto=d;
-  document.getElementById('mImg').src=d.url;
-  document.getElementById('mTitle').textContent=(d.isAI?'✨ IA: ':'')+d.title;
-  document.getElementById('mUrl').textContent=d.urlFull;
-  document.getElementById('mHtml').textContent='<img src="'+d.urlFull+'" alt="'+d.title+'" style="max-width:100%;height:auto;">';
-  document.getElementById('mOpen').href=d.urlFull;
-  ['cUrl','cHtml'].forEach(function(id){const b=document.getElementById(id);b.textContent='Copiar';b.classList.remove('ok');});
-  document.getElementById('mbg').classList.add('on');
-}
-function closeModal(){document.getElementById('mbg').classList.remove('on');}
-
-function copyF(srcId,btnId){
-  navigator.clipboard.writeText(document.getElementById(srcId).textContent).then(function(){
-    const b=document.getElementById(btnId);b.textContent='✓';b.classList.add('ok');
-    setTimeout(function(){b.textContent='Copiar';b.classList.remove('ok');},2000);
+function copyUrl(idx){
+  const el=document.getElementById('urlval_'+idx);
+  if(!el||el.textContent==='—')return;
+  navigator.clipboard.writeText(el.textContent).then(function(){
+    const btn=document.getElementById('cbtn_'+idx);
+    btn.textContent='✓';btn.classList.add('ok');
+    setTimeout(function(){btn.textContent='Copiar';btn.classList.remove('ok');},2000);
   });
 }
 
-async function cardDl(btn,fmt){
-  const d=getData(btn);
-  if(!d.url){alert('Imagen aún generándose.');return;}
-  const orig=btn.textContent;btn.disabled=true;btn.textContent='...';
-  await doDownload(d,fmt);
-  btn.textContent=orig;btn.disabled=false;
-}
-
-async function dlModal(fmt){
-  if(!curPhoto||!curPhoto.url)return;
-  const btnId=fmt==='png'?'mPng':'mJpg';
+async function dlItem(idx,fmt){
+  const item=document.getElementById('item_'+idx);
+  if(!item)return;
+  const btnId=fmt==='png'?'dlpng_'+idx:'dljpg_'+idx;
   const btn=document.getElementById(btnId);
-  const orig=btn.textContent;btn.disabled=true;btn.textContent='Descargando...';
-  await doDownload(curPhoto,fmt);
+  const orig=btn.textContent;btn.disabled=true;btn.textContent='...';
+  const photo={url:item.dataset.url,urlFull:item.dataset.urlFull,
+    urlJpg:item.dataset.urlJpg,urlPng:item.dataset.urlPng,title:item.dataset.title};
+  await doDownload(photo,fmt);
   btn.textContent=orig;btn.disabled=false;
 }
 
-async function dlAllFmt(fmt){
+async function dlAll(fmt){
   const bId=fmt==='png'?'btnAllPng':'btnAllJpg';
   const oId=fmt==='png'?'btnAllJpg':'btnAllPng';
   const btn=document.getElementById(bId),other=document.getElementById(oId);
   const orig=btn.textContent;btn.disabled=true;other.disabled=true;
-  let total=0;allResults.forEach(function(r){total+=r.photos.length;});
   let done=0;
   for(const r of allResults){
-    for(const p of r.photos){
-      done++;btn.textContent='Descargando '+done+'/'+total+'...';
-      if(p.url)await doDownload(p,fmt);
-      await new Promise(function(res){setTimeout(res,500);});
-    }
+    done++;btn.textContent='Descargando '+done+'/'+allResults.length+'...';
+    if(r.photo&&r.photo.url)await doDownload(r.photo,fmt);
+    await new Promise(function(res){setTimeout(res,500);});
   }
   btn.textContent=orig;btn.disabled=false;other.disabled=false;
   alert('✅ '+done+' fotos descargadas en .'+fmt.toUpperCase());
@@ -480,12 +424,10 @@ async function doDownload(photo,fmt){
 function buildExport(){
   const lines=[];
   allResults.forEach(function(r){
-    lines.push('\n=== '+r.term+(r.usedAI?' [IA]':'')+' ===');
-    r.photos.forEach(function(p){if(p.url)lines.push(p.url);});
+    if(r.photo&&r.photo.url)lines.push(r.term+': '+r.photo.url);
   });
   document.getElementById('expTa').value=lines.join('\n');
 }
-
 function toggleExp(){
   const b=document.getElementById('expBox');b.classList.toggle('on');
   if(b.classList.contains('on'))b.scrollIntoView({behavior:'smooth',block:'start'});
