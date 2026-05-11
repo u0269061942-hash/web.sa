@@ -188,33 +188,54 @@ async function startSearch() {
   document.getElementById('results').classList.add('on');
   document.getElementById('prog').style.display = 'block';
 
+  // Crear todos los items con placeholder primero
+  const itemEls = terms.map(function(term, i) {
+    return createItem(term, i);
+  });
+
+  // Buscar en Unsplash primero (secuencial para no saturar)
+  const unsplashResults = [];
   for (let i = 0; i < terms.length; i++) {
-    const term = terms[i];
-    setProg(i, terms.length, '&#128269; Buscando "' + term + '" en Unsplash...', false, '');
-    const itemEl = createItem(term, i);
-
-    // 1. Buscar en Unsplash
-    let photo = await searchUnsplash(term, function(msg) {
-      updatePH(i, null, msg, '');
-    });
-
+    setProg(i, terms.length, '&#128269; Buscando "' + terms[i] + '" en Unsplash...', false, '');
+    updatePH(i, null, 'Buscando en Unsplash...', '');
+    const photo = await searchUnsplash(terms[i], function(msg) { updatePH(i, null, msg, ''); });
+    unsplashResults.push(photo);
     if (photo) {
-      showItemPhoto(itemEl, i, photo);
-      allResults.push({ term, photo });
-      setProg(i + 1, terms.length, '✓ Encontrada: "' + term + '"', false, 'Unsplash');
+      showItemPhoto(itemEls[i], i, photo);
+      allResults.push({ term: terms[i], photo });
+      setProg(i + 1, terms.length, '✓ "' + terms[i] + '"', false, 'Unsplash');
     } else {
-      // 2. Crear con IA
-      setProg(i, terms.length, '✨ Creando "' + term + '" con IA...', true, 'Conectando...');
-      updatePH(i, 0, '✨ Creando imagen de "' + term + '"', 'Stable Diffusion');
-      photo = await generateAI(term, function(secs, model, detail) {
-        setProg(i, terms.length, '✨ Creando "' + term + '"... ' + secs + 's', true, model + ' — ' + detail);
-        updatePH(i, secs, '✨ Creando "' + term + '"', model);
-      });
-      showItemPhoto(itemEl, i, photo);
-      allResults.push({ term, photo });
-      setProg(i + 1, terms.length, '✨ Creada: "' + term + '"', true, photo.source);
+      updatePH(i, 0, '✨ Pendiente de IA...', 'En cola');
     }
   }
+
+  // Generar con IA EN PARALELO los que no se encontraron
+  const aiTerms = terms.filter(function(t, i) { return !unsplashResults[i]; });
+  const aiIndices = terms.map(function(t, i) { return i; }).filter(function(i) { return !unsplashResults[i]; });
+
+  if (aiTerms.length > 0) {
+    setProg(terms.filter(function(t,i){ return !!unsplashResults[i]; }).length, terms.length,
+      '✨ Generando ' + aiTerms.length + ' imágenes con IA en paralelo...', true, 'FLUX.1-schnell');
+
+    // Lanzar todas las generaciones IA al mismo tiempo
+    const aiPromises = aiTerms.map(function(term, j) {
+      const idx = aiIndices[j];
+      updatePH(idx, 0, '✨ Creando "' + term + '"', 'FLUX.1-schnell');
+      return generateAI(term, function(secs, model, detail) {
+        updatePH(idx, secs, '✨ Creando "' + term + '"', model);
+      }).then(function(photo) {
+        showItemPhoto(itemEls[idx], idx, photo);
+        allResults.push({ term, photo });
+      });
+    });
+
+    await Promise.all(aiPromises);
+  }
+
+  // Ordenar allResults por índice original
+  allResults.sort(function(a, b) {
+    return terms.indexOf(a.term) - terms.indexOf(b.term);
+  });
 
   document.getElementById('prog').style.display = 'none';
   busy = false; btn.disabled = false; btn.textContent = '🔍 Buscar imágenes';
@@ -274,45 +295,47 @@ async function searchUnsplash(term, onStatus) {
 
 async function generateAI(term, onTick) {
   let secs = 0;
-  let ticker = null;
-  function startTicker(model) {
-    if (ticker) clearInterval(ticker);
-    ticker = setInterval(function() { secs++; onTick(secs, model, 'Generando imagen de "' + term + '"...'); }, 1000);
-  }
-  function stopTicker() { if (ticker) clearInterval(ticker); ticker = null; }
+  const ticker = setInterval(function() {
+    secs++;
+    onTick(secs, 'FLUX.1-schnell', 'Generando imagen de "' + term + '"...');
+  }, 1000);
 
-  for (let mi = 0; mi < HF_MODELS.length; mi++) {
-    const model = HF_MODELS[mi];
-    const name = model.split('/')[1];
-    onTick(secs, name, 'Conectando...'); startTicker(name);
-    for (let attempt = 0; attempt < 3; attempt++) {
-      try {
-        if (attempt > 0) { stopTicker(); onTick(secs, name, 'Reintentando...'); await sleep(5000); startTicker(name); }
-        const response = await fetch(CF_WORKER, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model, prompt: term, token: HF_TOKEN })
-        });
-        if (response.status === 503) { stopTicker(); onTick(secs, name, 'Modelo cargando, esperando 20s...'); await sleep(20000); startTicker(name); continue; }
-        if (!response.ok) break;
+  // Reintentar hasta conseguirlo
+  for (let attempt = 0; attempt < 5; attempt++) {
+    try {
+      if (attempt > 0) {
+        onTick(secs, 'FLUX.1-schnell', 'Reintentando (' + attempt + '/5)...');
+        await sleep(attempt === 1 ? 20000 : 5000); // Si modelo cargando espera más
+      }
+      const response = await fetch(CF_WORKER, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: term, token: HF_TOKEN })
+      });
+      if (response.status === 503) {
+        onTick(secs, 'FLUX.1-schnell', 'Modelo cargando, esperando 20s...');
+        await sleep(20000);
+        continue;
+      }
+      if (response.ok) {
         const blob = await response.blob();
-        stopTicker();
         if (blob && blob.size > 500) {
+          clearInterval(ticker);
           const url = URL.createObjectURL(blob);
-          return { url, urlFull: url, urlJpg: url, urlPng: url, title: term, author: name, description: generateDescription(term), isAI: true, source: name, blob };
+          onTick(secs, 'FLUX.1-schnell', '✅ Imagen creada en ' + secs + 's');
+          return { url, urlFull: url, urlJpg: url, urlPng: url, title: term, author: 'FLUX.1-schnell', description: generateDescription(term), isAI: true, source: 'FLUX.1', blob };
         }
-      } catch(e) { console.warn(name, e); }
-    }
-    stopTicker(); onTick(secs, name, 'No disponible, probando siguiente...'); await sleep(1000);
+      }
+    } catch(e) { console.warn('FLUX error:', e); }
   }
 
-  // Pollinations como último recurso
-  stopTicker(); onTick(secs, 'Pollinations AI', 'Generando...'); startTicker('Pollinations AI');
+  clearInterval(ticker);
+  // Pollinations como respaldo
+  onTick(secs, 'Pollinations AI', 'Usando respaldo...');
   const polUrl = 'https://image.pollinations.ai/prompt/' + encodeURIComponent(term) + '?width=800&height=600&seed=' + Math.floor(Math.random() * 99999) + '&nologo=true&enhance=true';
   await new Promise(function(resolve) {
     const img = new Image();
-    img.onload = function() { stopTicker(); resolve(); };
-    img.onerror = function() { stopTicker(); resolve(); };
+    img.onload = resolve; img.onerror = resolve;
     img.src = polUrl;
   });
   return { url: polUrl, urlFull: polUrl, urlJpg: polUrl, urlPng: polUrl, title: term, author: 'Pollinations AI', description: generateDescription(term), isAI: true, source: 'Pollinations AI', blob: null };
