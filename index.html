@@ -21,7 +21,7 @@ header{padding:2.5rem 2rem 2rem;text-align:center;border-bottom:1px solid var(--
 h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3rem);font-weight:700;line-height:1.1;letter-spacing:-.02em;margin-bottom:.5rem}
 h1 em{font-style:italic;color:var(--gold)}
 .sub{font-size:.9rem;color:var(--muted);max-width:520px;margin:0 auto}
-main{max-width:960px;margin:0 auto;padding:2rem}
+main{max-width:1000px;margin:0 auto;padding:2rem}
 .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px;display:flex;justify-content:space-between}
 #cnt{color:var(--gold)}
 textarea{width:100%;height:200px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;font-family:'DM Sans',system-ui,sans-serif;font-size:.9rem;color:var(--text);outline:none;resize:vertical;line-height:1.9;margin-bottom:1rem}
@@ -47,29 +47,30 @@ textarea:focus{border-color:rgba(232,200,122,.4)}
 .exp-ta{width:100%;height:160px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px;font-family:'Courier New',monospace;font-size:11px;color:var(--muted);resize:vertical;outline:none;line-height:1.6}
 .exp-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .results{display:none}.results.on{display:block}
-/* ITEM — una imagen por término */
-.item{display:grid;grid-template-columns:300px 1fr;background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:1.5rem;animation:up .35s ease both}
+/* ITEM */
+.item{display:grid;grid-template-columns:320px 1fr;background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:1.5rem;animation:up .35s ease both}
 @keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .item.found{border-color:rgba(111,207,138,0.3)}
 .item.ai{border-color:rgba(167,139,250,0.3)}
-@media(max-width:640px){.item{grid-template-columns:1fr}}
-.item-img{position:relative;min-height:220px;background:var(--bg3)}
-.item-img img{width:100%;height:100%;object-fit:cover;display:block;min-height:220px}
-/* Placeholder mientras genera */
-.ph{width:100%;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:1.5rem;background:linear-gradient(135deg,#1a1824,#1e1a2e)}
+@media(max-width:700px){.item{grid-template-columns:1fr}}
+.item-img{position:relative;min-height:240px;background:var(--bg3)}
+.item-img img{width:100%;height:100%;object-fit:cover;display:block;min-height:240px}
+.ph{width:100%;min-height:240px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:1.5rem;background:linear-gradient(135deg,#1a1824,#1e1a2e)}
 .ph-spin{width:40px;height:40px;border:3px solid rgba(167,139,250,0.1);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .ph-name{font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;color:var(--text);text-align:center}
 .ph-secs{font-size:26px;font-weight:500;color:var(--purple)}
 .ph-msg{font-size:11px;color:var(--purple);text-align:center;animation:blink 1.4s ease-in-out infinite}
-.ph-src{font-size:10px;color:var(--muted2);text-align:center}
 @keyframes blink{0%,100%{opacity:.3}50%{opacity:1}}
 .tag{position:absolute;bottom:8px;left:8px;font-size:10px;padding:3px 9px;border-radius:99px;background:rgba(0,0,0,.7);color:#ccc}
 .tag-ai{position:absolute;bottom:8px;right:8px;font-size:10px;padding:3px 9px;border-radius:99px;background:rgba(110,80,220,0.9);color:#fff;font-weight:500}
 .tag-ok{position:absolute;bottom:8px;right:8px;font-size:10px;padding:3px 9px;border-radius:99px;background:rgba(40,160,80,0.9);color:#fff;font-weight:500}
-/* Info */
-.item-info{padding:1.3rem;display:flex;flex-direction:column;gap:10px;justify-content:center}
+/* Info panel */
+.item-info{padding:1.3rem;display:flex;flex-direction:column;gap:10px;justify-content:flex-start;overflow:hidden}
 .item-name{font-family:'Playfair Display',serif;font-style:italic;font-size:1.2rem}
+/* DESCRIPCIÓN */
+.item-desc{font-size:.85rem;color:var(--muted);line-height:1.6;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;font-style:italic}
+.item-desc-lbl{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
 .item-src{font-size:11px;color:var(--muted2)}
 .field{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px}
 .field-lbl{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
@@ -84,9 +85,9 @@ footer{border-top:1px solid var(--border);padding:1.2rem 2rem;text-align:center;
 </head>
 <body>
 <header>
-  <div class="badge">&#9889; Unsplash + IA — imagen exacta por nombre</div>
+  <div class="badge">&#9889; Unsplash + IA — imagen exacta + descripción</div>
   <h1>Fotos exactas para<br><em>tu web</em></h1>
-  <p class="sub">Escribe hasta 20 nombres. Busca en Unsplash y si no encuentra, la IA la crea. Descarga en .PNG o .JPG.</p>
+  <p class="sub">Escribe hasta 20 nombres. Busca la imagen exacta, genera con IA si no encuentra, y muestra descripción automática.</p>
 </header>
 <main>
   <div class="lbl"><span>Nombres — uno por línea (máx. 20)</span><span><span id="cnt">0</span>/20</span></div>
@@ -114,10 +115,9 @@ footer{border-top:1px solid var(--border);padding:1.2rem 2rem;text-align:center;
   </div>
   <div class="results" id="results"></div>
 </main>
-<footer>Buscador de Fotos &#8212; Unsplash + Stable Diffusion (Cloudflare + Hugging Face)</footer>
+<footer>Buscador de Fotos &#8212; Unsplash + Stable Diffusion (Cloudflare Worker)</footer>
 
 <script>
-// ── CONFIGURACIÓN ──────────────────────────────────────────
 const UNSPLASH_KEY = '2G8xFmc1jV0VWZg4zo6VeoV5yYj5Rf5S8mtuJ9VWai8';
 const CF_WORKER    = 'https://hf-proxyf.u0269061942.workers.dev';
 const HF_TOKEN     = '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';
@@ -126,7 +126,33 @@ const HF_MODELS    = [
   'runwayml/stable-diffusion-v1-5',
   'CompVis/stable-diffusion-v1-4'
 ];
-// ───────────────────────────────────────────────────────────
+
+// Descripciones automáticas para imágenes IA basadas en el nombre
+function generateDescription(term) {
+  const t = term.toLowerCase();
+  const descriptions = {
+    'superman': 'El icónico superhéroe de DC Comics, conocido por su capa roja y su símbolo de esperanza. Defensor de la justicia y protector de Metrópolis.',
+    'batman': 'El Caballero Oscuro de Gotham City. Superhéroe sin poderes que usa su inteligencia, tecnología y artes marciales para combatir el crimen.',
+    'spiderman': 'El Hombre Araña, superhéroe adolescente con habilidades arácnidas. Conocido por su sentido de la responsabilidad y su ingenio.',
+    'dragon': 'Criatura mítica de gran poder, con escamas y capaz de escupir fuego. Símbolo de fuerza y sabiduría en muchas culturas del mundo.',
+    'gato': 'Animal doméstico ágil y curioso, conocido por su independencia y elegancia. Uno de los compañeros favoritos del ser humano.',
+    'perro': 'El mejor amigo del hombre, leal y afectuoso. Animal doméstico conocido por su fidelidad y su vínculo especial con las personas.',
+    'ciudad': 'Entorno urbano vibrante lleno de rascacielos, luces y actividad humana constante. Centro de cultura, comercio y vida moderna.',
+    'naturaleza': 'El mundo natural en todo su esplendor, con paisajes, flora y fauna que reflejan la belleza del planeta Tierra.',
+    'montaña': 'Formación geológica imponente que se eleva sobre el paisaje, ofreciendo vistas panorámicas y desafíos para exploradores.',
+    'playa': 'Franja de arena donde el mar y la tierra se encuentran, lugar de descanso y disfrute bajo el sol.',
+    'puesta de sol': 'Fenómeno natural que tiñe el cielo de tonos cálidos al caer la noche, creando paisajes de extraordinaria belleza.',
+    'flor': 'Órgano reproductor de las plantas, símbolo de belleza y diversidad en la naturaleza con infinidad de formas y colores.',
+    'árbol': 'Planta leñosa que puede vivir cientos de años, fundamental para el ecosistema y símbolo de vida y permanencia.',
+    'agua': 'Elemento vital para toda forma de vida, que puede aparecer como río, lago, mar o cascada en la naturaleza.'
+  };
+  // Buscar coincidencia parcial
+  for (const key of Object.keys(descriptions)) {
+    if (t.includes(key) || key.includes(t)) return descriptions[key];
+  }
+  // Descripción genérica inteligente
+  return 'Imagen que representa "' + term + '". Esta fotografía captura la esencia visual del término con detalle y precisión, lista para usar en proyectos web y presentaciones digitales.';
+}
 
 const ta = document.getElementById('ta');
 ta.addEventListener('input', updateCount);
@@ -173,20 +199,17 @@ async function startSearch() {
     });
 
     if (photo) {
-      // Encontrado en Unsplash
       showItemPhoto(itemEl, i, photo);
       allResults.push({ term, photo });
       setProg(i + 1, terms.length, '✓ Encontrada: "' + term + '"', false, 'Unsplash');
     } else {
-      // No encontrado → crear con IA
-      setProg(i, terms.length, '✨ Creando "' + term + '" con IA...', true, 'Conectando con Stable Diffusion...');
-      updatePH(i, 0, '✨ Creando imagen de "' + term + '"', 'Stable Diffusion via Hugging Face');
-
+      // 2. Crear con IA
+      setProg(i, terms.length, '✨ Creando "' + term + '" con IA...', true, 'Conectando...');
+      updatePH(i, 0, '✨ Creando imagen de "' + term + '"', 'Stable Diffusion');
       photo = await generateAI(term, function(secs, model, detail) {
         setProg(i, terms.length, '✨ Creando "' + term + '"... ' + secs + 's', true, model + ' — ' + detail);
-        updatePH(i, secs, '✨ Creando imagen de "' + term + '"', model);
+        updatePH(i, secs, '✨ Creando "' + term + '"', model);
       });
-
       showItemPhoto(itemEl, i, photo);
       allResults.push({ term, photo });
       setProg(i + 1, terms.length, '✨ Creada: "' + term + '"', true, photo.source);
@@ -212,19 +235,14 @@ function setProg(done, total, msg, isAI, detail) {
   document.getElementById('pDetail').textContent = detail || '';
 }
 
-// ── UNSPLASH ───────────────────────────────────────────────
 async function searchUnsplash(term, onStatus) {
   try {
     onStatus('Buscando "' + term + '" en Unsplash...');
-    const r = await fetch(
-      'https://api.unsplash.com/search/photos?query=' + encodeURIComponent(term) + '&per_page=10&client_id=' + UNSPLASH_KEY
-    );
-    if (!r.ok) throw new Error('Unsplash error');
+    const r = await fetch('https://api.unsplash.com/search/photos?query=' + encodeURIComponent(term) + '&per_page=10&client_id=' + UNSPLASH_KEY);
+    if (!r.ok) throw new Error();
     const d = await r.json();
     const results = d.results || [];
     if (!results.length) return null;
-
-    // Buscar coincidencia exacta primero
     const termLow = term.toLowerCase();
     const exact = results.find(function(p) {
       const a = (p.alt_description || '').toLowerCase();
@@ -232,9 +250,13 @@ async function searchUnsplash(term, onStatus) {
       const tags = (p.tags || []).map(function(t) { return (t.title || '').toLowerCase(); }).join(' ');
       return a.includes(termLow) || b.includes(termLow) || tags.includes(termLow);
     });
-
     const pick = exact || results[0];
-    onStatus('✓ Imagen encontrada en Unsplash');
+    // Descripción: usar la de Unsplash si existe, si no generar automáticamente
+    const unsplashDesc = pick.alt_description || pick.description || '';
+    const autoDesc = generateDescription(term);
+    const finalDesc = unsplashDesc
+      ? unsplashDesc.charAt(0).toUpperCase() + unsplashDesc.slice(1) + '. ' + autoDesc
+      : autoDesc;
     return {
       url: pick.urls.regular,
       urlFull: pick.urls.full,
@@ -242,147 +264,72 @@ async function searchUnsplash(term, onStatus) {
       urlPng: pick.urls.full + '&fm=png',
       title: term,
       author: pick.user.name,
+      description: finalDesc,
       isAI: false,
       source: 'Unsplash',
       blob: null
     };
-  } catch(e) {
-    return null;
-  }
+  } catch(e) { return null; }
 }
 
-// ── IA — Stable Diffusion via Cloudflare Worker ────────────
 async function generateAI(term, onTick) {
   let secs = 0;
   let ticker = null;
-
   function startTicker(model) {
     if (ticker) clearInterval(ticker);
-    ticker = setInterval(function() {
-      secs++;
-      onTick(secs, model, 'Generando imagen de "' + term + '"...');
-    }, 1000);
+    ticker = setInterval(function() { secs++; onTick(secs, model, 'Generando imagen de "' + term + '"...'); }, 1000);
   }
-  function stopTicker() {
-    if (ticker) clearInterval(ticker);
-    ticker = null;
-  }
+  function stopTicker() { if (ticker) clearInterval(ticker); ticker = null; }
 
-  // Probar cada modelo hasta que funcione
   for (let mi = 0; mi < HF_MODELS.length; mi++) {
     const model = HF_MODELS[mi];
-    const modelName = model.split('/')[1];
-    onTick(secs, modelName, 'Conectando...');
-    startTicker(modelName);
-
-    // Reintentar hasta 3 veces por modelo
+    const name = model.split('/')[1];
+    onTick(secs, name, 'Conectando...'); startTicker(name);
     for (let attempt = 0; attempt < 3; attempt++) {
       try {
-        if (attempt > 0) {
-          stopTicker();
-          onTick(secs, modelName, 'Reintentando (' + attempt + '/3)...');
-          await sleep(5000);
-          startTicker(modelName);
-        }
-
+        if (attempt > 0) { stopTicker(); onTick(secs, name, 'Reintentando...'); await sleep(5000); startTicker(name); }
         const response = await fetch(CF_WORKER, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: model,
-            prompt: term,
-            token: HF_TOKEN
-          })
+          body: JSON.stringify({ model, prompt: term, token: HF_TOKEN })
         });
-
-        if (response.status === 503) {
-          stopTicker();
-          onTick(secs, modelName, 'Modelo cargando, esperando 20s...');
-          await sleep(20000);
-          startTicker(modelName);
-          continue;
-        }
-
-        if (!response.ok) {
-          console.warn(modelName + ' error:', response.status);
-          break;
-        }
-
+        if (response.status === 503) { stopTicker(); onTick(secs, name, 'Modelo cargando, esperando 20s...'); await sleep(20000); startTicker(name); continue; }
+        if (!response.ok) break;
         const blob = await response.blob();
         stopTicker();
-
         if (blob && blob.size > 500) {
           const url = URL.createObjectURL(blob);
-          onTick(secs, modelName, '✅ Imagen creada');
-          return {
-            url: url,
-            urlFull: url,
-            urlJpg: url,
-            urlPng: url,
-            title: term,
-            author: modelName,
-            isAI: true,
-            source: modelName,
-            blob: blob
-          };
+          return { url, urlFull: url, urlJpg: url, urlPng: url, title: term, author: name, description: generateDescription(term), isAI: true, source: name, blob };
         }
-      } catch(e) {
-        console.warn(modelName + ' excepción:', e);
-      }
+      } catch(e) { console.warn(name, e); }
     }
-
-    stopTicker();
-    onTick(secs, modelName, 'No disponible, probando siguiente modelo...');
-    await sleep(1000);
+    stopTicker(); onTick(secs, name, 'No disponible, probando siguiente...'); await sleep(1000);
   }
 
-  // Último recurso: Pollinations AI (sin CORS porque carga como img)
-  stopTicker();
-  onTick(secs, 'Pollinations AI', 'Generando imagen de "' + term + '"...');
-  startTicker('Pollinations AI');
-
-  const polUrl = 'https://image.pollinations.ai/prompt/' +
-    encodeURIComponent(term) +
-    '?width=800&height=600&seed=' + Math.floor(Math.random() * 99999) + '&nologo=true&enhance=true';
-
+  // Pollinations como último recurso
+  stopTicker(); onTick(secs, 'Pollinations AI', 'Generando...'); startTicker('Pollinations AI');
+  const polUrl = 'https://image.pollinations.ai/prompt/' + encodeURIComponent(term) + '?width=800&height=600&seed=' + Math.floor(Math.random() * 99999) + '&nologo=true&enhance=true';
   await new Promise(function(resolve) {
     const img = new Image();
     img.onload = function() { stopTicker(); resolve(); };
     img.onerror = function() { stopTicker(); resolve(); };
     img.src = polUrl;
   });
-
-  onTick(secs, 'Pollinations AI', '✅ Imagen creada');
-  return {
-    url: polUrl,
-    urlFull: polUrl,
-    urlJpg: polUrl,
-    urlPng: polUrl,
-    title: term,
-    author: 'Pollinations AI',
-    isAI: true,
-    source: 'Pollinations AI',
-    blob: null
-  };
+  return { url: polUrl, urlFull: polUrl, urlJpg: polUrl, urlPng: polUrl, title: term, author: 'Pollinations AI', description: generateDescription(term), isAI: true, source: 'Pollinations AI', blob: null };
 }
 
 function sleep(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
-
-// ── DOM ────────────────────────────────────────────────────
-function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function safeName(t) {
-  return (t || 'foto').toLowerCase()
+  return (t||'foto').toLowerCase()
     .replace(/[áàä]/g,'a').replace(/[éèë]/g,'e').replace(/[íìï]/g,'i')
     .replace(/[óòö]/g,'o').replace(/[úùü]/g,'u').replace(/ñ/g,'n')
-    .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').substring(0, 50) || 'foto';
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').substring(0,50)||'foto';
 }
 
 function createItem(term, idx) {
   const wrap = document.createElement('div');
-  wrap.className = 'item';
-  wrap.id = 'item_' + idx;
+  wrap.className = 'item'; wrap.id = 'item_' + idx;
   wrap.style.animationDelay = (idx * 0.07) + 's';
   wrap.innerHTML =
     '<div class="item-img" id="img_' + idx + '">' +
@@ -391,12 +338,15 @@ function createItem(term, idx) {
         '<div class="ph-secs" id="secs_' + idx + '">0s</div>' +
         '<div class="ph-name">' + esc(term) + '</div>' +
         '<div class="ph-msg" id="msg_' + idx + '">Buscando...</div>' +
-        '<div class="ph-src" id="src_' + idx + '"></div>' +
       '</div>' +
     '</div>' +
     '<div class="item-info">' +
       '<div class="item-name">' + esc(term) + '</div>' +
       '<div class="item-src" id="isrc_' + idx + '">Procesando...</div>' +
+      '<div class="field" id="desc_wrap_' + idx + '" style="display:none">' +
+        '<div class="item-desc-lbl">Descripción</div>' +
+        '<div class="item-desc" id="desc_' + idx + '"></div>' +
+      '</div>' +
       '<div class="field">' +
         '<div class="field-lbl">URL directa — cópiala para tu web</div>' +
         '<div class="field-row">' +
@@ -409,8 +359,8 @@ function createItem(term, idx) {
         '<div class="field-val" id="html_' + idx + '">—</div>' +
       '</div>' +
       '<div class="dl-row">' +
-        '<button class="btn gold" id="dlpng_' + idx + '" onclick="dlOne(' + idx + ',\'png\')" disabled>&#8595; .PNG</button>' +
-        '<button class="btn amber" id="dljpg_' + idx + '" onclick="dlOne(' + idx + ',\'jpg\')" disabled>&#8595; .JPG</button>' +
+        '<button class="btn gold" id="dlpng_' + idx + '" onclick="dlOne(' + idx + ',\'png\')" disabled>&#8595; Descargar .PNG</button>' +
+        '<button class="btn amber" id="dljpg_' + idx + '" onclick="dlOne(' + idx + ',\'jpg\')" disabled>&#8595; Descargar .JPG</button>' +
       '</div>' +
     '</div>';
   document.getElementById('results').appendChild(wrap);
@@ -420,30 +370,31 @@ function createItem(term, idx) {
 function updatePH(idx, secs, msg, src) {
   const se = document.getElementById('secs_' + idx);
   const me = document.getElementById('msg_' + idx);
-  const sr = document.getElementById('src_' + idx);
   if (se && secs !== null) se.textContent = secs + 's';
   if (me) me.textContent = msg;
-  if (sr) sr.textContent = src || '';
 }
 
 function showItemPhoto(itemEl, idx, photo) {
   if (photo.isAI) itemEl.classList.add('ai');
   else itemEl.classList.add('found');
-
   const imgDiv = document.getElementById('img_' + idx);
   imgDiv.innerHTML =
-    '<img src="' + esc(photo.url) + '" alt="' + esc(photo.title) + '" style="width:100%;height:100%;object-fit:cover;display:block;min-height:220px">' +
+    '<img src="' + esc(photo.url) + '" alt="' + esc(photo.title) + '" style="width:100%;height:100%;object-fit:cover;display:block;min-height:240px">' +
     '<div class="tag">' + esc(photo.source) + '</div>' +
     (photo.isAI ? '<div class="tag-ai">✨ IA</div>' : '<div class="tag-ok">✓ Encontrada</div>');
-
-  const urlText = photo.isAI ? photo.url : (photo.urlFull || photo.url);
   document.getElementById('isrc_' + idx).textContent = (photo.isAI ? '✨ ' : '📷 ') + photo.author;
+  // Mostrar descripción
+  if (photo.description) {
+    const dw = document.getElementById('desc_wrap_' + idx);
+    const dd = document.getElementById('desc_' + idx);
+    if (dw) dw.style.display = 'block';
+    if (dd) dd.textContent = photo.description;
+  }
+  const urlText = photo.isAI ? photo.url : (photo.urlFull || photo.url);
   document.getElementById('url_' + idx).textContent = urlText;
   document.getElementById('html_' + idx).textContent = '<img src="' + urlText + '" alt="' + photo.title + '" style="max-width:100%">';
   document.getElementById('dlpng_' + idx).disabled = false;
   document.getElementById('dljpg_' + idx).disabled = false;
-
-  // Guardar datos en el elemento
   itemEl.dataset.url = photo.url;
   itemEl.dataset.urlFull = photo.urlFull || photo.url;
   itemEl.dataset.urlJpg = photo.urlJpg || photo.url;
@@ -463,7 +414,6 @@ function copyUrl(idx) {
   });
 }
 
-// ── DESCARGAS ──────────────────────────────────────────────
 async function dlOne(idx, fmt) {
   const item = document.getElementById('item_' + idx);
   if (!item) return;
@@ -497,7 +447,6 @@ async function downloadPhoto(item, fmt) {
   const mime = fmt === 'png' ? 'image/png' : 'image/jpeg';
   const name = safeName(item.dataset.title) + '.' + ext;
   const isAI = item.dataset.isAI === '1';
-
   try {
     let sourceBlob;
     if (isAI && item._blob) {
@@ -505,11 +454,9 @@ async function downloadPhoto(item, fmt) {
     } else {
       const src = fmt === 'png' ? item.dataset.urlPng : item.dataset.urlJpg;
       const r = await fetch(src);
-      if (!r.ok) throw new Error('fetch error');
+      if (!r.ok) throw new Error();
       sourceBlob = await r.blob();
     }
-
-    // Convertir al formato correcto con canvas
     const bmp = await createImageBitmap(sourceBlob);
     const cv = document.createElement('canvas');
     cv.width = bmp.width; cv.height = bmp.height;
@@ -523,9 +470,7 @@ async function downloadPhoto(item, fmt) {
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
       setTimeout(function() { URL.revokeObjectURL(u); }, 3000);
     }, mime, 0.95);
-
   } catch(e) {
-    // Fallback directo
     const src = fmt === 'png' ? item.dataset.urlPng : item.dataset.urlJpg;
     const a = document.createElement('a');
     a.href = src; a.download = name; a.target = '_blank';
@@ -533,12 +478,10 @@ async function downloadPhoto(item, fmt) {
   }
 }
 
-// ── EXPORTAR ───────────────────────────────────────────────
 function buildExport() {
   const lines = allResults.map(function(r) {
-    const isAI = r.photo.isAI;
-    const url = isAI ? r.photo.url : (r.photo.urlFull || r.photo.url);
-    return r.term + ': ' + (isAI ? '[IA] ' : '') + url;
+    const url = r.photo.isAI ? r.photo.url : (r.photo.urlFull || r.photo.url);
+    return r.term + ': ' + (r.photo.isAI ? '[IA] ' : '') + url;
   });
   document.getElementById('expTa').value = lines.join('\n');
 }
