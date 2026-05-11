@@ -359,12 +359,9 @@ async function downloadPhoto(item, fmt){
   const src = fmt === 'png' ? item.dataset.urlPng : item.dataset.urlJpg;
 
   try{
-    // Descargar via Worker de Cloudflare para evitar CORS
-    const r = await fetch('https://hf-proxyf.u0269061942.workers.dev', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ imageUrl: src })
-    });
+    // Descargar via Worker de Cloudflare usando GET con parámetro url
+    const workerUrl = 'https://hf-proxyf.u0269061942.workers.dev?url=' + encodeURIComponent(src);
+    const r = await fetch(workerUrl);
     if(!r.ok) throw new Error('Worker error ' + r.status);
     const blob = await r.blob();
     const bmp = await createImageBitmap(blob);
