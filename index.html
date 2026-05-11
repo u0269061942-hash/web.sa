@@ -117,7 +117,13 @@ footer{border-top:1px solid var(--border);padding:1.2rem 2rem;text-align:center;
 <script>
 const UKEY='2G8xFmc1jV0VWZg4zo6VeoV5yYj5Rf5S8mtuJ9VWai8';
 const HF_TOKEN='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';
-const HF_MODELS=['stabilityai/stable-diffusion-2-1','runwayml/stable-diffusion-v1-5','CompVis/stable-diffusion-v1-4'];
+const HF_TOKEN='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';
+const CF_WORKER='https://hf-proxyf.u0269061942.workers.dev';
+const HF_MODELS=[
+  {id:'stabilityai/stable-diffusion-2-1',name:'Stable Diffusion 2.1'},
+  {id:'runwayml/stable-diffusion-v1-5',name:'Stable Diffusion 1.5'},
+  {id:'CompVis/stable-diffusion-v1-4',name:'Stable Diffusion 1.4'}
+];
 
 const ta=document.getElementById('ta');
 ta.addEventListener('input',updateCount);
@@ -220,13 +226,9 @@ async function searchUnsplashExact(term,onStatus){
   }catch(e){return null;}
 }
 
-// Genera imagen exacta con Hugging Face — prueba modelos en cascada
+// Genera imagen exacta via Cloudflare Worker (sin CORS)
 async function generateFLUX(term,idx,onTick){
-  const models=[
-    {id:'stabilityai/stable-diffusion-2-1',name:'Stable Diffusion 2.1',steps:20},
-    {id:'runwayml/stable-diffusion-v1-5',name:'Stable Diffusion 1.5',steps:20},
-    {id:'CompVis/stable-diffusion-v1-4',name:'Stable Diffusion 1.4',steps:20}
-  ];
+  const models=HF_MODELS;
 
   for(let mi=0;mi<models.length;mi++){
     const model=models[mi];
@@ -247,20 +249,16 @@ async function generateFLUX(term,idx,onTick){
           onTick(secs,model.name+' reintentando ('+attempt+'/3)...');
           await sleep(5000);
         }
-        const response=await fetch(
-          'https://api-inference.huggingface.co/models/'+model.id,
-          {
-            method:'POST',
-            headers:{
-              'Authorization':'Bearer '+HF_TOKEN,
-              'Content-Type':'application/json'
-            },
-            body:JSON.stringify({
-              inputs:term,
-              parameters:{num_inference_steps:model.steps}
-            })
-          }
-        );
+        // Llamada via Cloudflare Worker para evitar CORS
+        const response=await fetch(CF_WORKER,{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({
+            model:model.id,
+            prompt:term,
+            token:HF_TOKEN
+          })
+        });
 
         if(response.status===503){
           // Modelo cargando — esperar y reintentar
