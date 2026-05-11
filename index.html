@@ -38,62 +38,64 @@ textarea:focus{border-color:rgba(232,200,122,.4)}
 .prog-bar{height:5px;background:var(--bg3);border-radius:99px;overflow:hidden}
 .prog-fill{height:100%;background:var(--gold);border-radius:99px;transition:width .5s;width:0}
 .prog-fill.ai{background:var(--purple)}
-.prog-msg{font-size:13px;margin-top:10px;min-height:20px;color:var(--text)}
+.prog-msg{font-size:13px;margin-top:10px;color:var(--text)}
 .prog-msg.ai{color:var(--purple);font-weight:500}
-.prog-msg.ok{color:var(--green)}
-.prog-detail{font-size:11px;color:var(--muted2);margin-top:5px;min-height:16px}
+.prog-detail{font-size:11px;color:var(--muted2);margin-top:5px}
 .exp-box{display:none;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);padding:1.4rem;margin-bottom:2rem}
 .exp-box.on{display:block}
 .exp-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.7rem}
 .exp-ta{width:100%;height:160px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px;font-family:'Courier New',monospace;font-size:11px;color:var(--muted);resize:vertical;outline:none;line-height:1.6}
 .exp-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .results{display:none}.results.on{display:block}
-.item{display:grid;grid-template-columns:300px 1fr;gap:0;background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:1.5rem;animation:up .35s ease both}
+/* ITEM — una imagen por término */
+.item{display:grid;grid-template-columns:300px 1fr;background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:1.5rem;animation:up .35s ease both}
 @keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.item.ai-item{border-color:rgba(167,139,250,0.3)}
-.item.ok-item{border-color:rgba(111,207,138,0.3)}
+.item.found{border-color:rgba(111,207,138,0.3)}
+.item.ai{border-color:rgba(167,139,250,0.3)}
 @media(max-width:640px){.item{grid-template-columns:1fr}}
-.item-img{position:relative;min-height:220px;background:var(--bg3);overflow:hidden}
+.item-img{position:relative;min-height:220px;background:var(--bg3)}
 .item-img img{width:100%;height:100%;object-fit:cover;display:block;min-height:220px}
-.item-ph{width:100%;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:1.5rem;background:linear-gradient(135deg,#1a1824,#1e1a2e)}
-.ph-spin{width:44px;height:44px;border:3px solid rgba(167,139,250,0.1);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
+/* Placeholder mientras genera */
+.ph{width:100%;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:1.5rem;background:linear-gradient(135deg,#1a1824,#1e1a2e)}
+.ph-spin{width:40px;height:40px;border:3px solid rgba(167,139,250,0.1);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.ph-name{font-family:'Playfair Display',serif;font-style:italic;font-size:1.1rem;color:var(--text);text-align:center}
-.ph-status{font-size:11px;color:var(--purple);text-align:center;line-height:1.5}
-.ph-timer{font-size:28px;font-weight:500;color:var(--purple);font-variant-numeric:tabular-nums}
-.ph-detail{font-size:10px;color:var(--muted2);text-align:center;animation:blink 1.4s ease-in-out infinite}
-@keyframes blink{0%,100%{opacity:.4}50%{opacity:1}}
-.src-tag{position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,.75);color:#ccc;font-size:10px;padding:3px 9px;border-radius:99px}
-.ai-tag{position:absolute;bottom:8px;right:8px;background:rgba(110,80,220,0.92);color:#fff;font-size:10px;font-weight:500;padding:3px 9px;border-radius:99px}
-.ok-tag{position:absolute;bottom:8px;right:8px;background:rgba(40,160,80,0.92);color:#fff;font-size:10px;font-weight:500;padding:3px 9px;border-radius:99px}
+.ph-name{font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;color:var(--text);text-align:center}
+.ph-secs{font-size:26px;font-weight:500;color:var(--purple)}
+.ph-msg{font-size:11px;color:var(--purple);text-align:center;animation:blink 1.4s ease-in-out infinite}
+.ph-src{font-size:10px;color:var(--muted2);text-align:center}
+@keyframes blink{0%,100%{opacity:.3}50%{opacity:1}}
+.tag{position:absolute;bottom:8px;left:8px;font-size:10px;padding:3px 9px;border-radius:99px;background:rgba(0,0,0,.7);color:#ccc}
+.tag-ai{position:absolute;bottom:8px;right:8px;font-size:10px;padding:3px 9px;border-radius:99px;background:rgba(110,80,220,0.9);color:#fff;font-weight:500}
+.tag-ok{position:absolute;bottom:8px;right:8px;font-size:10px;padding:3px 9px;border-radius:99px;background:rgba(40,160,80,0.9);color:#fff;font-weight:500}
+/* Info */
 .item-info{padding:1.3rem;display:flex;flex-direction:column;gap:10px;justify-content:center}
-.item-term{font-family:'Playfair Display',serif;font-style:italic;font-size:1.2rem;color:var(--text)}
-.item-credit{font-size:11px;color:var(--muted2)}
-.field-sm{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:8px 10px}
-.field-lbl{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px}
-.url-row{display:flex;align-items:flex-start;gap:6px}
-.url-val{font-family:'Courier New',monospace;font-size:10px;color:var(--muted);word-break:break-all;flex:1;line-height:1.5}
-.cbtn-sm{background:var(--bg);border:1px solid var(--border2);border-radius:5px;padding:3px 10px;font-size:10px;font-weight:500;color:var(--text);cursor:pointer;font-family:'DM Sans',system-ui,sans-serif;transition:all .15s;flex-shrink:0;white-space:nowrap}
-.cbtn-sm:hover{border-color:var(--amber)}.cbtn-sm.ok{border-color:var(--green);color:var(--green)}
-.item-btns{display:flex;gap:6px;flex-wrap:wrap}
-.item-btns .btn{height:38px;font-size:.78rem;padding:0 16px;flex:1}
+.item-name{font-family:'Playfair Display',serif;font-style:italic;font-size:1.2rem}
+.item-src{font-size:11px;color:var(--muted2)}
+.field{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px}
+.field-lbl{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+.field-row{display:flex;align-items:flex-start;gap:8px}
+.field-val{font-family:'Courier New',monospace;font-size:10px;color:var(--muted);word-break:break-all;flex:1;line-height:1.5}
+.cbtn{background:var(--bg);border:1px solid var(--border2);border-radius:5px;padding:3px 10px;font-size:10px;font-weight:500;color:var(--text);cursor:pointer;font-family:'DM Sans',system-ui,sans-serif;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.cbtn:hover{border-color:var(--amber)}.cbtn.ok{border-color:var(--green);color:var(--green)}
+.dl-row{display:flex;gap:8px}
+.dl-row .btn{flex:1;height:38px;font-size:.8rem;padding:0 12px}
 footer{border-top:1px solid var(--border);padding:1.2rem 2rem;text-align:center;font-size:11px;color:var(--muted2);margin-top:2rem}
 </style>
 </head>
 <body>
 <header>
-  <div class="badge">&#9889; Unsplash + FLUX.1 — imagen exacta garantizada</div>
+  <div class="badge">&#9889; Unsplash + IA — imagen exacta por nombre</div>
   <h1>Fotos exactas para<br><em>tu web</em></h1>
-  <p class="sub">Una imagen exacta por cada nombre. Si no la encuentra en Unsplash, FLUX.1 la genera con IA. Descarga en .PNG o .JPG.</p>
+  <p class="sub">Escribe hasta 20 nombres. Busca en Unsplash y si no encuentra, la IA la crea. Descarga en .PNG o .JPG.</p>
 </header>
 <main>
-  <div class="lbl"><span>Términos &#8212; uno por línea (máx. 20)</span><span><span id="cnt">0</span>/20</span></div>
-  <textarea id="ta" placeholder="superman&#10;dragon de fuego&#10;ciudad cyberpunk&#10;gato blanco&#10;puesta de sol&#10;...hasta 20 términos"></textarea>
+  <div class="lbl"><span>Nombres — uno por línea (máx. 20)</span><span><span id="cnt">0</span>/20</span></div>
+  <textarea id="ta" placeholder="superman&#10;dragon de fuego&#10;ciudad cyberpunk&#10;gato blanco&#10;puesta de sol&#10;...hasta 20 nombres"></textarea>
   <div class="row">
     <button class="btn gold" id="searchBtn" onclick="startSearch()">&#128269; Buscar imágenes</button>
     <button class="btn ghost" onclick="clearAll()">&#128465; Limpiar</button>
     <div class="sp"></div>
-    <button class="btn ghost" id="expBtn" style="display:none" onclick="toggleExp()">&#8595; Ver URLs</button>
+    <button class="btn ghost" id="expBtn" style="display:none" onclick="toggleExp()">&#8595; Exportar URLs</button>
   </div>
   <div class="prog" id="prog">
     <div class="prog-top"><span id="pLbl">0 de 0</span><span id="pPct">0%</span></div>
@@ -102,415 +104,456 @@ footer{border-top:1px solid var(--border);padding:1.2rem 2rem;text-align:center;
     <div class="prog-detail" id="pDetail"></div>
   </div>
   <div class="exp-box" id="expBox">
-    <div class="exp-lbl">URLs de las imágenes</div>
+    <div class="exp-lbl">URLs de las imágenes encontradas</div>
     <textarea class="exp-ta" id="expTa" readonly></textarea>
     <div class="exp-row">
-      <button class="btn ghost" onclick="copyUrls()">&#128203; Copiar URLs</button>
-      <button class="btn gold" id="btnAllPng" onclick="dlAll('png')">&#8595; Descargas .PNG</button>
-      <button class="btn amber" id="btnAllJpg" onclick="dlAll('jpg')">&#8595; Descargas .JPG</button>
+      <button class="btn ghost" onclick="copyUrls()">&#128203; Copiar todas las URLs</button>
+      <button class="btn gold" id="btnPng" onclick="dlAll('png')">&#8595; Descargas en formato .PNG</button>
+      <button class="btn amber" id="btnJpg" onclick="dlAll('jpg')">&#8595; Descargas en formato .JPG</button>
     </div>
   </div>
   <div class="results" id="results"></div>
 </main>
-<footer>Buscador &#8212; Unsplash + FLUX.1 (Hugging Face)</footer>
+<footer>Buscador de Fotos &#8212; Unsplash + Stable Diffusion (Cloudflare + Hugging Face)</footer>
 
 <script>
-const UKEY='2G8xFmc1jV0VWZg4zo6VeoV5yYj5Rf5S8mtuJ9VWai8';
-const HF_TOKEN='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';
-const HF_TOKEN='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';
-const CF_WORKER='https://hf-proxyf.u0269061942.workers.dev';
-const HF_MODELS=[
-  {id:'stabilityai/stable-diffusion-2-1',name:'Stable Diffusion 2.1'},
-  {id:'runwayml/stable-diffusion-v1-5',name:'Stable Diffusion 1.5'},
-  {id:'CompVis/stable-diffusion-v1-4',name:'Stable Diffusion 1.4'}
+// ── CONFIGURACIÓN ──────────────────────────────────────────
+const UNSPLASH_KEY = '2G8xFmc1jV0VWZg4zo6VeoV5yYj5Rf5S8mtuJ9VWai8';
+const CF_WORKER    = 'https://hf-proxyf.u0269061942.workers.dev';
+const HF_TOKEN     = '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';
+const HF_MODELS    = [
+  'stabilityai/stable-diffusion-2-1',
+  'runwayml/stable-diffusion-v1-5',
+  'CompVis/stable-diffusion-v1-4'
 ];
+// ───────────────────────────────────────────────────────────
 
-const ta=document.getElementById('ta');
-ta.addEventListener('input',updateCount);
-function updateCount(){document.getElementById('cnt').textContent=Math.min(getTerms().length,20);}
-function getTerms(){return ta.value.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,20);}
-let allResults=[],busy=false;
-
-function clearAll(){
-  ta.value='';updateCount();
-  document.getElementById('results').innerHTML='';
-  document.getElementById('results').classList.remove('on');
-  document.getElementById('expBox').classList.remove('on');
-  document.getElementById('expBtn').style.display='none';
-  document.getElementById('prog').style.display='none';
-  allResults=[];
+const ta = document.getElementById('ta');
+ta.addEventListener('input', updateCount);
+function updateCount() {
+  document.getElementById('cnt').textContent = Math.min(getTerms().length, 20);
+}
+function getTerms() {
+  return ta.value.split('\n').map(s => s.trim()).filter(Boolean).slice(0, 20);
 }
 
-async function startSearch(){
-  if(busy)return;
-  const terms=getTerms();
-  if(!terms.length){alert('Escribe al menos un término');return;}
-  busy=true;allResults=[];
-  const btn=document.getElementById('searchBtn');
-  btn.disabled=true;btn.textContent='Buscando...';
-  document.getElementById('expBtn').style.display='none';
+let allResults = [], busy = false;
+
+function clearAll() {
+  ta.value = ''; updateCount();
+  document.getElementById('results').innerHTML = '';
+  document.getElementById('results').classList.remove('on');
   document.getElementById('expBox').classList.remove('on');
-  document.getElementById('results').innerHTML='';
+  document.getElementById('expBtn').style.display = 'none';
+  document.getElementById('prog').style.display = 'none';
+  allResults = [];
+}
+
+async function startSearch() {
+  if (busy) return;
+  const terms = getTerms();
+  if (!terms.length) { alert('Escribe al menos un nombre'); return; }
+  busy = true; allResults = [];
+  const btn = document.getElementById('searchBtn');
+  btn.disabled = true; btn.textContent = 'Buscando...';
+  document.getElementById('expBtn').style.display = 'none';
+  document.getElementById('expBox').classList.remove('on');
+  document.getElementById('results').innerHTML = '';
   document.getElementById('results').classList.add('on');
-  document.getElementById('prog').style.display='block';
+  document.getElementById('prog').style.display = 'block';
 
-  for(let i=0;i<terms.length;i++){
-    const term=terms[i];
-    setProg(i,terms.length,'&#128269; Buscando "'+term+'" en Unsplash...',false,'Buscando coincidencia exacta...');
-    const itemEl=addItem(term,i);
+  for (let i = 0; i < terms.length; i++) {
+    const term = terms[i];
+    setProg(i, terms.length, '&#128269; Buscando "' + term + '" en Unsplash...', false, '');
+    const itemEl = createItem(term, i);
 
-    // 1. Buscar en Unsplash con coincidencia exacta en tags/descripción
-    let photo=await searchUnsplashExact(term,function(msg){
-      updatePH(i,null,msg,'');
+    // 1. Buscar en Unsplash
+    let photo = await searchUnsplash(term, function(msg) {
+      updatePH(i, null, msg, '');
     });
 
-    if(!photo){
-      // 2. Generar con FLUX.1 via Hugging Face — espera sin límite
-      setProg(i,terms.length,'✨ Generando "'+term+'" con FLUX.1...',true,'Hugging Face — FLUX.1-schnell');
-      updatePH(i,0,'✨ Generando imagen exacta...','FLUX.1 — Hugging Face');
-      photo=await generateFLUX(term,i,function(secs,detail){
-        setProg(i,terms.length,'✨ Generando "'+term+'" con FLUX.1... '+secs+'s',true,detail);
-        updatePH(i,secs,'✨ Generando imagen exacta de "'+term+'"',detail);
-      });
-    }
+    if (photo) {
+      // Encontrado en Unsplash
+      showItemPhoto(itemEl, i, photo);
+      allResults.push({ term, photo });
+      setProg(i + 1, terms.length, '✓ Encontrada: "' + term + '"', false, 'Unsplash');
+    } else {
+      // No encontrado → crear con IA
+      setProg(i, terms.length, '✨ Creando "' + term + '" con IA...', true, 'Conectando con Stable Diffusion...');
+      updatePH(i, 0, '✨ Creando imagen de "' + term + '"', 'Stable Diffusion via Hugging Face');
 
-    showItem(itemEl,i,photo);
-    allResults.push({term,photo});
-    setProg(i+1,terms.length,(photo.isAI?'✨ Generada':'✓ Encontrada')+': "'+term+'"',photo.isAI,photo.source);
+      photo = await generateAI(term, function(secs, model, detail) {
+        setProg(i, terms.length, '✨ Creando "' + term + '"... ' + secs + 's', true, model + ' — ' + detail);
+        updatePH(i, secs, '✨ Creando imagen de "' + term + '"', model);
+      });
+
+      showItemPhoto(itemEl, i, photo);
+      allResults.push({ term, photo });
+      setProg(i + 1, terms.length, '✨ Creada: "' + term + '"', true, photo.source);
+    }
   }
 
-  document.getElementById('prog').style.display='none';
-  busy=false;btn.disabled=false;btn.textContent='🔍 Buscar imágenes';
-  document.getElementById('expBtn').style.display='flex';
+  document.getElementById('prog').style.display = 'none';
+  busy = false; btn.disabled = false; btn.textContent = '🔍 Buscar imágenes';
+  document.getElementById('expBtn').style.display = 'flex';
   buildExport();
 }
 
-function setProg(done,total,msg,isAI,detail){
-  const pct=total?Math.round(done/total*100):0;
-  const fill=document.getElementById('pFill');
-  fill.style.width=pct+'%';fill.className='prog-fill'+(isAI?' ai':'');
-  document.getElementById('pPct').textContent=pct+'%';
-  document.getElementById('pLbl').textContent=done+' de '+total+' términos';
-  const m=document.getElementById('pMsg');m.innerHTML=msg;
-  m.className='prog-msg'+(isAI?' ai':'');
-  document.getElementById('pDetail').textContent=detail||'';
+function setProg(done, total, msg, isAI, detail) {
+  const pct = total ? Math.round(done / total * 100) : 0;
+  const fill = document.getElementById('pFill');
+  fill.style.width = pct + '%';
+  fill.className = 'prog-fill' + (isAI ? ' ai' : '');
+  document.getElementById('pPct').textContent = pct + '%';
+  document.getElementById('pLbl').textContent = done + ' de ' + total + ' términos';
+  const m = document.getElementById('pMsg');
+  m.innerHTML = msg;
+  m.className = 'prog-msg' + (isAI ? ' ai' : '');
+  document.getElementById('pDetail').textContent = detail || '';
 }
 
-async function searchUnsplashExact(term,onStatus){
-  try{
-    onStatus('Buscando en Unsplash...');
-    const r=await fetch('https://api.unsplash.com/search/photos?query='+encodeURIComponent(term)+'&per_page=10&client_id='+UKEY);
-    if(!r.ok)throw new Error();
-    const d=await r.json();
-    const results=d.results||[];
-    const termLower=term.toLowerCase();
-    // Buscar coincidencia exacta en descripción o tags
-    const exact=results.find(function(p){
-      const desc=(p.alt_description||'').toLowerCase();
-      const desc2=(p.description||'').toLowerCase();
-      const tags=(p.tags||[]).map(function(t){return(t.title||'').toLowerCase();}).join(' ');
-      return desc.includes(termLower)||desc2.includes(termLower)||tags.includes(termLower);
+// ── UNSPLASH ───────────────────────────────────────────────
+async function searchUnsplash(term, onStatus) {
+  try {
+    onStatus('Buscando "' + term + '" en Unsplash...');
+    const r = await fetch(
+      'https://api.unsplash.com/search/photos?query=' + encodeURIComponent(term) + '&per_page=10&client_id=' + UNSPLASH_KEY
+    );
+    if (!r.ok) throw new Error('Unsplash error');
+    const d = await r.json();
+    const results = d.results || [];
+    if (!results.length) return null;
+
+    // Buscar coincidencia exacta primero
+    const termLow = term.toLowerCase();
+    const exact = results.find(function(p) {
+      const a = (p.alt_description || '').toLowerCase();
+      const b = (p.description || '').toLowerCase();
+      const tags = (p.tags || []).map(function(t) { return (t.title || '').toLowerCase(); }).join(' ');
+      return a.includes(termLow) || b.includes(termLow) || tags.includes(termLow);
     });
-    if(exact){
-      onStatus('✓ Coincidencia exacta encontrada');
-      return{
-        url:exact.urls.regular,urlFull:exact.urls.full,
-        urlJpg:exact.urls.full+'&fm=jpg&q=95',
-        urlPng:exact.urls.full+'&fm=png',
-        title:term,author:exact.user.name,
-        isAI:false,source:'Unsplash'
-      };
-    }
-    onStatus('Sin coincidencia exacta en Unsplash → generando con IA...');
+
+    const pick = exact || results[0];
+    onStatus('✓ Imagen encontrada en Unsplash');
+    return {
+      url: pick.urls.regular,
+      urlFull: pick.urls.full,
+      urlJpg: pick.urls.full + '&fm=jpg&q=95',
+      urlPng: pick.urls.full + '&fm=png',
+      title: term,
+      author: pick.user.name,
+      isAI: false,
+      source: 'Unsplash',
+      blob: null
+    };
+  } catch(e) {
     return null;
-  }catch(e){return null;}
+  }
 }
 
-// Genera imagen exacta via Cloudflare Worker (sin CORS)
-async function generateFLUX(term,idx,onTick){
-  const models=HF_MODELS;
+// ── IA — Stable Diffusion via Cloudflare Worker ────────────
+async function generateAI(term, onTick) {
+  let secs = 0;
+  let ticker = null;
 
-  for(let mi=0;mi<models.length;mi++){
-    const model=models[mi];
-    let secs=0;
-    let success=false;
-    let resultBlob=null;
-
-    onTick(0,'Probando '+model.name+'...');
-    const ticker=setInterval(function(){
+  function startTicker(model) {
+    if (ticker) clearInterval(ticker);
+    ticker = setInterval(function() {
       secs++;
-      onTick(secs,model.name+' generando imagen de "'+term+'"...');
-    },1000);
+      onTick(secs, model, 'Generando imagen de "' + term + '"...');
+    }, 1000);
+  }
+  function stopTicker() {
+    if (ticker) clearInterval(ticker);
+    ticker = null;
+  }
 
-    try{
-      // Reintentar hasta 3 veces con este modelo
-      for(let attempt=0;attempt<3;attempt++){
-        if(attempt>0){
-          onTick(secs,model.name+' reintentando ('+attempt+'/3)...');
+  // Probar cada modelo hasta que funcione
+  for (let mi = 0; mi < HF_MODELS.length; mi++) {
+    const model = HF_MODELS[mi];
+    const modelName = model.split('/')[1];
+    onTick(secs, modelName, 'Conectando...');
+    startTicker(modelName);
+
+    // Reintentar hasta 3 veces por modelo
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        if (attempt > 0) {
+          stopTicker();
+          onTick(secs, modelName, 'Reintentando (' + attempt + '/3)...');
           await sleep(5000);
+          startTicker(modelName);
         }
-        // Llamada via Cloudflare Worker para evitar CORS
-        const response=await fetch(CF_WORKER,{
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({
-            model:model.id,
-            prompt:term,
-            token:HF_TOKEN
+
+        const response = await fetch(CF_WORKER, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: model,
+            prompt: term,
+            token: HF_TOKEN
           })
         });
 
-        if(response.status===503){
-          // Modelo cargando — esperar y reintentar
-          onTick(secs,model.name+' cargando, esperando 15s...');
-          clearInterval(ticker);
-          await sleep(15000);
-          const ticker2=setInterval(function(){secs++;onTick(secs,model.name+' cargando...');},1000);
+        if (response.status === 503) {
+          stopTicker();
+          onTick(secs, modelName, 'Modelo cargando, esperando 20s...');
+          await sleep(20000);
+          startTicker(modelName);
           continue;
         }
 
-        if(!response.ok){
-          console.warn(model.name+' error:',response.status);
-          break; // Probar siguiente modelo
-        }
-
-        const blob=await response.blob();
-        if(blob&&blob.size>1000){
-          resultBlob=blob;
-          success=true;
+        if (!response.ok) {
+          console.warn(modelName + ' error:', response.status);
           break;
         }
+
+        const blob = await response.blob();
+        stopTicker();
+
+        if (blob && blob.size > 500) {
+          const url = URL.createObjectURL(blob);
+          onTick(secs, modelName, '✅ Imagen creada');
+          return {
+            url: url,
+            urlFull: url,
+            urlJpg: url,
+            urlPng: url,
+            title: term,
+            author: modelName,
+            isAI: true,
+            source: modelName,
+            blob: blob
+          };
+        }
+      } catch(e) {
+        console.warn(modelName + ' excepción:', e);
       }
-    }catch(e){
-      console.warn(model.name+' excepción:',e);
     }
 
-    clearInterval(ticker);
-
-    if(success&&resultBlob){
-      const url=URL.createObjectURL(resultBlob);
-      onTick(secs,'✅ Imagen de "'+term+'" creada con '+model.name);
-      return{
-        url,urlFull:url,urlJpg:url,urlPng:url,
-        title:term,author:model.name,
-        isAI:true,source:model.name,blob:resultBlob
-      };
-    }
-
-    onTick(secs,model.name+' no disponible, probando siguiente modelo...');
-    await sleep(2000);
+    stopTicker();
+    onTick(secs, modelName, 'No disponible, probando siguiente modelo...');
+    await sleep(1000);
   }
 
-  // Si todos los modelos fallan — usar Pollinations como último recurso
-  onTick(0,'Usando Pollinations AI como respaldo...');
-  const polUrl='https://image.pollinations.ai/prompt/'+encodeURIComponent(term)+'?width=800&height=600&seed='+Math.floor(Math.random()*99999)+'&nologo=true';
-  const loaded=await new Promise(function(resolve){
-    const img=new Image();
-    const t=setTimeout(function(){resolve(false);},60000);
-    img.onload=function(){clearTimeout(t);resolve(true);};
-    img.onerror=function(){clearTimeout(t);resolve(false);};
-    img.src=polUrl;
+  // Último recurso: Pollinations AI (sin CORS porque carga como img)
+  stopTicker();
+  onTick(secs, 'Pollinations AI', 'Generando imagen de "' + term + '"...');
+  startTicker('Pollinations AI');
+
+  const polUrl = 'https://image.pollinations.ai/prompt/' +
+    encodeURIComponent(term) +
+    '?width=800&height=600&seed=' + Math.floor(Math.random() * 99999) + '&nologo=true&enhance=true';
+
+  await new Promise(function(resolve) {
+    const img = new Image();
+    img.onload = function() { stopTicker(); resolve(); };
+    img.onerror = function() { stopTicker(); resolve(); };
+    img.src = polUrl;
   });
-  return{
-    url:polUrl,urlFull:polUrl,urlJpg:polUrl,urlPng:polUrl,
-    title:term,author:'Pollinations AI',
-    isAI:true,source:'Pollinations AI',blob:null
+
+  onTick(secs, 'Pollinations AI', '✅ Imagen creada');
+  return {
+    url: polUrl,
+    urlFull: polUrl,
+    urlJpg: polUrl,
+    urlPng: polUrl,
+    title: term,
+    author: 'Pollinations AI',
+    isAI: true,
+    source: 'Pollinations AI',
+    blob: null
   };
 }
 
-function sleep(ms){return new Promise(function(r){setTimeout(r,ms);});}
+function sleep(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function safeName(t){
-  return(t||'foto').toLowerCase()
+// ── DOM ────────────────────────────────────────────────────
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function safeName(t) {
+  return (t || 'foto').toLowerCase()
     .replace(/[áàä]/g,'a').replace(/[éèë]/g,'e').replace(/[íìï]/g,'i')
     .replace(/[óòö]/g,'o').replace(/[úùü]/g,'u').replace(/ñ/g,'n')
-    .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').substring(0,50)||'foto';
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').substring(0, 50) || 'foto';
 }
 
-function addItem(term,idx){
-  const wrap=document.createElement('div');
-  wrap.className='item';wrap.id='item_'+idx;
-  wrap.style.animationDelay=(idx*.06)+'s';
-  wrap.innerHTML=
-    '<div class="item-img" id="img_'+idx+'">'+
-      '<div class="item-ph">'+
-        '<div class="ph-spin"></div>'+
-        '<div class="ph-timer" id="timer_'+idx+'">0s</div>'+
-        '<div class="ph-name">'+esc(term)+'</div>'+
-        '<div class="ph-status" id="phst_'+idx+'">Buscando...</div>'+
-        '<div class="ph-detail" id="phdt_'+idx+'"></div>'+
-      '</div>'+
-    '</div>'+
-    '<div class="item-info">'+
-      '<div class="item-term">'+esc(term)+'</div>'+
-      '<div class="item-credit" id="cr_'+idx+'">Procesando...</div>'+
-      '<div class="field-sm">'+
-        '<div class="field-lbl">URL / Fuente</div>'+
-        '<div class="url-row">'+
-          '<span class="url-val" id="uv_'+idx+'">—</span>'+
-          '<button class="cbtn-sm" id="cb_'+idx+'" onclick="copyUrl('+idx+')">Copiar</button>'+
-        '</div>'+
-      '</div>'+
-      '<div class="field-sm">'+
-        '<div class="field-lbl">Código HTML</div>'+
-        '<div class="url-val" id="hv_'+idx+'">—</div>'+
-      '</div>'+
-      '<div class="item-btns">'+
-        '<button class="btn gold" id="dp_'+idx+'" onclick="dlItem('+idx+',\'png\')" disabled>&#8595; Descargar .PNG</button>'+
-        '<button class="btn amber" id="dj_'+idx+'" onclick="dlItem('+idx+',\'jpg\')" disabled>&#8595; Descargar .JPG</button>'+
-      '</div>'+
+function createItem(term, idx) {
+  const wrap = document.createElement('div');
+  wrap.className = 'item';
+  wrap.id = 'item_' + idx;
+  wrap.style.animationDelay = (idx * 0.07) + 's';
+  wrap.innerHTML =
+    '<div class="item-img" id="img_' + idx + '">' +
+      '<div class="ph">' +
+        '<div class="ph-spin"></div>' +
+        '<div class="ph-secs" id="secs_' + idx + '">0s</div>' +
+        '<div class="ph-name">' + esc(term) + '</div>' +
+        '<div class="ph-msg" id="msg_' + idx + '">Buscando...</div>' +
+        '<div class="ph-src" id="src_' + idx + '"></div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="item-info">' +
+      '<div class="item-name">' + esc(term) + '</div>' +
+      '<div class="item-src" id="isrc_' + idx + '">Procesando...</div>' +
+      '<div class="field">' +
+        '<div class="field-lbl">URL directa — cópiala para tu web</div>' +
+        '<div class="field-row">' +
+          '<span class="field-val" id="url_' + idx + '">—</span>' +
+          '<button class="cbtn" id="cbtn_' + idx + '" onclick="copyUrl(' + idx + ')">Copiar</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="field">' +
+        '<div class="field-lbl">Código HTML</div>' +
+        '<div class="field-val" id="html_' + idx + '">—</div>' +
+      '</div>' +
+      '<div class="dl-row">' +
+        '<button class="btn gold" id="dlpng_' + idx + '" onclick="dlOne(' + idx + ',\'png\')" disabled>&#8595; .PNG</button>' +
+        '<button class="btn amber" id="dljpg_' + idx + '" onclick="dlOne(' + idx + ',\'jpg\')" disabled>&#8595; .JPG</button>' +
+      '</div>' +
     '</div>';
   document.getElementById('results').appendChild(wrap);
   return wrap;
 }
 
-function updatePH(idx,secs,status,detail){
-  const t=document.getElementById('timer_'+idx);
-  const s=document.getElementById('phst_'+idx);
-  const d=document.getElementById('phdt_'+idx);
-  if(t&&secs!==null)t.textContent=secs+'s';
-  if(s)s.textContent=status;
-  if(d)d.textContent=detail||'';
+function updatePH(idx, secs, msg, src) {
+  const se = document.getElementById('secs_' + idx);
+  const me = document.getElementById('msg_' + idx);
+  const sr = document.getElementById('src_' + idx);
+  if (se && secs !== null) se.textContent = secs + 's';
+  if (me) me.textContent = msg;
+  if (sr) sr.textContent = src || '';
 }
 
-function showItem(itemEl,idx,photo){
-  if(photo.isAI)itemEl.classList.add('ai-item');
-  else itemEl.classList.add('ok-item');
-  const imgDiv=document.getElementById('img_'+idx);
-  imgDiv.innerHTML=
-    '<img src="'+esc(photo.url)+'" alt="'+esc(photo.title)+'" style="width:100%;height:100%;object-fit:cover;display:block;min-height:220px">'+
-    '<div class="src-tag">'+esc(photo.source)+'</div>'+
-    (photo.isAI?'<div class="ai-tag">✨ FLUX.1</div>':'<div class="ok-tag">✓ Exacta</div>');
-  document.getElementById('cr_'+idx).textContent=(photo.isAI?'✨ ':' 📷')+photo.author;
-  const urlTxt=photo.isAI?'Imagen generada por FLUX.1 (descarga directa)':(photo.urlFull||photo.url);
-  document.getElementById('uv_'+idx).textContent=urlTxt;
-  document.getElementById('hv_'+idx).textContent=photo.isAI
-    ?'<!-- Imagen generada por IA, usar botón descargar -->'
-    :'<img src="'+(photo.urlFull||photo.url)+'" alt="'+photo.title+'" style="max-width:100%">';
-  document.getElementById('dp_'+idx).disabled=false;
-  document.getElementById('dj_'+idx).disabled=false;
-  itemEl.dataset.url=photo.url;
-  itemEl.dataset.urlFull=photo.urlFull||photo.url;
-  itemEl.dataset.urlJpg=photo.urlJpg||photo.url;
-  itemEl.dataset.urlPng=photo.urlPng||photo.url;
-  itemEl.dataset.title=photo.title;
-  itemEl.dataset.isAI=photo.isAI?'1':'0';
-  // Guardar blob si es IA
-  if(photo.blob)itemEl._blob=photo.blob;
+function showItemPhoto(itemEl, idx, photo) {
+  if (photo.isAI) itemEl.classList.add('ai');
+  else itemEl.classList.add('found');
+
+  const imgDiv = document.getElementById('img_' + idx);
+  imgDiv.innerHTML =
+    '<img src="' + esc(photo.url) + '" alt="' + esc(photo.title) + '" style="width:100%;height:100%;object-fit:cover;display:block;min-height:220px">' +
+    '<div class="tag">' + esc(photo.source) + '</div>' +
+    (photo.isAI ? '<div class="tag-ai">✨ IA</div>' : '<div class="tag-ok">✓ Encontrada</div>');
+
+  const urlText = photo.isAI ? photo.url : (photo.urlFull || photo.url);
+  document.getElementById('isrc_' + idx).textContent = (photo.isAI ? '✨ ' : '📷 ') + photo.author;
+  document.getElementById('url_' + idx).textContent = urlText;
+  document.getElementById('html_' + idx).textContent = '<img src="' + urlText + '" alt="' + photo.title + '" style="max-width:100%">';
+  document.getElementById('dlpng_' + idx).disabled = false;
+  document.getElementById('dljpg_' + idx).disabled = false;
+
+  // Guardar datos en el elemento
+  itemEl.dataset.url = photo.url;
+  itemEl.dataset.urlFull = photo.urlFull || photo.url;
+  itemEl.dataset.urlJpg = photo.urlJpg || photo.url;
+  itemEl.dataset.urlPng = photo.urlPng || photo.url;
+  itemEl.dataset.title = photo.title;
+  itemEl.dataset.isAI = photo.isAI ? '1' : '0';
+  if (photo.blob) itemEl._blob = photo.blob;
 }
 
-function copyUrl(idx){
-  const el=document.getElementById('uv_'+idx);
-  if(!el||el.textContent==='—')return;
-  navigator.clipboard.writeText(el.textContent).then(function(){
-    const b=document.getElementById('cb_'+idx);
-    b.textContent='✓';b.classList.add('ok');
-    setTimeout(function(){b.textContent='Copiar';b.classList.remove('ok');},2000);
+function copyUrl(idx) {
+  const el = document.getElementById('url_' + idx);
+  if (!el || el.textContent === '—') return;
+  navigator.clipboard.writeText(el.textContent).then(function() {
+    const b = document.getElementById('cbtn_' + idx);
+    b.textContent = '✓'; b.classList.add('ok');
+    setTimeout(function() { b.textContent = 'Copiar'; b.classList.remove('ok'); }, 2000);
   });
 }
 
-async function dlItem(idx,fmt){
-  const item=document.getElementById('item_'+idx);
-  if(!item)return;
-  const bId=fmt==='png'?'dp_'+idx:'dj_'+idx;
-  const btn=document.getElementById(bId);
-  const orig=btn.textContent;btn.disabled=true;btn.textContent='Descargando...';
-
-  const isAI=item.dataset.isAI==='1';
-  const title=item.dataset.title||'foto';
-  const ext=fmt==='png'?'png':'jpg';
-  const mime=fmt==='png'?'image/png':'image/jpeg';
-  const name=safeName(title)+'.'+ext;
-
-  if(isAI&&item._blob){
-    // Imagen IA — ya tenemos el blob, convertir formato y descargar
-    await convertAndDownload(item._blob,name,mime,fmt);
-  }else{
-    // Imagen Unsplash — descargar desde URL
-    const src=fmt==='png'?item.dataset.urlPng:item.dataset.urlJpg;
-    await downloadFromUrl(src,name,mime,fmt);
-  }
-  btn.textContent=orig;btn.disabled=false;
+// ── DESCARGAS ──────────────────────────────────────────────
+async function dlOne(idx, fmt) {
+  const item = document.getElementById('item_' + idx);
+  if (!item) return;
+  const btnId = fmt === 'png' ? 'dlpng_' + idx : 'dljpg_' + idx;
+  const btn = document.getElementById(btnId);
+  const orig = btn.textContent;
+  btn.disabled = true; btn.textContent = '...';
+  await downloadPhoto(item, fmt);
+  btn.textContent = orig; btn.disabled = false;
 }
 
-async function dlAll(fmt){
-  const bId=fmt==='png'?'btnAllPng':'btnAllJpg';
-  const oId=fmt==='png'?'btnAllJpg':'btnAllPng';
-  const btn=document.getElementById(bId),other=document.getElementById(oId);
-  const orig=btn.textContent;btn.disabled=true;other.disabled=true;
-  let done=0;
-  for(let i=0;i<allResults.length;i++){
-    done++;btn.textContent='Descargando '+done+'/'+allResults.length+'...';
-    const item=document.getElementById('item_'+i);
-    if(item){
-      const isAI=item.dataset.isAI==='1';
-      const title=item.dataset.title||'foto';
-      const ext=fmt==='png'?'png':'jpg';
-      const mime=fmt==='png'?'image/png':'image/jpeg';
-      const name=safeName(title)+'.'+ext;
-      if(isAI&&item._blob){
-        await convertAndDownload(item._blob,name,mime,fmt);
-      }else{
-        const src=fmt==='png'?item.dataset.urlPng:item.dataset.urlJpg;
-        await downloadFromUrl(src,name,mime,fmt);
-      }
-    }
+async function dlAll(fmt) {
+  const bId = fmt === 'png' ? 'btnPng' : 'btnJpg';
+  const oId = fmt === 'png' ? 'btnJpg' : 'btnPng';
+  const btn = document.getElementById(bId);
+  const other = document.getElementById(oId);
+  const orig = btn.textContent;
+  btn.disabled = true; other.disabled = true;
+  for (let i = 0; i < allResults.length; i++) {
+    btn.textContent = 'Descargando ' + (i + 1) + '/' + allResults.length + '...';
+    const item = document.getElementById('item_' + i);
+    if (item) await downloadPhoto(item, fmt);
     await sleep(600);
   }
-  btn.textContent=orig;btn.disabled=false;other.disabled=false;
-  alert('✅ '+done+' imágenes descargadas en .'+fmt.toUpperCase());
+  btn.textContent = orig; btn.disabled = false; other.disabled = false;
+  alert('✅ ' + allResults.length + ' imágenes descargadas en .' + fmt.toUpperCase());
 }
 
-async function convertAndDownload(blob,name,mime,fmt){
-  try{
-    const bmp=await createImageBitmap(blob);
-    const cv=document.createElement('canvas');
-    cv.width=bmp.width;cv.height=bmp.height;
-    const ctx=cv.getContext('2d');
-    if(fmt==='jpg'){ctx.fillStyle='#fff';ctx.fillRect(0,0,bmp.width,bmp.height);}
-    ctx.drawImage(bmp,0,0);
-    cv.toBlob(function(outBlob){
-      triggerDownload(URL.createObjectURL(outBlob),name);
-    },mime,0.95);
-  }catch(e){console.error(e);}
-}
+async function downloadPhoto(item, fmt) {
+  const ext = fmt === 'png' ? 'png' : 'jpg';
+  const mime = fmt === 'png' ? 'image/png' : 'image/jpeg';
+  const name = safeName(item.dataset.title) + '.' + ext;
+  const isAI = item.dataset.isAI === '1';
 
-async function downloadFromUrl(src,name,mime,fmt){
-  try{
-    const r=await fetch(src);if(!r.ok)throw new Error();
-    const blob=await r.blob();
-    await convertAndDownload(blob,name,mime,fmt);
-  }catch(e){
-    const a=document.createElement('a');
-    a.href=src;a.download=name;a.target='_blank';
-    document.body.appendChild(a);a.click();document.body.removeChild(a);
+  try {
+    let sourceBlob;
+    if (isAI && item._blob) {
+      sourceBlob = item._blob;
+    } else {
+      const src = fmt === 'png' ? item.dataset.urlPng : item.dataset.urlJpg;
+      const r = await fetch(src);
+      if (!r.ok) throw new Error('fetch error');
+      sourceBlob = await r.blob();
+    }
+
+    // Convertir al formato correcto con canvas
+    const bmp = await createImageBitmap(sourceBlob);
+    const cv = document.createElement('canvas');
+    cv.width = bmp.width; cv.height = bmp.height;
+    const ctx = cv.getContext('2d');
+    if (fmt === 'jpg') { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, bmp.width, bmp.height); }
+    ctx.drawImage(bmp, 0, 0);
+    cv.toBlob(function(outBlob) {
+      const u = URL.createObjectURL(outBlob);
+      const a = document.createElement('a');
+      a.href = u; a.download = name;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function() { URL.revokeObjectURL(u); }, 3000);
+    }, mime, 0.95);
+
+  } catch(e) {
+    // Fallback directo
+    const src = fmt === 'png' ? item.dataset.urlPng : item.dataset.urlJpg;
+    const a = document.createElement('a');
+    a.href = src; a.download = name; a.target = '_blank';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
   }
 }
 
-function triggerDownload(url,name){
-  const a=document.createElement('a');
-  a.href=url;a.download=name;
-  document.body.appendChild(a);a.click();document.body.removeChild(a);
-  setTimeout(function(){URL.revokeObjectURL(url);},3000);
+// ── EXPORTAR ───────────────────────────────────────────────
+function buildExport() {
+  const lines = allResults.map(function(r) {
+    const isAI = r.photo.isAI;
+    const url = isAI ? r.photo.url : (r.photo.urlFull || r.photo.url);
+    return r.term + ': ' + (isAI ? '[IA] ' : '') + url;
+  });
+  document.getElementById('expTa').value = lines.join('\n');
 }
 
-function buildExport(){
-  const lines=[];
-  allResults.forEach(function(r,i){
-    const item=document.getElementById('item_'+i);
-    const isAI=item&&item.dataset.isAI==='1';
-    lines.push(r.term+': '+(isAI?'[Imagen generada por FLUX.1 — descargar desde la app]':(r.photo.urlFull||r.photo.url)));
-  });
-  document.getElementById('expTa').value=lines.join('\n');
+function toggleExp() {
+  const b = document.getElementById('expBox');
+  b.classList.toggle('on');
+  if (b.classList.contains('on')) b.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
-function toggleExp(){
-  const b=document.getElementById('expBox');b.classList.toggle('on');
-  if(b.classList.contains('on'))b.scrollIntoView({behavior:'smooth',block:'start'});
+
+function copyUrls() {
+  navigator.clipboard.writeText(document.getElementById('expTa').value)
+    .then(function() { alert('¡URLs copiadas!'); });
 }
-function copyUrls(){
-  navigator.clipboard.writeText(document.getElementById('expTa').value).then(function(){alert('¡URLs copiadas!');});
-}
+
 updateCount();
 </script>
 </body>
