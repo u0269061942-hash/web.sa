@@ -117,7 +117,7 @@ footer{border-top:1px solid var(--border);padding:1.2rem 2rem;text-align:center;
 <script>
 const UKEY='2G8xFmc1jV0VWZg4zo6VeoV5yYj5Rf5S8mtuJ9VWai8';
 const HF_TOKEN='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';
-const HF_MODEL='black-forest-labs/FLUX.1-schnell';
+const HF_MODELS=['stabilityai/stable-diffusion-2-1','runwayml/stable-diffusion-v1-5','CompVis/stable-diffusion-v1-4'];
 
 const ta=document.getElementById('ta');
 ta.addEventListener('input',updateCount);
@@ -220,68 +220,104 @@ async function searchUnsplashExact(term,onStatus){
   }catch(e){return null;}
 }
 
-// Genera imagen exacta con FLUX.1 via Hugging Face API
+// Genera imagen exacta con Hugging Face — prueba modelos en cascada
 async function generateFLUX(term,idx,onTick){
-  let secs=0;
-  const ticker=setInterval(function(){
-    secs++;
-    onTick(secs,'Esperando respuesta de FLUX.1...');
-  },1000);
+  const models=[
+    {id:'stabilityai/stable-diffusion-2-1',name:'Stable Diffusion 2.1',steps:20},
+    {id:'runwayml/stable-diffusion-v1-5',name:'Stable Diffusion 1.5',steps:20},
+    {id:'CompVis/stable-diffusion-v1-4',name:'Stable Diffusion 1.4',steps:20}
+  ];
 
-  try{
-    onTick(0,'Enviando prompt exacto a FLUX.1...');
-    // Llamada a la API de Hugging Face con el prompt EXACTO del término
-    const response=await fetch(
-      'https://api-inference.huggingface.co/models/'+HF_MODEL,
-      {
-        method:'POST',
-        headers:{
-          'Authorization':'Bearer '+HF_TOKEN,
-          'Content-Type':'application/json'
-        },
-        body:JSON.stringify({
-          inputs:term,  // Prompt EXACTO — solo el nombre
-          parameters:{
-            num_inference_steps:4,
-            width:800,
-            height:600
+  for(let mi=0;mi<models.length;mi++){
+    const model=models[mi];
+    let secs=0;
+    let success=false;
+    let resultBlob=null;
+
+    onTick(0,'Probando '+model.name+'...');
+    const ticker=setInterval(function(){
+      secs++;
+      onTick(secs,model.name+' generando imagen de "'+term+'"...');
+    },1000);
+
+    try{
+      // Reintentar hasta 3 veces con este modelo
+      for(let attempt=0;attempt<3;attempt++){
+        if(attempt>0){
+          onTick(secs,model.name+' reintentando ('+attempt+'/3)...');
+          await sleep(5000);
+        }
+        const response=await fetch(
+          'https://api-inference.huggingface.co/models/'+model.id,
+          {
+            method:'POST',
+            headers:{
+              'Authorization':'Bearer '+HF_TOKEN,
+              'Content-Type':'application/json'
+            },
+            body:JSON.stringify({
+              inputs:term,
+              parameters:{num_inference_steps:model.steps}
+            })
           }
-        })
-      }
-    );
+        );
 
-    clearInterval(ticker);
+        if(response.status===503){
+          // Modelo cargando — esperar y reintentar
+          onTick(secs,model.name+' cargando, esperando 15s...');
+          clearInterval(ticker);
+          await sleep(15000);
+          const ticker2=setInterval(function(){secs++;onTick(secs,model.name+' cargando...');},1000);
+          continue;
+        }
 
-    if(!response.ok){
-      const err=await response.text();
-      console.error('HF error:',err);
-      // Si el modelo está cargando, reintentar
-      if(response.status===503){
-        onTick(secs,'Modelo cargando, reintentando en 10s...');
-        await sleep(10000);
-        return generateFLUX(term,idx,onTick);
+        if(!response.ok){
+          console.warn(model.name+' error:',response.status);
+          break; // Probar siguiente modelo
+        }
+
+        const blob=await response.blob();
+        if(blob&&blob.size>1000){
+          resultBlob=blob;
+          success=true;
+          break;
+        }
       }
-      throw new Error('HF error '+response.status);
+    }catch(e){
+      console.warn(model.name+' excepción:',e);
     }
 
-    // La respuesta es un blob de imagen directamente
-    const blob=await response.blob();
-    // Convertir blob a URL para mostrar y descargar
-    const url=URL.createObjectURL(blob);
-    return{
-      url,urlFull:url,urlJpg:url,urlPng:url,
-      title:term,author:'FLUX.1 (Hugging Face)',
-      isAI:true,source:'FLUX.1',blob
-    };
-
-  }catch(e){
     clearInterval(ticker);
-    console.error('Error FLUX:',e);
-    // Reintento automático
-    onTick(secs,'Error, reintentando...');
-    await sleep(3000);
-    return generateFLUX(term,idx,onTick);
+
+    if(success&&resultBlob){
+      const url=URL.createObjectURL(resultBlob);
+      onTick(secs,'✅ Imagen de "'+term+'" creada con '+model.name);
+      return{
+        url,urlFull:url,urlJpg:url,urlPng:url,
+        title:term,author:model.name,
+        isAI:true,source:model.name,blob:resultBlob
+      };
+    }
+
+    onTick(secs,model.name+' no disponible, probando siguiente modelo...');
+    await sleep(2000);
   }
+
+  // Si todos los modelos fallan — usar Pollinations como último recurso
+  onTick(0,'Usando Pollinations AI como respaldo...');
+  const polUrl='https://image.pollinations.ai/prompt/'+encodeURIComponent(term)+'?width=800&height=600&seed='+Math.floor(Math.random()*99999)+'&nologo=true';
+  const loaded=await new Promise(function(resolve){
+    const img=new Image();
+    const t=setTimeout(function(){resolve(false);},60000);
+    img.onload=function(){clearTimeout(t);resolve(true);};
+    img.onerror=function(){clearTimeout(t);resolve(false);};
+    img.src=polUrl;
+  });
+  return{
+    url:polUrl,urlFull:polUrl,urlJpg:polUrl,urlPng:polUrl,
+    title:term,author:'Pollinations AI',
+    isAI:true,source:'Pollinations AI',blob:null
+  };
 }
 
 function sleep(ms){return new Promise(function(r){setTimeout(r,ms);});}
