@@ -12,7 +12,8 @@
   --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.18);
   --gold:#e8c87a;--amber:#c4a45a;--purple:#a78bfa;
   --text:#f0ede8;--muted:#7a7880;--muted2:#3e3d4a;
-  --green:#6fcf8a;--r:10px;--rl:16px;
+  --green:#6fcf8a;--red:#e07070;
+  --r:10px;--rl:16px;
 }
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;font-weight:300;min-height:100vh}
@@ -37,9 +38,7 @@ textarea:focus{border-color:rgba(232,200,122,.4)}
 .prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px}
 .prog-bar{height:5px;background:var(--bg3);border-radius:99px;overflow:hidden}
 .prog-fill{height:100%;background:var(--gold);border-radius:99px;transition:width .5s;width:0}
-.prog-fill.ai{background:var(--purple)}
 .prog-msg{font-size:13px;margin-top:10px;color:var(--text)}
-.prog-msg.ai{color:var(--purple);font-weight:500}
 .prog-detail{font-size:11px;color:var(--muted2);margin-top:5px}
 .exp-box{display:none;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);padding:1.4rem;margin-bottom:2rem}
 .exp-box.on{display:block}
@@ -48,30 +47,26 @@ textarea:focus{border-color:rgba(232,200,122,.4)}
 .exp-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .results{display:none}.results.on{display:block}
 /* ITEM */
-.item{display:grid;grid-template-columns:320px 1fr;background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:1.5rem;animation:up .35s ease both}
+.item{display:grid;grid-template-columns:300px 1fr;background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:1.5rem;animation:up .35s ease both}
 @keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .item.found{border-color:rgba(111,207,138,0.3)}
-.item.ai{border-color:rgba(167,139,250,0.3)}
+.item.notfound{border-color:rgba(224,112,112,0.3)}
 @media(max-width:700px){.item{grid-template-columns:1fr}}
-.item-img{position:relative;min-height:240px;background:var(--bg3)}
-.item-img img{width:100%;height:100%;object-fit:cover;display:block;min-height:240px}
-.ph{width:100%;min-height:240px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:1.5rem;background:linear-gradient(135deg,#1a1824,#1e1a2e)}
-.ph-spin{width:40px;height:40px;border:3px solid rgba(167,139,250,0.1);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite}
+.item-img{position:relative;min-height:220px;background:var(--bg3)}
+.item-img img{width:100%;height:100%;object-fit:cover;display:block;min-height:220px}
+.ph{width:100%;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:1.5rem;background:linear-gradient(135deg,#1a1824,#1e1a2e)}
+.ph-spin{width:36px;height:36px;border:3px solid rgba(232,200,122,0.1);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .ph-name{font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;color:var(--text);text-align:center}
-.ph-secs{font-size:26px;font-weight:500;color:var(--purple)}
-.ph-msg{font-size:11px;color:var(--purple);text-align:center;animation:blink 1.4s ease-in-out infinite}
+.ph-msg{font-size:11px;color:var(--gold);text-align:center;animation:blink 1.4s ease-in-out infinite}
 @keyframes blink{0%,100%{opacity:.3}50%{opacity:1}}
-.tag{position:absolute;bottom:8px;left:8px;font-size:10px;padding:3px 9px;border-radius:99px;background:rgba(0,0,0,.7);color:#ccc}
-.tag-ai{position:absolute;bottom:8px;right:8px;font-size:10px;padding:3px 9px;border-radius:99px;background:rgba(110,80,220,0.9);color:#fff;font-weight:500}
+.tag{position:absolute;bottom:8px;left:8px;font-size:10px;padding:3px 9px;border-radius:99px;background:rgba(0,0,0,.75);color:#ccc}
 .tag-ok{position:absolute;bottom:8px;right:8px;font-size:10px;padding:3px 9px;border-radius:99px;background:rgba(40,160,80,0.9);color:#fff;font-weight:500}
-/* Info panel */
-.item-info{padding:1.3rem;display:flex;flex-direction:column;gap:10px;justify-content:flex-start;overflow:hidden}
+.tag-no{position:absolute;bottom:8px;right:8px;font-size:10px;padding:3px 9px;border-radius:99px;background:rgba(200,60,60,0.9);color:#fff;font-weight:500}
+.item-info{padding:1.3rem;display:flex;flex-direction:column;gap:10px;justify-content:center}
 .item-name{font-family:'Playfair Display',serif;font-style:italic;font-size:1.2rem}
-/* DESCRIPCIÓN */
-.item-desc{font-size:.85rem;color:var(--muted);line-height:1.6;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;font-style:italic}
-.item-desc-lbl{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
 .item-src{font-size:11px;color:var(--muted2)}
+.item-desc{font-size:.85rem;color:var(--muted);line-height:1.6;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;font-style:italic}
 .field{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px}
 .field-lbl{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
 .field-row{display:flex;align-items:flex-start;gap:8px}
@@ -85,15 +80,15 @@ footer{border-top:1px solid var(--border);padding:1.2rem 2rem;text-align:center;
 </head>
 <body>
 <header>
-  <div class="badge">&#9889; Unsplash + IA — imagen exacta + descripción</div>
+  <div class="badge">&#128269; Google Images + SerpAPI</div>
   <h1>Fotos exactas para<br><em>tu web</em></h1>
-  <p class="sub">Escribe hasta 20 nombres. Busca la imagen exacta, genera con IA si no encuentra, y muestra descripción automática.</p>
+  <p class="sub">Escribe hasta 20 nombres. Busca la imagen exacta en Google y devuelve URL + descarga en .PNG y .JPG lista para subir.</p>
 </header>
 <main>
   <div class="lbl"><span>Nombres — uno por línea (máx. 20)</span><span><span id="cnt">0</span>/20</span></div>
   <textarea id="ta" placeholder="superman&#10;dragon de fuego&#10;ciudad cyberpunk&#10;gato blanco&#10;puesta de sol&#10;...hasta 20 nombres"></textarea>
   <div class="row">
-    <button class="btn gold" id="searchBtn" onclick="startSearch()">&#128269; Buscar imágenes</button>
+    <button class="btn gold" id="searchBtn" onclick="startSearch()">&#128269; Buscar en Google Images</button>
     <button class="btn ghost" onclick="clearAll()">&#128465; Limpiar</button>
     <div class="sp"></div>
     <button class="btn ghost" id="expBtn" style="display:none" onclick="toggleExp()">&#8595; Exportar URLs</button>
@@ -105,67 +100,33 @@ footer{border-top:1px solid var(--border);padding:1.2rem 2rem;text-align:center;
     <div class="prog-detail" id="pDetail"></div>
   </div>
   <div class="exp-box" id="expBox">
-    <div class="exp-lbl">URLs de las imágenes encontradas</div>
+    <div class="exp-lbl">URLs de todas las imágenes encontradas</div>
     <textarea class="exp-ta" id="expTa" readonly></textarea>
     <div class="exp-row">
       <button class="btn ghost" onclick="copyUrls()">&#128203; Copiar todas las URLs</button>
-      <button class="btn gold" id="btnPng" onclick="dlAll('png')">&#8595; Descargas en formato .PNG</button>
-      <button class="btn amber" id="btnJpg" onclick="dlAll('jpg')">&#8595; Descargas en formato .JPG</button>
+      <button class="btn gold" id="btnPng" onclick="dlAll('png')">&#8595; Descargar todas en .PNG</button>
+      <button class="btn amber" id="btnJpg" onclick="dlAll('jpg')">&#8595; Descargar todas en .JPG</button>
     </div>
   </div>
   <div class="results" id="results"></div>
 </main>
-<footer>Buscador de Fotos &#8212; Unsplash + Stable Diffusion (Cloudflare Worker)</footer>
+<footer>Buscador de Fotos &#8212; Google Images via SerpAPI</footer>
 
 <script>
-const UNSPLASH_KEY = '2G8xFmc1jV0VWZg4zo6VeoV5yYj5Rf5S8mtuJ9VWai8';
-const CF_WORKER    = 'https://hf-proxyf.u0269061942.workers.dev';
-const HF_TOKEN     = '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';
-const HF_MODELS    = [
-  'stabilityai/stable-diffusion-2-1',
-  'runwayml/stable-diffusion-v1-5',
-  'CompVis/stable-diffusion-v1-4'
-];
-
-// Descripciones automáticas para imágenes IA basadas en el nombre
-function generateDescription(term) {
-  const t = term.toLowerCase();
-  const descriptions = {
-    'superman': 'El icónico superhéroe de DC Comics, conocido por su capa roja y su símbolo de esperanza. Defensor de la justicia y protector de Metrópolis.',
-    'batman': 'El Caballero Oscuro de Gotham City. Superhéroe sin poderes que usa su inteligencia, tecnología y artes marciales para combatir el crimen.',
-    'spiderman': 'El Hombre Araña, superhéroe adolescente con habilidades arácnidas. Conocido por su sentido de la responsabilidad y su ingenio.',
-    'dragon': 'Criatura mítica de gran poder, con escamas y capaz de escupir fuego. Símbolo de fuerza y sabiduría en muchas culturas del mundo.',
-    'gato': 'Animal doméstico ágil y curioso, conocido por su independencia y elegancia. Uno de los compañeros favoritos del ser humano.',
-    'perro': 'El mejor amigo del hombre, leal y afectuoso. Animal doméstico conocido por su fidelidad y su vínculo especial con las personas.',
-    'ciudad': 'Entorno urbano vibrante lleno de rascacielos, luces y actividad humana constante. Centro de cultura, comercio y vida moderna.',
-    'naturaleza': 'El mundo natural en todo su esplendor, con paisajes, flora y fauna que reflejan la belleza del planeta Tierra.',
-    'montaña': 'Formación geológica imponente que se eleva sobre el paisaje, ofreciendo vistas panorámicas y desafíos para exploradores.',
-    'playa': 'Franja de arena donde el mar y la tierra se encuentran, lugar de descanso y disfrute bajo el sol.',
-    'puesta de sol': 'Fenómeno natural que tiñe el cielo de tonos cálidos al caer la noche, creando paisajes de extraordinaria belleza.',
-    'flor': 'Órgano reproductor de las plantas, símbolo de belleza y diversidad en la naturaleza con infinidad de formas y colores.',
-    'árbol': 'Planta leñosa que puede vivir cientos de años, fundamental para el ecosistema y símbolo de vida y permanencia.',
-    'agua': 'Elemento vital para toda forma de vida, que puede aparecer como río, lago, mar o cascada en la naturaleza.'
-  };
-  // Buscar coincidencia parcial
-  for (const key of Object.keys(descriptions)) {
-    if (t.includes(key) || key.includes(t)) return descriptions[key];
-  }
-  // Descripción genérica inteligente
-  return 'Imagen que representa "' + term + '". Esta fotografía captura la esencia visual del término con detalle y precisión, lista para usar en proyectos web y presentaciones digitales.';
-}
+const SERP_KEY = 'fbcf18838a5b0ad0fb81424b325ac65c4919b3aca061be7076d0e9b43cedb9c9';
 
 const ta = document.getElementById('ta');
 ta.addEventListener('input', updateCount);
-function updateCount() {
+function updateCount(){
   document.getElementById('cnt').textContent = Math.min(getTerms().length, 20);
 }
-function getTerms() {
+function getTerms(){
   return ta.value.split('\n').map(s => s.trim()).filter(Boolean).slice(0, 20);
 }
 
 let allResults = [], busy = false;
 
-function clearAll() {
+function clearAll(){
   ta.value = ''; updateCount();
   document.getElementById('results').innerHTML = '';
   document.getElementById('results').classList.remove('on');
@@ -175,10 +136,10 @@ function clearAll() {
   allResults = [];
 }
 
-async function startSearch() {
-  if (busy) return;
+async function startSearch(){
+  if(busy) return;
   const terms = getTerms();
-  if (!terms.length) { alert('Escribe al menos un nombre'); return; }
+  if(!terms.length){ alert('Escribe al menos un nombre'); return; }
   busy = true; allResults = [];
   const btn = document.getElementById('searchBtn');
   btn.disabled = true; btn.textContent = 'Buscando...';
@@ -188,169 +149,86 @@ async function startSearch() {
   document.getElementById('results').classList.add('on');
   document.getElementById('prog').style.display = 'block';
 
-  // Crear todos los items con placeholder primero
-  const itemEls = terms.map(function(term, i) {
-    return createItem(term, i);
-  });
+  for(let i = 0; i < terms.length; i++){
+    const term = terms[i];
+    setProg(i, terms.length, '&#128269; Buscando "' + term + '" en Google Images...', '');
+    const itemEl = createItem(term, i);
+    updatePH(i, 'Buscando en Google Images...');
 
-  // Buscar en Unsplash primero (secuencial para no saturar)
-  const unsplashResults = [];
-  for (let i = 0; i < terms.length; i++) {
-    setProg(i, terms.length, '&#128269; Buscando "' + terms[i] + '" en Unsplash...', false, '');
-    updatePH(i, null, 'Buscando en Unsplash...', '');
-    const photo = await searchUnsplash(terms[i], function(msg) { updatePH(i, null, msg, ''); });
-    unsplashResults.push(photo);
-    if (photo) {
-      showItemPhoto(itemEls[i], i, photo);
-      allResults.push({ term: terms[i], photo });
-      setProg(i + 1, terms.length, '✓ "' + terms[i] + '"', false, 'Unsplash');
+    const photo = await searchGoogle(term);
+
+    if(photo){
+      showItem(itemEl, i, photo);
+      allResults.push({ term, photo });
+      setProg(i+1, terms.length, '✓ Encontrada: "' + term + '"', 'Google Images');
     } else {
-      updatePH(i, 0, '✨ Pendiente de IA...', 'En cola');
+      showNotFound(itemEl, i, term);
+      allResults.push({ term, photo: null });
+      setProg(i+1, terms.length, '✗ No encontrada: "' + term + '"', '');
     }
   }
 
-  // Generar con IA EN PARALELO los que no se encontraron
-  const aiTerms = terms.filter(function(t, i) { return !unsplashResults[i]; });
-  const aiIndices = terms.map(function(t, i) { return i; }).filter(function(i) { return !unsplashResults[i]; });
-
-  if (aiTerms.length > 0) {
-    setProg(terms.filter(function(t,i){ return !!unsplashResults[i]; }).length, terms.length,
-      '✨ Generando ' + aiTerms.length + ' imágenes con IA en paralelo...', true, 'FLUX.1-schnell');
-
-    // Lanzar todas las generaciones IA al mismo tiempo
-    const aiPromises = aiTerms.map(function(term, j) {
-      const idx = aiIndices[j];
-      updatePH(idx, 0, '✨ Creando "' + term + '"', 'FLUX.1-schnell');
-      return generateAI(term, function(secs, model, detail) {
-        updatePH(idx, secs, '✨ Creando "' + term + '"', model);
-      }).then(function(photo) {
-        showItemPhoto(itemEls[idx], idx, photo);
-        allResults.push({ term, photo });
-      });
-    });
-
-    await Promise.all(aiPromises);
-  }
-
-  // Ordenar allResults por índice original
-  allResults.sort(function(a, b) {
-    return terms.indexOf(a.term) - terms.indexOf(b.term);
-  });
-
   document.getElementById('prog').style.display = 'none';
-  busy = false; btn.disabled = false; btn.textContent = '🔍 Buscar imágenes';
+  busy = false; btn.disabled = false; btn.textContent = '🔍 Buscar en Google Images';
   document.getElementById('expBtn').style.display = 'flex';
   buildExport();
 }
 
-function setProg(done, total, msg, isAI, detail) {
-  const pct = total ? Math.round(done / total * 100) : 0;
-  const fill = document.getElementById('pFill');
-  fill.style.width = pct + '%';
-  fill.className = 'prog-fill' + (isAI ? ' ai' : '');
+function setProg(done, total, msg, detail){
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById('pFill').style.width = pct + '%';
   document.getElementById('pPct').textContent = pct + '%';
   document.getElementById('pLbl').textContent = done + ' de ' + total + ' términos';
-  const m = document.getElementById('pMsg');
-  m.innerHTML = msg;
-  m.className = 'prog-msg' + (isAI ? ' ai' : '');
+  document.getElementById('pMsg').innerHTML = msg;
   document.getElementById('pDetail').textContent = detail || '';
 }
 
-async function searchUnsplash(term, onStatus) {
-  try {
-    onStatus('Buscando "' + term + '" en Unsplash...');
-    const r = await fetch('https://api.unsplash.com/search/photos?query=' + encodeURIComponent(term) + '&per_page=10&client_id=' + UNSPLASH_KEY);
-    if (!r.ok) throw new Error();
+// Buscar en Google Images via SerpAPI
+async function searchGoogle(term){
+  try{
+    const url = 'https://serpapi.com/search.json?engine=google_images&q=' +
+      encodeURIComponent(term) +
+      '&ijn=0&api_key=' + SERP_KEY +
+      '&safe=active&num=1';
+
+    const r = await fetch(url);
+    if(!r.ok) throw new Error('SerpAPI error ' + r.status);
     const d = await r.json();
-    const results = d.results || [];
-    if (!results.length) return null;
-    const termLow = term.toLowerCase();
-    const exact = results.find(function(p) {
-      const a = (p.alt_description || '').toLowerCase();
-      const b = (p.description || '').toLowerCase();
-      const tags = (p.tags || []).map(function(t) { return (t.title || '').toLowerCase(); }).join(' ');
-      return a.includes(termLow) || b.includes(termLow) || tags.includes(termLow);
-    });
-    const pick = exact || results[0];
-    // Descripción: usar la de Unsplash si existe, si no generar automáticamente
-    const unsplashDesc = pick.alt_description || pick.description || '';
-    const autoDesc = generateDescription(term);
-    const finalDesc = unsplashDesc
-      ? unsplashDesc.charAt(0).toUpperCase() + unsplashDesc.slice(1) + '. ' + autoDesc
-      : autoDesc;
+    const images = d.images_results || [];
+    if(!images.length) return null;
+
+    // Tomar la primera imagen — es la más relevante
+    const img = images[0];
     return {
-      url: pick.urls.regular,
-      urlFull: pick.urls.full,
-      urlJpg: pick.urls.full + '&fm=jpg&q=95',
-      urlPng: pick.urls.full + '&fm=png',
+      url: img.original || img.thumbnail,
+      urlFull: img.original || img.thumbnail,
+      urlJpg: img.original || img.thumbnail,
+      urlPng: img.original || img.thumbnail,
       title: term,
-      author: pick.user.name,
-      description: finalDesc,
+      description: img.title || term,
+      source: img.source || 'Google Images',
+      author: img.source || 'Google Images',
       isAI: false,
-      source: 'Unsplash',
       blob: null
     };
-  } catch(e) { return null; }
-}
-
-async function generateAI(term, onTick) {
-  let secs = 0;
-  const ticker = setInterval(function() {
-    secs++;
-    onTick(secs, 'FLUX.1-schnell', 'Generando imagen de "' + term + '"...');
-  }, 1000);
-
-  // Reintentar hasta conseguirlo
-  for (let attempt = 0; attempt < 5; attempt++) {
-    try {
-      if (attempt > 0) {
-        onTick(secs, 'FLUX.1-schnell', 'Reintentando (' + attempt + '/5)...');
-        await sleep(attempt === 1 ? 20000 : 5000); // Si modelo cargando espera más
-      }
-      const response = await fetch(CF_WORKER, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: term, token: HF_TOKEN })
-      });
-      if (response.status === 503) {
-        onTick(secs, 'FLUX.1-schnell', 'Modelo cargando, esperando 20s...');
-        await sleep(20000);
-        continue;
-      }
-      if (response.ok) {
-        const blob = await response.blob();
-        if (blob && blob.size > 500) {
-          clearInterval(ticker);
-          const url = URL.createObjectURL(blob);
-          onTick(secs, 'FLUX.1-schnell', '✅ Imagen creada en ' + secs + 's');
-          return { url, urlFull: url, urlJpg: url, urlPng: url, title: term, author: 'FLUX.1-schnell', description: generateDescription(term), isAI: true, source: 'FLUX.1', blob };
-        }
-      }
-    } catch(e) { console.warn('FLUX error:', e); }
+  } catch(e){
+    console.error('SerpAPI error:', e);
+    return null;
   }
-
-  clearInterval(ticker);
-  // Pollinations como respaldo
-  onTick(secs, 'Pollinations AI', 'Usando respaldo...');
-  const polUrl = 'https://image.pollinations.ai/prompt/' + encodeURIComponent(term) + '?width=800&height=600&seed=' + Math.floor(Math.random() * 99999) + '&nologo=true&enhance=true';
-  await new Promise(function(resolve) {
-    const img = new Image();
-    img.onload = resolve; img.onerror = resolve;
-    img.src = polUrl;
-  });
-  return { url: polUrl, urlFull: polUrl, urlJpg: polUrl, urlPng: polUrl, title: term, author: 'Pollinations AI', description: generateDescription(term), isAI: true, source: 'Pollinations AI', blob: null };
 }
 
-function sleep(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
-function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function safeName(t) {
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function safeName(t){
   return (t||'foto').toLowerCase()
     .replace(/[áàä]/g,'a').replace(/[éèë]/g,'e').replace(/[íìï]/g,'i')
     .replace(/[óòö]/g,'o').replace(/[úùü]/g,'u').replace(/ñ/g,'n')
     .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').substring(0,50)||'foto';
 }
+function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 
-function createItem(term, idx) {
+function createItem(term, idx){
   const wrap = document.createElement('div');
   wrap.className = 'item'; wrap.id = 'item_' + idx;
   wrap.style.animationDelay = (idx * 0.07) + 's';
@@ -358,18 +236,14 @@ function createItem(term, idx) {
     '<div class="item-img" id="img_' + idx + '">' +
       '<div class="ph">' +
         '<div class="ph-spin"></div>' +
-        '<div class="ph-secs" id="secs_' + idx + '">0s</div>' +
         '<div class="ph-name">' + esc(term) + '</div>' +
-        '<div class="ph-msg" id="msg_' + idx + '">Buscando...</div>' +
+        '<div class="ph-msg" id="ph_' + idx + '">Buscando...</div>' +
       '</div>' +
     '</div>' +
     '<div class="item-info">' +
       '<div class="item-name">' + esc(term) + '</div>' +
-      '<div class="item-src" id="isrc_' + idx + '">Procesando...</div>' +
-      '<div class="field" id="desc_wrap_' + idx + '" style="display:none">' +
-        '<div class="item-desc-lbl">Descripción</div>' +
-        '<div class="item-desc" id="desc_' + idx + '"></div>' +
-      '</div>' +
+      '<div class="item-src" id="src_' + idx + '">Procesando...</div>' +
+      '<div class="item-desc" id="desc_' + idx + '" style="display:none"></div>' +
       '<div class="field">' +
         '<div class="field-lbl">URL directa — cópiala para tu web</div>' +
         '<div class="field-row">' +
@@ -378,7 +252,7 @@ function createItem(term, idx) {
         '</div>' +
       '</div>' +
       '<div class="field">' +
-        '<div class="field-lbl">Código HTML</div>' +
+        '<div class="field-lbl">Código HTML listo para pegar</div>' +
         '<div class="field-val" id="html_' + idx + '">—</div>' +
       '</div>' +
       '<div class="dl-row">' +
@@ -390,56 +264,65 @@ function createItem(term, idx) {
   return wrap;
 }
 
-function updatePH(idx, secs, msg, src) {
-  const se = document.getElementById('secs_' + idx);
-  const me = document.getElementById('msg_' + idx);
-  if (se && secs !== null) se.textContent = secs + 's';
-  if (me) me.textContent = msg;
+function updatePH(idx, msg){
+  const el = document.getElementById('ph_' + idx);
+  if(el) el.textContent = msg;
 }
 
-function showItemPhoto(itemEl, idx, photo) {
-  if (photo.isAI) itemEl.classList.add('ai');
-  else itemEl.classList.add('found');
+function showItem(itemEl, idx, photo){
+  itemEl.classList.add('found');
   const imgDiv = document.getElementById('img_' + idx);
   imgDiv.innerHTML =
-    '<img src="' + esc(photo.url) + '" alt="' + esc(photo.title) + '" style="width:100%;height:100%;object-fit:cover;display:block;min-height:240px">' +
-    '<div class="tag">' + esc(photo.source) + '</div>' +
-    (photo.isAI ? '<div class="tag-ai">✨ IA</div>' : '<div class="tag-ok">✓ Encontrada</div>');
-  document.getElementById('isrc_' + idx).textContent = (photo.isAI ? '✨ ' : '📷 ') + photo.author;
-  // Mostrar descripción
-  if (photo.description) {
-    const dw = document.getElementById('desc_wrap_' + idx);
-    const dd = document.getElementById('desc_' + idx);
-    if (dw) dw.style.display = 'block';
-    if (dd) dd.textContent = photo.description;
+    '<img src="' + esc(photo.url) + '" alt="' + esc(photo.title) + '" style="width:100%;height:100%;object-fit:cover;display:block;min-height:220px" onerror="this.style.display=\'none\'">' +
+    '<div class="tag">Google Images</div>' +
+    '<div class="tag-ok">✓ Encontrada</div>';
+
+  document.getElementById('src_' + idx).textContent = '📷 ' + photo.source;
+
+  if(photo.description && photo.description !== photo.title){
+    const desc = document.getElementById('desc_' + idx);
+    desc.textContent = photo.description;
+    desc.style.display = 'block';
   }
-  const urlText = photo.isAI ? photo.url : (photo.urlFull || photo.url);
-  document.getElementById('url_' + idx).textContent = urlText;
-  document.getElementById('html_' + idx).textContent = '<img src="' + urlText + '" alt="' + photo.title + '" style="max-width:100%">';
+
+  document.getElementById('url_' + idx).textContent = photo.urlFull;
+  document.getElementById('html_' + idx).textContent = '<img src="' + photo.urlFull + '" alt="' + photo.title + '" style="max-width:100%">';
   document.getElementById('dlpng_' + idx).disabled = false;
   document.getElementById('dljpg_' + idx).disabled = false;
+
   itemEl.dataset.url = photo.url;
-  itemEl.dataset.urlFull = photo.urlFull || photo.url;
-  itemEl.dataset.urlJpg = photo.urlJpg || photo.url;
-  itemEl.dataset.urlPng = photo.urlPng || photo.url;
+  itemEl.dataset.urlFull = photo.urlFull;
+  itemEl.dataset.urlJpg = photo.urlJpg;
+  itemEl.dataset.urlPng = photo.urlPng;
   itemEl.dataset.title = photo.title;
-  itemEl.dataset.isAI = photo.isAI ? '1' : '0';
-  if (photo.blob) itemEl._blob = photo.blob;
+  if(photo.blob) itemEl._blob = photo.blob;
 }
 
-function copyUrl(idx) {
+function showNotFound(itemEl, idx, term){
+  itemEl.classList.add('notfound');
+  const imgDiv = document.getElementById('img_' + idx);
+  imgDiv.innerHTML =
+    '<div class="ph">' +
+      '<div style="font-size:2rem">🔍</div>' +
+      '<div class="ph-name">' + esc(term) + '</div>' +
+      '<div style="font-size:11px;color:var(--red);text-align:center">No se encontró imagen</div>' +
+    '</div>';
+  document.getElementById('src_' + idx).textContent = '✗ Sin resultados en Google Images';
+}
+
+function copyUrl(idx){
   const el = document.getElementById('url_' + idx);
-  if (!el || el.textContent === '—') return;
-  navigator.clipboard.writeText(el.textContent).then(function() {
+  if(!el || el.textContent === '—') return;
+  navigator.clipboard.writeText(el.textContent).then(function(){
     const b = document.getElementById('cbtn_' + idx);
     b.textContent = '✓'; b.classList.add('ok');
-    setTimeout(function() { b.textContent = 'Copiar'; b.classList.remove('ok'); }, 2000);
+    setTimeout(function(){ b.textContent = 'Copiar'; b.classList.remove('ok'); }, 2000);
   });
 }
 
-async function dlOne(idx, fmt) {
+async function dlOne(idx, fmt){
   const item = document.getElementById('item_' + idx);
-  if (!item) return;
+  if(!item) return;
   const btnId = fmt === 'png' ? 'dlpng_' + idx : 'dljpg_' + idx;
   const btn = document.getElementById(btnId);
   const orig = btn.textContent;
@@ -448,76 +331,74 @@ async function dlOne(idx, fmt) {
   btn.textContent = orig; btn.disabled = false;
 }
 
-async function dlAll(fmt) {
+async function dlAll(fmt){
   const bId = fmt === 'png' ? 'btnPng' : 'btnJpg';
   const oId = fmt === 'png' ? 'btnJpg' : 'btnPng';
   const btn = document.getElementById(bId);
   const other = document.getElementById(oId);
   const orig = btn.textContent;
   btn.disabled = true; other.disabled = true;
-  for (let i = 0; i < allResults.length; i++) {
-    btn.textContent = 'Descargando ' + (i + 1) + '/' + allResults.length + '...';
-    const item = document.getElementById('item_' + i);
-    if (item) await downloadPhoto(item, fmt);
-    await sleep(600);
+  let done = 0;
+  for(let i = 0; i < allResults.length; i++){
+    if(allResults[i].photo){
+      done++;
+      btn.textContent = 'Descargando ' + done + '/' + allResults.filter(r => r.photo).length + '...';
+      const item = document.getElementById('item_' + i);
+      if(item && item.dataset.url) await downloadPhoto(item, fmt);
+      await sleep(500);
+    }
   }
   btn.textContent = orig; btn.disabled = false; other.disabled = false;
-  alert('✅ ' + allResults.length + ' imágenes descargadas en .' + fmt.toUpperCase());
+  alert('✅ ' + done + ' imágenes descargadas en .' + fmt.toUpperCase());
 }
 
-async function downloadPhoto(item, fmt) {
+async function downloadPhoto(item, fmt){
   const ext = fmt === 'png' ? 'png' : 'jpg';
   const mime = fmt === 'png' ? 'image/png' : 'image/jpeg';
   const name = safeName(item.dataset.title) + '.' + ext;
-  const isAI = item.dataset.isAI === '1';
-  try {
-    let sourceBlob;
-    if (isAI && item._blob) {
-      sourceBlob = item._blob;
-    } else {
-      const src = fmt === 'png' ? item.dataset.urlPng : item.dataset.urlJpg;
-      const r = await fetch(src);
-      if (!r.ok) throw new Error();
-      sourceBlob = await r.blob();
-    }
-    const bmp = await createImageBitmap(sourceBlob);
+  const src = fmt === 'png' ? item.dataset.urlPng : item.dataset.urlJpg;
+
+  try{
+    const r = await fetch(src);
+    if(!r.ok) throw new Error();
+    const blob = await r.blob();
+    const bmp = await createImageBitmap(blob);
     const cv = document.createElement('canvas');
     cv.width = bmp.width; cv.height = bmp.height;
     const ctx = cv.getContext('2d');
-    if (fmt === 'jpg') { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, bmp.width, bmp.height); }
+    if(fmt === 'jpg'){ ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, bmp.width, bmp.height); }
     ctx.drawImage(bmp, 0, 0);
-    cv.toBlob(function(outBlob) {
+    cv.toBlob(function(outBlob){
       const u = URL.createObjectURL(outBlob);
       const a = document.createElement('a');
       a.href = u; a.download = name;
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      setTimeout(function() { URL.revokeObjectURL(u); }, 3000);
+      setTimeout(function(){ URL.revokeObjectURL(u); }, 3000);
     }, mime, 0.95);
-  } catch(e) {
-    const src = fmt === 'png' ? item.dataset.urlPng : item.dataset.urlJpg;
+  } catch(e){
+    // Fallback directo
     const a = document.createElement('a');
     a.href = src; a.download = name; a.target = '_blank';
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
   }
 }
 
-function buildExport() {
-  const lines = allResults.map(function(r) {
-    const url = r.photo.isAI ? r.photo.url : (r.photo.urlFull || r.photo.url);
-    return r.term + ': ' + (r.photo.isAI ? '[IA] ' : '') + url;
-  });
+function buildExport(){
+  const lines = allResults
+    .filter(r => r.photo)
+    .map(r => r.term + ': ' + r.photo.urlFull);
   document.getElementById('expTa').value = lines.join('\n');
 }
 
-function toggleExp() {
+function toggleExp(){
   const b = document.getElementById('expBox');
   b.classList.toggle('on');
-  if (b.classList.contains('on')) b.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if(b.classList.contains('on')) b.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function copyUrls() {
+function copyUrls(){
   navigator.clipboard.writeText(document.getElementById('expTa').value)
-    .then(function() { alert('¡URLs copiadas!'); });
+    .then(function(){ alert('¡URLs copiadas!'); });
 }
 
 updateCount();
